@@ -3,3 +3,4 @@
 #### Here some textual descriptions of the basic things
 
 - [functions and bindings](./fun-and-bindings.md)
+- [how bindings work example](./reference/bind-example.html)
