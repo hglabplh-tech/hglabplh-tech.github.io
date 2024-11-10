@@ -7,6 +7,8 @@
 
 @title{Scheme 48 - Reference - Part I - Basics - Bindings - REPL}
 
+@author[(author+email "Harald Glab-Plhak" "hglabplhak@gmail.com")]
+
 @; ------------------------------------------------------------
 @section{Bindings Examples}
 
