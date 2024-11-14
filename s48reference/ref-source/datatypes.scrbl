@@ -104,37 +104,126 @@ Examples:
 
 
 Here are some abbreviations which can be useful:
-@racketblock[(define (caar   x) (car (car x)))
-(define (cadr   x) (car (cdr x)))
-(define (cdar   x) (cdr (car x)))
-(define (cddr   x) (cdr (cdr x)))
 
-(define (caaar  x) (caar (car x)))
-(define (caadr  x) (caar (cdr x)))
-(define (cadar  x) (cadr (car x)))
-(define (caddr  x) (cadr (cdr x)))
-(define (cdaar  x) (cdar (car x)))
-(define (cdadr  x) (cdar (cdr x)))
-(define (cddar  x) (cddr (car x)))
-(define (cdddr  x) (cddr (cdr x)))
+@defproc[(caar [x list?]) any/c]{
+Implemented as:
+@racket[(car (car x))]
+}
+@defproc[(cadr [x list?]) any/c]{
+Implemented as:
+@racket[(car (cdr x))]
+}
 
-(define (caaaar x) (caaar (car x)))
-(define (caaadr x) (caaar (cdr x)))
-(define (caadar x) (caadr (car x)))
-(define (caaddr x) (caadr (cdr x)))
-(define (cadaar x) (cadar (car x)))
-(define (cadadr x) (cadar (cdr x)))
-(define (caddar x) (caddr (car x)))
-(define (cadddr x) (caddr (cdr x)))
-(define (cdaaar x) (cdaar (car x)))
-(define (cdaadr x) (cdaar (cdr x)))
-(define (cdadar x) (cdadr (car x)))
-(define (cdaddr x) (cdadr (cdr x)))
-(define (cddaar x) (cddar (car x)))
-(define (cddadr x) (cddar (cdr x)))
-(define (cdddar x) (cdddr (car x)))
-(define (cddddr x) (cdddr (cdr x)))
-]
+@defproc[(cdar [x list?]) list?]{
+Implemented as:
+@racket[(cdr (car x))]
+}
+
+@defproc[(cddr [x list?]) list?]{
+Implemented as:
+@racket[(cdr (cdr x))]
+}
+
+@defproc[(caaar [x list?]) any/c]{
+Implemented as:
+@racket[(caar (car x))]
+}
+
+@defproc[(caadr [x list?]) any/c]{
+Implemented as:
+@racket[(cadr (car x))]
+}
+
+@defproc[(caddr [x list?]) list?]{
+Implemented as:
+@racket[(cddr (cdr x))]
+}
+
+@defproc[(cdaar [x list?]) any/c]{
+Implemented as:
+@racket[(cdar (car x))]
+}
+
+@defproc[(cdadr [x list?]) list?]{
+Implemented as:
+@racket[(cdar (cdr x))]
+}
+
+@defproc[(cddar [x list?]) any/c]{
+Implemented as:
+@racket[(cddr (car x))]
+}
+
+@defproc[(cdddr [x list?]) list?]{
+Implemented as:
+@racket[(cddr (cdr x))]
+}
+
+@defproc[(caaaar [x list?]) any/c]{
+Implemented as:
+@racket[(caaar (car x))]
+}
+
+@defproc[(caaadr [x list?]) list?]{
+Implemented as:
+@racket[(caaar (cdr x))]
+}
+
+@defproc[(caadar [x list?]) any/c]{
+Implemented as:
+@racket[(caadr (car x))]
+}
+
+@defproc[(caaddr [x list?]) list?]{
+Implemented as:
+@racket[(caadr (cdr x))]
+}
+@defproc[(cadaar [x list?]) any/c]{
+Implemented as:
+@racket[(cadar (car x))]
+}
+
+
+@defproc[(cadadr [x list?]) list?]{
+Implemented as:
+@racket[(cadar (cdr x))]
+}
+
+@defproc[(cdaadr [x list?]) list?]{
+Implemented as:
+@racket[(cdaar (cdr x))]
+}
+
+@defproc[(cdadar [x list?]) any/c]{
+Implemented as:
+@racket[(cdadr (car x))]
+}
+
+@defproc[(cddaar [x list?]) any/c]{
+Implemented as:
+@racket[(cddar (car x))]
+}
+
+@defproc[(cddadr [x list?]) list?]{
+Implemented as:
+@racket[(cddar (cdr x))]
+}
+
+@defproc[(cddaar [x list?]) any/c]{
+Implemented as:
+@racket[(cddar (car x))]
+}
+
+
+@defproc[(cdddar [x list?]) any/c]{
+Implemented as:
+@racket[(cdddr (car x))]
+}
+
+@defproc[(cddddr [x list?]) list?]{
+Implemented as:
+@racket[(cdddr (cdr x))]
+}
 
 @defproc[(null? [l list?]) boolean?]{
 checks if the list is empty '()                                     
