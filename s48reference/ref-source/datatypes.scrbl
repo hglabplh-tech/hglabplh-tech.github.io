@@ -266,6 +266,21 @@ Same as @racket[member] with the difference that @racket[eq?] is used
 
 @defproc[(memv [v any/c] [l list?]) (or/c #f list?)]{
 Same as @racket[member] with the difference that @racket[eqv?] is used
+ instead of @racket[equal?]
+ }
+
+ @defproc[(assoc [v any/c] [l (listof pair?)]) (or/c pair? #f)]{
+Locates the first pair of the list where the key is @racket[equal?]
+to v and returns it if no match is found it returns @racket[#f]  
+}
+
+@defproc[(assq [v any/c] [l (listof pair?)]) (or/c pair? #f)]{
+Same as @racket[assoc] with the difference that @racket[eq?] is used
+ instead of @racket[equal?] 
+                                                       }
+
+@defproc[(assv [v any/c] [l (listof pair?)]) (or/c pair? #f)]{
+Same as @racket[assoc] with the difference that @racket[eqv?] is used
  instead of @racket[equal?] 
                                                        }
 
