@@ -5,7 +5,7 @@
                      (only-in racket/contract any/c)
                      (only-in racket/class is-a?/c)))
 
-@title{Scheme 48 - Reference -  The Base of Scheme48}
+
 
 @author[(author+email "Harald Glab-Plhak" "hglabplhak@gmail.com")]
 
