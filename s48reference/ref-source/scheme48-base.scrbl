@@ -5,13 +5,12 @@
                      (only-in racket/contract any/c)
                      (only-in racket/class is-a?/c)))
 
-@title{Scheme 48 - Reference - Part I - Basics - Bindings - REPL}
+@title{Scheme 48 - Reference -  The Base of Scheme48}
 
 @author[(author+email "Harald Glab-Plhak" "hglabplhak@gmail.com")]
 
 @; ------------------------------------------------------------
 @section{Bindings Examples}
-
 Here we define the potential environment operations for bindings:
 
 
@@ -23,7 +22,7 @@ Here we define the potential environment operations for bindings:
 Have a look how such functionality may be defined
 
 @defproc[(binding [id string?] [value any?/c]) function?]{
-This function takes a id as first parameter and any valoue function or another binding as second parameter
+This function takes a id as first parameter and any value function or another binding as second parameter
 and returns a function containing the binding
 }
 

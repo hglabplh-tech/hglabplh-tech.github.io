@@ -1,17 +1,21 @@
 #lang scribble/doc
 @(require
    scribble/manual scribble/eval
-          (for-label lang/prim lang/imageeq lang/posn racket/gui/base
+          (for-label lang/prim racket/gui/base                     
                      (only-in racket/contract any/c)
                      (only-in racket/class is-a?/c)))
 
-@title{Scheme 48 - Reference - Part II - Basics - Datatypes}
+@title{Scheme 48 - Reference -  Base-Types}
 
 @author[(author+email "Harald Glab-Plhak" "hglabplhak@gmail.com")]
 
+@; ------------------------------------------------------------
+@section[#:tag "basetypes_definitions"]{The Datatypes - primitives / base types}
+
+
 
 @; ------------------------------------------------------------
-@section[#:tag "basetypes"]{The Datatypes - Primitives}
+@section[#:tag "basetypes_functions"]{The Datatypes - functions}
 
 The basic datatypes like Integer , Boolean, Long, Float Double and the base functions
 
