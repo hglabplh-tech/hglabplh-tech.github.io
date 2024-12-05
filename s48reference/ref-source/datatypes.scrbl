@@ -285,5 +285,36 @@ Same as @racket[assoc] with the difference that @racket[eq?] is used
 @defproc[(assv [v any/c] [l (listof pair?)]) (or/c pair? #f)]{
 Same as @racket[assoc] with the difference that @racket[eqv?] is used
  instead of @racket[equal?] 
-                                                       }
+
+}
+
+@defproc[(list? [thing any/c] ) (boolean?)]{
+Ask if thing is a list
+                    }
+
+
+@;---------------------------------------------------------------
+@subsection[#:tag "characters"]{Characters}
+
+@defproc[(char<? [first char?] [second char?]) (boolean?)]{
+Look if first char is smaller than second char
+                                                         }
+
+@defproc[(char>? [first char?] [second char?]) (boolean?)]{
+Look if first char is greater than second char
+                                                         }
+
+@defproc[(char<=? [first char?] [second char?]) (boolean?)]{
+Look if first char is smaller or equal second char
+                                                         }
+
+@defproc[(char>=? [first char?] [second char?]) (boolean?)]{
+Look if first char is greater or equal second char
+}
+
+
+@;---------------------------------------------------------------
+@subsection[#:tag "strings"]{Strings}
+
+
 
