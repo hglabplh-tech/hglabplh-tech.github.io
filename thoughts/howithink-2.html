@@ -1,0 +1,268 @@
+<html>
+<div>
+<h2>My coding / designing thoughts Part II</h2>
+<h3>Listeners, Threading, Channels</h3>
+<h4>A few definitions of the things first</h4>
+<h5>Listeners</h5>
+<p>Listeners per definition listen waiting for events of different kinds
+In best case the listener runs in another thread when the code which fires the event.</p>
+<p>One case where listeners can be used is testing:</p>
+<p>Think about the following situation:</p>
+<p>The Test runs in a JUNIT framework ok in a test different events can take place
+Lets have a look to a example test to see what I mean:</p>
+<pre><code class="language-Java">
+@BeforeEach
+public void beforeEach() {
+  /* do some init for the test that follows */
+}
+
+@AfterEach
+public void afterEach() {
+/* exit stuff */
+}
+
+@Test
+public void myTest () {
+/*
+-record begin test (with clock) 
+- test
+-assertions
+*/
+-record end test (with clock)
+}
+</code></pre>
+<p>And a assert</p>
+<pre><code class="language-Java">try {
+	assertThat(&quot;went wrong &quot;,b, is(a));
+	// record all ok
+} catch (Throwable e) {
+	// record went wrong
+} finally {
+	// record event checked
+}
+
+</code></pre>
+<p>Ok now we write out or log events for example but the time it is logged the test will block eventually.</p>
+<p>What we done was to write a GUI which had a progress bar and a test and assert ... counter if the record this things in the way above the whole GUI and the tests will block and it will be not possible to write a automation were more than one test runs in parallel there will all times be a blocking state at least in one thread.</p>
+<p>So we have to think about a threaded listener concept:</p>
+<h5>Listener How TO:</h5>
+<p>At first we have to think about how we define a listener</p>
+<p>Here a thought abot that in Java code</p>
+<ul>
+<li>This may be a base interface</li>
+</ul>
+<pre><code class="language-Java">
+public interface ListenerBase {
+
+	default void startProcess (TESTID testId) {
+		System.out.println(&quot;Start test-run with testId: &quot; + testId.testId() + &quot; and type: &quot; + testId.type());
+	}
+
+	default void endProcess (TESTID testId) {
+		System.out.println(&quot;End test-run with testId: &quot; + testId.testId() + &quot; and type: &quot; + testId.type());
+	}
+
+	public static class TESTRUNID {
+
+		private final TESTTYPE type;
+
+		private final UUID tesRuntId;
+
+		private final String testRunName;
+
+		public PID (String testRunName, TESTTYPE type) {
+			this.testRunName = testRunName;
+			this.pid = UUID.randomUUID(); 
+			this.type = type;		
+		}
+
+		public UUID testId() {
+			return this.testId;		
+		} 
+
+		public TESTTYPE type() {
+			return this.type;
+		}
+
+	}
+
+	public static class TESTID {
+
+		private final TESTTYPE type;
+
+		private final UUID testId;
+
+		private final Class&lt;?&gt; testClass;
+
+		private final Method testMethod;
+
+		public PID (Class&lt;?&gt; testClass, Method testMethod, 
+					TESTTYPE type) {
+			this.testClass = testClass;
+			this.testMethod = testMethod;
+			this.testId = UUID.randomUUID(); 
+			this.type = type;		
+		}
+
+		public UUID testId() {
+			return this.testId;		
+		} 
+
+		public TESTTYPE type() {
+			return this.type;
+		}
+
+	}
+
+
+
+
+	public enum TESTTYPE {
+		TESTRUN,
+		TEST,
+		FUN_TEST,
+		UNIT_TEST,
+		PERF_TEST,
+		COMPONENT_TEST,;
+
+	}
+}
+</code></pre>
+<ul>
+<li>and now for the test a listener Interface</li>
+</ul>
+<pre><code class="language-Java">
+public interface TestEventListener extends ListenerBase {
+
+	void beforeAllEvent (TESTRUNID testId);
+
+	void afterAllEvent (TESTRUNID testId);
+
+	void beforeEachEvent (TESTID testId);
+
+	void afterEachEvent (TESTID testId);
+
+	void startTestEvent (TESTID testId);
+
+	void finishTestEvent (TESTID testId);
+/* and so on............. */
+
+}
+</code></pre>
+<p><strong>RESUME:</strong>
+This all is done in a way that we build up a registry for our listeners with the different listener types in the main thread and a listener of the specific type simply implements the listener interface for this type see above <strong><em>TestEventListener</em></strong> .</p>
+<p>Now we can write a fire event submitting an event to our test listner engine running in one ore more separate threads.</p>
+<h5>The Threading</h5>
+<p>Now it is well done that we like to have a look at threads in that place:</p>
+<p>One simple Thread:</p>
+<pre><code class="language-Java">
+public class AllINOne {
+
+	public static AllINOne instance = null;
+
+	private final Thread myThread;
+
+	public AllINOne() {
+		this.myThread = new Thread(
+		new Runnable {
+			public void run () {
+				/* something is done */
+			}
+		});
+	}
+
+	public Thread myThread() {		
+		return this.myThread; 
+	}
+
+	public static long startMe() {
+		if (instance != null) {
+			instance = new AllINOne();
+		}
+		instance.myThread().start();
+		return instance.myThread().getId(); 
+	}
+
+		
+	public static AllINOne instance() {
+		if (instance != null) {
+			instance = new AllINOne();
+		}		
+		return instance;
+	}
+
+	public static main(String[] args) {
+		AllINOne singleInst = AllINOne.instance();
+		Thread theThread = singleInst.myThread();
+		long tid = AllINOne.startMe();
+		theThread.join(); // do not stop until thread ends
+	}
+
+	
+}
+</code></pre>
+<h5>The channeling</h5>
+<p>At first a small definition of a ThreadLocal you will see</p>
+<pre><code class="language-Java">public class ThreadPipe {
+    // Thread local variable containing each thread's ID
+    private static final ThreadLocal&lt;PipeReader&gt; thePipeReader =
+         new ThreadLocal&lt;PipeReader&gt;() {
+             @Override protected PipeReader initialValue() {
+                 return new PipeReader();
+         }
+     };
+
+     // Returns the current thread's unique ID, assigning it if necessary
+     public static PipeReader get() {
+         return thePipeReader.get();
+     }
+ }
+</code></pre>
+<p>This PipeReader is used by the Thread to get Commands</p>
+<pre><code class="language-Java">
+
+public ChannelThread imnplements Runnable {
+
+	public final PipeWriter pWriter = new PipeWriter(); 
+
+	public ChannelThread() {}
+
+	public PipeWriter pWriter() {
+		return this.pWriter;
+	}
+	
+	public void run() {
+		PipeReader pReader = null;
+		try {
+			 pReader = ThreadPipe.get(); // get the pipe via threadLocal
+			pReader.connect(pWriter);
+			Integer readRes = pReader.read();
+			while (readRes != -1) {
+				/*process thing*/
+				readRes = pReader.read();
+			}
+		} finally {
+			if (pReader != null ) {
+				pReader.close();
+			}
+		}
+		
+	}
+
+}
+</code></pre>
+<p>More about threads and channels will follow in a later thoughts-report</p>
+<ul>
+<li>
+<p>Harald G.P. IT-Consulting / Project Support</p>
+</li>
+<li>
+<p>03.05.1966 Computer Sience since 1992</p>
+</li>
+<li>
+<p>© Harald Glab-Plhak (2024)</p>
+</li>
+</ul>
+
+</div>
+</html>
