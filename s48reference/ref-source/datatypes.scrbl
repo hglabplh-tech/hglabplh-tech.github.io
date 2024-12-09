@@ -1,9 +1,7 @@
 #lang scribble/doc
 @(require
    scribble/manual scribble/eval
-          (for-label lang/prim racket/gui/base                     
-                     (only-in racket/contract any/c)
-                     (only-in racket/class is-a?/c)))
+          (for-label scheme))
 
 
 @author[(author+email "Harald Glab-Plhak" "hglabplhak@gmail.com")]
@@ -315,6 +313,37 @@ Look if first char is greater or equal second char
 
 @;---------------------------------------------------------------
 @subsection[#:tag "strings"]{Strings}
+
+
+@defproc[(string ...) (string?)]{
+ define a string out of strings                         
+                         }
+  
+
+@defproc[(substring [str string?] [start integer?] [end integer?]) (string?)]{
+ The substring of @scheme[str] starting with @scheme[start] offset and ending @scheme[end] offset
+}
+  
+
+@defproc[(string-append ...) (string?)]{
+Concat one or more strings to one string
+
+}
+
+@defproc[(string-length [arg string?]) (integer?)]{
+                                                   }
+
+@defproc[(string-ref [str string?] [index integer?]) (char?)]{
+                                                   }
+
+
+@defproc[(string->list [arg string?]) (list?)]{
+                                               
+                                               }
+
+@defproc[(list->string [arg list?]) (string?)]{
+                                               
+                                               }
 
 
 

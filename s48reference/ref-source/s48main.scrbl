@@ -2,10 +2,9 @@
 
 @(require
    scribble-include-text
-   scribble/manual scribble/eval
-          (for-label lang/prim racket/gui/base                     
-                     (only-in racket/contract any/c)
-                     (only-in racket/class is-a?/c)))
+   scribble/manual scribble/eval        
+          (for-label scheme))             
+                     
 
 
 @title[#:style '(toc) #:tag "scheme48"]{Language Reference @italic{Scheme 48}}

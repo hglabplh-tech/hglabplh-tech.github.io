@@ -1,17 +1,20 @@
 #lang scribble/doc
 @(require
    scribble/manual scribble/eval
-          (for-label lang/prim lang/imageeq lang/posn racket/gui/base
+          (for-label lang/prim racket/gui/base                     
                      (only-in racket/contract any/c)
                      (only-in racket/class is-a?/c)))
 
-@title{Scheme 48 - Reference - Part II - Basics - Datatypes}
 
 @author[(author+email "Harald Glab-Plhak" "hglabplhak@gmail.com")]
 
+@; ------------------------------------------------------------
+@section[#:tag "basetypes_definitions"]{The Datatypes - primitives / base types}
+
+
 
 @; ------------------------------------------------------------
-@section[#:tag "basetypes"]{The Datatypes - Primitives}
+@section[#:tag "basetypes_functions"]{The Datatypes - functions}
 
 The basic datatypes like Integer , Boolean, Long, Float Double and the base functions
 
@@ -282,5 +285,36 @@ Same as @racket[assoc] with the difference that @racket[eq?] is used
 @defproc[(assv [v any/c] [l (listof pair?)]) (or/c pair? #f)]{
 Same as @racket[assoc] with the difference that @racket[eqv?] is used
  instead of @racket[equal?] 
-                                                       }
+
+}
+
+@defproc[(list? [thing any/c] ) (boolean?)]{
+Ask if thing is a list
+                    }
+
+
+@;---------------------------------------------------------------
+@subsection[#:tag "characters"]{Characters}
+
+@defproc[(char<? [first char?] [second char?]) (boolean?)]{
+Look if first char is smaller than second char
+                                                         }
+
+@defproc[(char>? [first char?] [second char?]) (boolean?)]{
+Look if first char is greater than second char
+                                                         }
+
+@defproc[(char<=? [first char?] [second char?]) (boolean?)]{
+Look if first char is smaller or equal second char
+                                                         }
+
+@defproc[(char>=? [first char?] [second char?]) (boolean?)]{
+Look if first char is greater or equal second char
+}
+
+
+@;---------------------------------------------------------------
+@subsection[#:tag "strings"]{Strings}
+
+
 
