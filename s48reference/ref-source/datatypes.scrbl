@@ -331,19 +331,77 @@ Concat one or more strings to one string
 }
 
 @defproc[(string-length [arg string?]) (integer?)]{
-                                                   }
+The length of @scheme[arg]
+}
 
 @defproc[(string-ref [str string?] [index integer?]) (char?)]{
-                                                   }
+The string reference of @scheme[str] at the index position @scheme[index]
+ the return is the char at that position
+}
 
 
 @defproc[(string->list [arg string?]) (list?)]{
-                                               
-                                               }
+The string @scheme[arg] is converted to a list of chars
+}
 
 @defproc[(list->string [arg list?]) (string?)]{
-                                               
-                                               }
+The list of chars @scheme[arg] is converted to a string
+}
+
+@defproc[(string-fill! [v string?] [x char?]) (unspecific)]{
+The string @scheme[v] is filled with the char @scheme[x]
+}
+
+@defproc[(string=? [str1 string?] [str2 string?]) (boolean?)]{
+Ask if the string @scheme[str1] is case sensitive equal to @scheme[str2]
+return @scheme[true] if it is or @scheme[false] if not
+}
+
+@defproc[(string<=? [str1 string?] [str2 string?]) (boolean?)]{
+Ask if the string @scheme[str1] is case sensitive smaller than or equal to @scheme[str2]
+return @scheme[true] if it is or @scheme[false] if not  
+}
+
+@defproc[(string>=? [str1 string?] [str2 string?]) (boolean?)]{
+Ask if the string @scheme[str1] is case sensitive greater than or equal to @scheme[str2]
+return @scheme[true] if it is or @scheme[false] if not  
+}
+
+@defproc[(string>? [str1 string?] [str2 string?]) (boolean?)]{
+Ask if the string @scheme[str1] is case sensitive greater than @scheme[str2]
+return @scheme[true] if it is or @scheme[false] if not  
+}
+
+@defproc[(string<? [str1 string?] [str2 string?]) (boolean?)]{
+Ask if the string @scheme[str1] is case sensitive smaller than @scheme[str2]
+return @scheme[true] if it is or @scheme[false] if not
+}
+
+@defproc[(string-ci=? [str1 string?] [str2 string?]) (boolean?)]{
+Ask if the string @scheme[str1] is case insensitive equal to @scheme[str2]
+return @scheme[true] if it is or @scheme[false] if not  
+}
+
+@defproc[(string-ci>=? [str1 string?] [str2 string?]) (boolean?)]{
+Ask if the string @scheme[str1] is case insensitive greater than or equal to @scheme[str2]
+return @scheme[true] if it is or @scheme[false] if not  
+}
+
+@defproc[(string-ci<=? [str1 string?] [str2 string?]) (boolean?)]{
+Ask if the string @scheme[str1] is case insensitive smaller than or equal to @scheme[str2]
+return @scheme[true] if it is or @scheme[false] if not  
+}
+
+@defproc[(string-ci<? [str1 string?] [str2 string?]) (boolean?)]{
+Ask if the string @scheme[str1] is case insensitive smaller than @scheme[str2]
+return @scheme[true] if it is or @scheme[false] if not  
+}
+
+@defproc[(string-ci>? [str1 string?] [str2 string?]) (boolean?)]{
+Ask if the string @scheme[str1] is case insensitive greater than @scheme[str2]
+return @scheme[true] if it is or @scheme[false] if not  
+}
+
 
 
 

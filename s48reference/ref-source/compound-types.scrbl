@@ -6,4 +6,6 @@
                      (only-in racket/class is-a?/c)))
 
 
+@;---------------------------------------------------------------
+@subsection[#:tag "vectors"]{Vectors}
 
