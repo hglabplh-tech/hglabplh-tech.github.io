@@ -1,4 +1,3 @@
-#lang scribble/doc
 @(require
    scribble/manual scribble/eval
           (for-label lang/prim lang/imageeq lang/posn racket/gui/base

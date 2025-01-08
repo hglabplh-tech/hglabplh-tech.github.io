@@ -5,7 +5,7 @@
    scribble/manual scribble/eval        
           (for-label scheme))             
                      
-
+@author[(author+email "Harald Glab-Plhak" "hglabplhak@gmail.com")
 
 @title[#:style '(toc) #:tag "scheme48"]{Language Reference @italic{Scheme 48}}
 
@@ -16,8 +16,11 @@ and the different API's
 @table-of-contents[]
 
 @include-text["./scheme48-base.scrbl"]
+@include-text["./lambda-expr.scrbl"]
 @include-text["./datatypes.scrbl"]
-@include-text["./io-functions.scrbl"]
 @include-text["./compound-types.scrbl"]
+@include-text["./control-features.scrbl"]
+@include-text["./io-functions.scrbl"]
+
 
 

@@ -1,4 +1,3 @@
-#lang scribble/doc
 @(require
    scribble/manual scribble/eval
           (for-label scheme))
