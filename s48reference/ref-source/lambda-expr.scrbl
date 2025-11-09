@@ -1,3 +1,4 @@
+#lang scribble/doc
 @(require
    scribble-include-text
    scribble/manual scribble/eval        

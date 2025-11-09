@@ -1,210 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-<div>
-<h3>My way of looking at code and data</h3>
-<p>The time I learned computer science I developed my own way to look at code, processing and data which is processed</p>
-<p>It started with the imperative way of looking at it. Dealing with languages like Pascal, C, PL/1, COBOL and REXX - (VM/CMS interpreter version) I started to look at the code as something manipulating a defined instance of data and I learned to know data structures and a kind of streams and blocks:</p>
-<h4>&quot;Streams&quot; and &quot;Blocks&quot;</h4>
-<p>The first stream I looked at was the stream like reading of files and the way of reading files as &quot;records&quot; (means fixd length blocks of 80 bytes / 72 bytes punch / reader format). Unlike the text files on UNIX this files had on the host no line delimiter like '\n'.
-But it is unstructured data in most cases text data which is &quot;structured&quot; by the processing of the data inside the code.</p>
-<h5>fixed length record data</h5>
-<p>with this fixed length record files there is a direct connection to the former formats of puncher and reader can be emulated.</p>
-<h5>vriable length record data</h5>
-<p>The next step is a variable
-Record length. Here the first 2 bytes tell the length.</p>
-<h4>How to structure one record</h4>
-<p>total 80 byte (F 80)</p>
-<h6>Positions:</h6>
-<ul>
-<li>0..19 name</li>
-<li>20..39 surname</li>
-<li>40..54 street</li>
-<li>55..74 city</li>
-<li>75..80 postal code</li>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2113.65">
+  <style type="text/css">
+    p.p2 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px Times; color: #000000; -webkit-text-stroke: #000000}
+    p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Courier; color: #000000; -webkit-text-stroke: #000000}
+    p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Courier; color: #000000; -webkit-text-stroke: #000000; min-height: 14.0px}
+    li.li2 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px Times; color: #000000; -webkit-text-stroke: #000000}
+    li.li6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; color: #000000; -webkit-text-stroke: #000000}
+    span.s1 {font-kerning: none}
+    span.s2 {-webkit-text-stroke: 0px #000000}
+    span.Apple-tab-span {white-space:pre}
+    ul.ul1 {list-style-type: disc}
+  </style>
+</head>
+<body>
+<h3 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 14.0px Times; color: #000000; -webkit-text-stroke: #000000"><span class="s1"><b>My way of looking at code and data</b></span></h3>
+<p class="p2"><span class="s1">The time I learned computer science I developed my own way to look at code, processing and data which is processed</span></p>
+<p class="p2"><span class="s1">It started with the imperative way of looking at it. Dealing with languages like Pascal, C, PL/1, COBOL and REXX - (VM/CMS interpreter version) I started to look at the code as something manipulating a defined instance of data and I learned to know data structures and a kind of streams and blocks:</span></p>
+<h4 style="margin: 0.0px 0.0px 16.0px 0.0px; font: 12.0px Times; color: #000000; -webkit-text-stroke: #000000"><span class="s1"><b>"Streams" and "Blocks"</b></span></h4>
+<p class="p2"><span class="s1">The first stream I looked at was the stream like reading of files and the way of reading files as "records" (means fixd length blocks of 80 bytes / 72 bytes punch / reader format). Unlike the text files on UNIX this files had on the host no line delimiter like '\n'. But it is unstructured data in most cases text data which is "structured" by the processing of the data inside the code.</span></p>
+<h5 style="margin: 0.0px 0.0px 16.6px 0.0px; font: 10.0px Times; color: #000000; -webkit-text-stroke: #000000"><span class="s1"><b>fixed length record data</b></span></h5>
+<p class="p2"><span class="s1">with this fixed length record files there is a direct connection to the former formats of puncher and reader can be emulated.</span></p>
+<h5 style="margin: 0.0px 0.0px 16.6px 0.0px; font: 10.0px Times; color: #000000; -webkit-text-stroke: #000000"><span class="s1"><b>vriable length record data</b></span></h5>
+<p class="p2"><span class="s1">The next step is a variable Record length. Here the first 2 bytes tell the length.</span></p>
+<h4 style="margin: 0.0px 0.0px 16.0px 0.0px; font: 12.0px Times; color: #000000; -webkit-text-stroke: #000000"><span class="s1"><b>How to structure one record</b></span></h4>
+<p class="p2"><span class="s1">total 80 byte (F 80)</span></p>
+<h6 style="margin: 0.0px 0.0px 21.0px 0.0px; font: 9.0px Times; color: #000000; -webkit-text-stroke: #000000"><span class="s1"><b>Positions:</b></span></h6>
+<ul class="ul1">
+  <li class="li6"><span class="s2"></span><span class="s1">0..19 name</span></li>
+  <li class="li6"><span class="s2"></span><span class="s1">20..39 surname</span></li>
+  <li class="li6"><span class="s2"></span><span class="s1">40..54 street</span></li>
+  <li class="li6"><span class="s2"></span><span class="s1">55..74 city</span></li>
+  <li class="li6"><span class="s2"></span><span class="s1">75..80 postal code</span></li>
 </ul>
-<p>You can imagine that the code to parse and structuring for writing the changed record is a bit complicated and it is sometimes annoying to code that way even if the &quot;structures&quot; get more complex comnpound data.</p>
-<h4>Structured Data</h4>
-<p>After that I learned that with the features of the programming languages data can really be structured. This can be done (I use as example language ANSI C) by a structure like
-This structures can also be defined as type.</p>
-<pre><code class="language-C">struct address {
-	char* name;
-	char* surname;
-	char* street;
-	char* city;
-	char* postal-code;
-}
-
-typedef struct _BILL {
-	int     rec_type;
-	long 	part_number;
-	char*	articel_name;
-	int 	count;
-	float   price;
-	double  total; 
-} BILL, PBILL*;
-
-</code></pre>
-<p>With this kind of data a program could be made better structured and more flixible it is much better to handle complex compund data this way.</p>
-<p>The next thing I learned was that by the language feature 'BASED' in PL/1 (union in C does nearly the same) it is possible to have variants of data comming in the same storage can be handled by simply add a record type and so there are more possibilities what kind of data can appear in the same place.</p>
-<p>Think about our BILL now we do that</p>
-<pre><code class="language-C">typedef struct _BILL_FORM_1 {
-	long 	part_number;
-	char*	articel_name;
-	int 	count;
-	float   price;
-	double  total; 
-} BILL_FORM_1, *P;
-
-typedef struct _BILL_FORM_2 {
-	long 	liter;
-	char*	articel_name;
-	int 	count;
-	float   price;
-	double  total; 
-} BILL_FORM_2;
-
-</code></pre>
-<p>and now there comes the trick : Lets think the first type is 1 and the second type is 2</p>
-<p>So we can do it like that (I found that faszinating):</p>
-<pre><code class="language-C">typedef union _BILL_DATA {
-		BILL_FORM_1 bill_t_1;
-		BILL_FORM_2 bill_t_2;
-} BILL_DATA;
-
-typedef struct _THE_BILL {
-	int bill_type;
-	BILL_DATA the_bill_data;
-} THE_BILL
-
-</code></pre>
-<p>Thinking in those structures opened a complete new world because the logic was more simple. For example when deciding which record we need:</p>
-<pre><code class="language-C">switch (rec_type) {
-	case 1:
-		/* do something with BILL_FORM_1 */
-		break;
-	case 2:
-		/* do something with BILL_FORM_2 */
-		break;
-	default:
-		printf(&quot;%s&quot;, &quot;error&quot;); 
-} 
-
-</code></pre>
-<p>The next thing opening a next step of thinking a logic by handling complex data started in the 1970:</p>
-<pre><code> :h1 id='intr'.Chapter 1:  Introduction
-   :p.GML supported hierarchical containers, such as
-   :ol.
-   :li.Ordered lists (like this one),
-   :li.Unordered lists, and
-   :li.Definition lists
-   :eol.
-   as well as simple structures.
-   :p.Markup minimization (later generalized and formalized in SGML),
-   allowed the end-tags to be omitted for the &quot;h1&quot; and &quot;p&quot; elements.
-</code></pre>
-<p>This <strong>GML</strong>(General Markup Language) mutated to <strong>SGML</strong> (Structured General Markup Langage):</p>
-<pre><code class="language-XML">&lt;lines&gt;
-	&lt;line&gt;first line&lt;/line&gt;
-	&lt;line&gt;second line&lt;/line&gt;
-&lt;/lines&gt;
-
-</code></pre>
-<p>Two standards were developed out of <strong>SGML</strong> -&gt; <strong><em>XML</em></strong> and <strong><em>HTML</em></strong> (the well known standards).</p>
-<p>With this method I thought ok now I can handle much more complex data with low effort for the languages are parsed not by the own program but there are parser libraries delivering a structured output like for <strong><em>XML</em></strong> <strong>DOM</strong> parser (<strong>DOM</strong> -&gt; Document Object Model)</p>
-<p>This data is very good for some kind of structured data</p>
-<p>The other thing I was excited about was relational storing data (<strong><em>DB2</em></strong> my first Relational Database).</p>
-<p>I think to explain the functionality of relational databases in that place is a bit to much.
-I only showed this examples because this opened my mind for a new kind of programming and processing data</p>
-<h4>Data and functionality:</h4>
-<p>At one point in my career coding and designing in <strong>ANSI C</strong> I came to the point where the logic was too complex to handle it straight in a conventional way so I thought by myself why not mixing data and functionality in a structure. This was possible by using function pointers</p>
-<pre><code class="language-C">typedef struct _MIX_FUN_DAT {
-	int a;
-	int b;
-	int (*add_pointer)(int,int);
-} MIX_FUN_DAT, PMIX_FUN_DAT*
-
-// Function definition
-int addition(int x, int y) {
-  return x + y;
-}
-
-int main () {
-	MIX_FUN_DAT my_struct;
-	my_struct.a = 7;
-	my_struct.b = 9;
-	my_struct.add_pointer = &amp;addition;
-	int result = (*my_struct.add_pointer)(my_struct.a, my_struct.b);
-	// result is 16
-}
-</code></pre>
-<p>Now what you see here is a very complicated way to add two integers but let us see what happens if:</p>
-<pre><code class="language-C">typedef struct _MIX_FUN_DAT {
-	_MIX_FUN_DAT *self;
-	int a;
-	int b;
-	int (*add)(_MIX_FUN_DAT *self);
-	void (*display_add_res)(_MIX_FUN_DAT *self);
-} MIX_FUN_DAT, PMIX_FUN_DAT*
-
-// function for add
-int addition(PMIX_FUN_DAT self) {
-  return (self-&gt;a + self-&gt;b);
-}
-
-// function for display
-void display_addition_res(PMIX_FUN_DAT self) {
-  int result = (*self-&gt;add)(self);
-  printf(&quot;The result is: %d\n&quot;, result);
-}
-
-
-
-int main () {
-	MIX_FUN_DAT my_struct;
-	my_struct.self = &amp;my_struct;
-	my_struct.a = 7;
-	my_struct.b = 9;
-	my_struct.add_pointer = &amp;addition;
-	(*my_struct.display_add_res)(my_struct.self);
-	int result = (*my_struct.add)(my_struct.self);
-	// result is 16
-}
-</code></pre>
-<p>Ok now you can think about what you assiciate with that code. For me it is nearly
-like a object</p>
-<p>And of course it is not far away from:</p>
-<pre><code class="language-C">
-typedef struct _FUN_AND_ENV {
-	_FUN_AND_ENV *self;
-	char** env; 
-	int (*get_at)(_FUN_AND_ENV *self, int);
-	char* (*concat)(_FUN_AND_ENV *self), int ,int);
-} FUN_AND_ENV, PFUN_AND_ENV*
-
-
-char* fun_get_at(PFUN_AND_ENV self, int index) {
-	return self-&gt;env[index];
-}
-
-char* fun_concat(PFUN_AND_ENV self, int first, int second) {
-	char* the_first = (*self-&gt;get_at)(first);
-	char* the_first = (*self-&gt;get_at)(second);
-	return strcat(the_first, the_second);
-}
-
-
-</code></pre>
-<p>And latest now it should be clear how flexible this kind of structuring can be used</p>
-<ul>
-<li>
-<p>Harald G.P. IT-Consulting / Project Support</p>
-</li>
-<li>
-<p>03.05.1966 Computer Sience since 1992</p>
-</li>
-<li>
-<p>© Harald Glab-Plhak (2024)</p>
-</li>
+<p class="p2"><span class="s1">You can imagine that the code to parse and structuring for writing the changed record is a bit complicated and it is sometimes annoying to code that way even if the "structures" get more complex comnpound data.</span></p>
+<h4 style="margin: 0.0px 0.0px 16.0px 0.0px; font: 12.0px Times; color: #000000; -webkit-text-stroke: #000000"><span class="s1"><b>Structured Data</b></span></h4>
+<p class="p2"><span class="s1">After that I learned that with the features of the programming languages data can really be structured. This can be done (I use as example language ANSI C) by a structure like This structures can also be defined as type.</span></p>
+<p class="p7"><span class="s1">struct address {</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>char* name;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>char* surname;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>char* street;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>char* city;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>char* postal-code;</span></p>
+<p class="p7"><span class="s1">}</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1">typedef struct _BILL {</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>int <span class="Apple-converted-space">    </span>rec_type;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>long <span class="Apple-tab-span">	</span>part_number;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>char*<span class="Apple-tab-span">	</span>articel_name;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>int <span class="Apple-tab-span">	</span>count;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>float <span class="Apple-converted-space">  </span>price;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>double<span class="Apple-converted-space">  </span>total;<span class="Apple-converted-space"> </span></span></p>
+<p class="p7"><span class="s1">} BILL, PBILL*;</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p2"><span class="s1">With this kind of data a program could be made better structured and more flixible it is much better to handle complex compund data this way.</span></p>
+<p class="p2"><span class="s1">The next thing I learned was that by the language feature 'BASED' in PL/1 (union in C does nearly the same) it is possible to have variants of data comming in the same storage can be handled by simply add a record type and so there are more possibilities what kind of data can appear in the same place.</span></p>
+<p class="p2"><span class="s1">Think about our BILL now we do that</span></p>
+<p class="p7"><span class="s1">typedef struct _BILL_FORM_1 {</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>long <span class="Apple-tab-span">	</span>part_number;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>char*<span class="Apple-tab-span">	</span>articel_name;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>int <span class="Apple-tab-span">	</span>count;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>float <span class="Apple-converted-space">  </span>price;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>double<span class="Apple-converted-space">  </span>total;<span class="Apple-converted-space"> </span></span></p>
+<p class="p7"><span class="s1">} BILL_FORM_1, *P;</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1">typedef struct _BILL_FORM_2 {</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>long <span class="Apple-tab-span">	</span>liter;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>char*<span class="Apple-tab-span">	</span>articel_name;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>int <span class="Apple-tab-span">	</span>count;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>float <span class="Apple-converted-space">  </span>price;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>double<span class="Apple-converted-space">  </span>total;<span class="Apple-converted-space"> </span></span></p>
+<p class="p7"><span class="s1">} BILL_FORM_2;</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p2"><span class="s1">and now there comes the trick : Lets think the first type is 1 and the second type is 2</span></p>
+<p class="p2"><span class="s1">So we can do it like that (I found that faszinating):</span></p>
+<p class="p7"><span class="s1">typedef union _BILL_DATA {</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>BILL_FORM_1 bill_t_1;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>BILL_FORM_2 bill_t_2;</span></p>
+<p class="p7"><span class="s1">} BILL_DATA;</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1">typedef struct _THE_BILL {</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>int bill_type;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>BILL_DATA the_bill_data;</span></p>
+<p class="p7"><span class="s1">} THE_BILL</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p2"><span class="s1">Thinking in those structures opened a complete new world because the logic was more simple. For example when deciding which record we need:</span></p>
+<p class="p7"><span class="s1">switch (rec_type) {</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>case 1:</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>/* do something with BILL_FORM_1 */</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>break;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>case 2:</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>/* do something with BILL_FORM_2 */</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>break;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>default:</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span><span class="Apple-tab-span">	</span>printf("%s", "error");<span class="Apple-converted-space"> </span></span></p>
+<p class="p7"><span class="s1">}<span class="Apple-converted-space"> </span></span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p2"><span class="s1">The next thing opening a next step of thinking a logic by handling complex data started in the 1970:</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space"> </span>:h1 id='intr'.Chapter 1:<span class="Apple-converted-space">  </span>Introduction</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">   </span>:p.GML supported hierarchical containers, such as</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">   </span>:ol.</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">   </span>:li.Ordered lists (like this one),</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">   </span>:li.Unordered lists, and</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">   </span>:li.Definition lists</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">   </span>:eol.</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">   </span>as well as simple structures.</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">   </span>:p.Markup minimization (later generalized and formalized in SGML),</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">   </span>allowed the end-tags to be omitted for the "h1" and "p" elements.</span></p>
+<p class="p2"><span class="s1">This <b>GML</b>(General Markup Language) mutated to <b>SGML</b> (Structured General Markup Langage):</span></p>
+<p class="p7"><span class="s1">&lt;lines&gt;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>&lt;line&gt;first line&lt;/line&gt;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>&lt;line&gt;second line&lt;/line&gt;</span></p>
+<p class="p7"><span class="s1">&lt;/lines&gt;</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p2"><span class="s1">Two standards were developed out of <b>SGML</b> -&gt; <b><i>XML</i></b> and <b><i>HTML</i></b> (the well known standards).</span></p>
+<p class="p2"><span class="s1">With this method I thought ok now I can handle much more complex data with low effort for the languages are parsed not by the own program but there are parser libraries delivering a structured output like for <b><i>XML</i></b> <b>DOM</b> parser (<b>DOM</b> -&gt; Document Object Model)</span></p>
+<p class="p2"><span class="s1">This data is very good for some kind of structured data</span></p>
+<p class="p2"><span class="s1">The other thing I was excited about was relational storing data (<b><i>DB2</i></b> my first Relational Database).</span></p>
+<p class="p2"><span class="s1">I think to explain the functionality of relational databases in that place is a bit to much. I only showed this examples because this opened my mind for a new kind of programming and processing data</span></p>
+<h4 style="margin: 0.0px 0.0px 16.0px 0.0px; font: 12.0px Times; color: #000000; -webkit-text-stroke: #000000"><span class="s1"><b>Data and functionality:</b></span></h4>
+<p class="p2"><span class="s1">At one point in my career coding and designing in <b>ANSI C</b> I came to the point where the logic was too complex to handle it straight in a conventional way so I thought by myself why not mixing data and functionality in a structure. This was possible by using function pointers</span></p>
+<p class="p7"><span class="s1">typedef struct _MIX_FUN_DAT {</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>int a;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>int b;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>int (*add_pointer)(int,int);</span></p>
+<p class="p7"><span class="s1">} MIX_FUN_DAT, PMIX_FUN_DAT*</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1">// Function definition</span></p>
+<p class="p7"><span class="s1">int addition(int x, int y) {</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">  </span>return x + y;</span></p>
+<p class="p7"><span class="s1">}</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1">int main () {</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>MIX_FUN_DAT my_struct;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>my_struct.a = 7;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>my_struct.b = 9;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>my_struct.add_pointer = &amp;addition;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>int result = (*my_struct.add_pointer)(my_struct.a, my_struct.b);</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>// result is 16</span></p>
+<p class="p7"><span class="s1">}</span></p>
+<p class="p2"><span class="s1">Now what you see here is a very complicated way to add two integers but let us see what happens if:</span></p>
+<p class="p7"><span class="s1">typedef struct _MIX_FUN_DAT {</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>_MIX_FUN_DAT *self;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>int a;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>int b;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>int (*add)(_MIX_FUN_DAT *self);</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>void (*display_add_res)(_MIX_FUN_DAT *self);</span></p>
+<p class="p7"><span class="s1">} MIX_FUN_DAT, PMIX_FUN_DAT*</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1">// function for add</span></p>
+<p class="p7"><span class="s1">int addition(PMIX_FUN_DAT self) {</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">  </span>return (self-&gt;a + self-&gt;b);</span></p>
+<p class="p7"><span class="s1">}</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1">// function for display</span></p>
+<p class="p7"><span class="s1">void display_addition_res(PMIX_FUN_DAT self) {</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">  </span>int result = (*self-&gt;add)(self);</span></p>
+<p class="p7"><span class="s1"><span class="Apple-converted-space">  </span>printf("The result is: %d\n", result);</span></p>
+<p class="p7"><span class="s1">}</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1">int main () {</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>MIX_FUN_DAT my_struct;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>my_struct.self = &amp;my_struct;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>my_struct.a = 7;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>my_struct.b = 9;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>my_struct.add_pointer = &amp;addition;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>(*my_struct.display_add_res)(my_struct.self);</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>int result = (*my_struct.add)(my_struct.self);</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>// result is 16</span></p>
+<p class="p7"><span class="s1">}</span></p>
+<p class="p2"><span class="s1">Ok now you can think about what you assiciate with that code. For me it is nearly like a object</span></p>
+<p class="p2"><span class="s1">And of course it is not far away from:</span></p>
+<p class="p7"><span class="s1">typedef struct _FUN_AND_ENV {</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>_FUN_AND_ENV *self;</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>char** env;<span class="Apple-converted-space"> </span></span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>int (*get_at)(_FUN_AND_ENV *self, int);</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>char* (*concat)(_FUN_AND_ENV *self), int ,int);</span></p>
+<p class="p7"><span class="s1">} FUN_AND_ENV, PFUN_AND_ENV*</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1">char* fun_get_at(PFUN_AND_ENV self, int index) {</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>return self-&gt;env[index];</span></p>
+<p class="p7"><span class="s1">}</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p7"><span class="s1">char* fun_concat(PFUN_AND_ENV self, int first, int second) {</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>char* the_first = (*self-&gt;get_at)(first);</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>char* the_first = (*self-&gt;get_at)(second);</span></p>
+<p class="p7"><span class="s1"><span class="Apple-tab-span">	</span>return strcat(the_first, the_second);</span></p>
+<p class="p7"><span class="s1">}</span></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p8"><span class="s1"></span><br></p>
+<p class="p2"><span class="s1">And latest now it should be clear how flexible this kind of structuring can be used</span></p>
+<ul class="ul1">
+  <li class="li2"><span class="s2"></span><span class="s1">03.05.1966 Computer Sience since 1992<br>
+</span></li>
+  <li class="li2"><span class="s2"></span><span class="s1">Â© Harald Glab-Plhak (2024)<br>
+</span></li>
 </ul>
-
-</div>
+</body>
 </html>

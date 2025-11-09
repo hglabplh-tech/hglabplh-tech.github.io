@@ -5,13 +5,13 @@
    scribble/manual scribble/eval        
           (for-label scheme))             
                      
-@author[(author+email "Harald Glab-Plhak" "hglabplhak@gmail.com")
+@author[(author+email "Harald Glab-Plhak" "hglabplhak@gmail.com")]
 
 @title[#:style '(toc) #:tag "scheme48"]{Language Reference @italic{Scheme 48}}
 
 Note: This reference is to have a complete overview of Scheme 48 it's base types, functionality
 and the different API's
-@italic{@link["http://www.s48.org"]{Scheme48 homepage / sources, documentation, links}}.
+@italic{@link["http://www.s48.org"]{Scheme48 homepage / sources, documentation, links}}
 
 @table-of-contents[]
 
@@ -21,6 +21,8 @@ and the different API's
 @include-text["./compound-types.scrbl"]
 @include-text["./control-features.scrbl"]
 @include-text["./io-functions.scrbl"]
+@include-text["./IO.scrbl"]
+@include-text["./R6RS-Vector.scrbl"]
 
 
 
