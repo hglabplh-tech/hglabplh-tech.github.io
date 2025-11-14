@@ -288,7 +288,7 @@ public ChannelThread imnplements Runnable {
 
 More about threads and channels will follow in a later thoughts-report
 
-- Harald G.P. IT-Consulting / Project Support
+- Harald Glab-Plhak
 - 03.05.1966 Computer Sience since 1992
 
-- &copy; Harald Glab-Plhak (2024)
+- &copy; Harald Glab-Plhak (2024, 2025)

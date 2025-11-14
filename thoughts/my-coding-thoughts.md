@@ -9,14 +9,14 @@ It started with the imperative way of looking at it. Dealing with languages like
 
 #### "Streams" and "Blocks"
 
-The first stream I looked at was the stream like reading of files and the way of reading files as "records" (means fixd length blocks of 80 bytes / 72 bytes punch / reader format). Unlike the text files on UNIX this files had on the host no line delimiter like '\n'.
+The first stream I looked at was the stream like reading of files and the way of reading files as "records" (means fixed length blocks of 80 bytes / 72 bytes punch / reader format). Unlike the text files on UNIX this files had on the host no line delimiter like '\n'.
 But it is unstructured data in most cases text data which is "structured" by the processing of the data inside the code.
 
 ##### fixed length record data
 
 with this fixed length record files there is a direct connection to the former formats of puncher and reader can be emulated. 
 
-##### vriable length record data
+##### variable length record data
 The next step is a variable
 Record length. Here the first 2 bytes tell the length.
 
@@ -30,7 +30,7 @@ total 80 byte (F 80)
 - 55..74 city
 - 75..80 postal code
 
-You can imagine that the code to parse and structuring for writing the changed record is a bit complicated and it is sometimes annoying to code that way even if the "structures" get more complex comnpound data.
+You can imagine that the code to parse and structuring for writing the changed record is a bit complicated and it is sometimes annoying to code that way even if the "structures" get more complex compound data.
 
 
 #### Structured Data 
@@ -128,7 +128,7 @@ The next thing opening a next step of thinking a logic by handling complex data 
    :li.Definition lists
    :eol.
    as well as simple structures.
-   :p.Markup minimization (later generalized and formalized in SGML),
+   :p.Markup minimisation (later generalised and formalised in SGML),
    allowed the end-tags to be omitted for the "h1" and "p" elements.
 ```
 
@@ -216,7 +216,7 @@ int main () {
 }
 ````
 
-Ok now you can think about what you assiciate with that code. For me it is nearly 
+Ok now you can think about what you associate with that code. For me it is nearly 
 like a object
 
 And of course it is not far away from:
@@ -244,13 +244,16 @@ char* fun_concat(PFUN_AND_ENV self, int first, int second) {
 
 ```
 
-And latest now it should be clear how flexible this kind of structuring can be used
+And at last now it should be clear how flexible this kind of structuring can be used.
+
+#### The way it went
+Ok I talked about how data were handled in former times. By structuring also code was structured in the same way with Nassi / Schneidermann. If you try to do that today you will fail because at the one hand we have a very great amount of data and we have much more complex code. So also the view has changed. There are things like streaming libraries in Java / Python / C# and the structure of the data is often defined by data 'structures' like __JSON__(**J**ava **S**cript **O**bject **N**otation) or __XML__ (**E**xtended **M**arkup **L**anguage). But t is also often the case that we have to do some fulltext search in RTF, WORD, PDF, or other formats. Here libraries like Hadoop(Apache) take place. This tools search in an 'intelligent' way lke with backtracking Thesaurus, parsing PDF fuzzy match and/or KI.  
 
 
-- Harald G.P. IT-Consulting / Project Support
-- 03.05.1966 Computer Sience since 1992
+- Harald Glab-Plhak
+- 03.05.1966 Computer Science since 1992
 
-- &copy; Harald Glab-Plhak (2024)
+- &copy; Harald Glab-Plhak (2024, 2025)
 
 
 
