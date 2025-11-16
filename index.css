@@ -27,7 +27,6 @@
   width: 100%;
   margin-top: 0.5em;
   text-align: left;
-  background-color: #ECF5F5;
 }
 
 .inherited td {
@@ -37,27 +36,40 @@
   padding-right: 0.2em;
 }
 
-.inherited h1 {
+.h1_span {
+  background-color: blue;
+  font-size: 100%
   font-style: italic;
   padding-left: 1em;
   text-indent: -0.8em;
   padding-right: 0.2em;
 }
 
-.inherited h2 {
+.h2_span {
+  background-color: green;
   font-style: italic;
   padding-left: 1em;
   text-indent: -0.8em;
   padding-right: 0.2em;
 }
 
-.inherited h3 {
+.h3_span {
+  background-color: green;
   font-style: italic;
   padding-left: 1em;
   text-indent: -0.8em;
   padding-right: 0.2em;
   
-}.inheritedlbl {
+}
+.h4_span {
+  background-color: cyan;
+  font-style: italic;
+  padding-left: 1em;
+  text-indent: -0.8em;
+  padding-right: 0.2em;
+}
+
+.inheritedlbl {
   font-style: italic;
 }
 
