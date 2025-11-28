@@ -1,2 +1,8 @@
 io.github.hglabplh_tech.reflect.clojure.api.annotations
+io.github.hglabplh_tech.reflect.clojure.api.app_exam
+io.github.hglabplh_tech.reflect.clojure.api.example
+io.github.hglabplh_tech.reflect.clojure.api.example.annot_rec
+io.github.hglabplh_tech.reflect.clojure.api.example.lambda
+io.github.hglabplh_tech.reflect.clojure.api.example.special
 io.github.hglabplh_tech.reflect.clojure.api.utils
+io.github.hglabplh_tech.tests.framework.annots
