@@ -1,0 +1,121 @@
+# Features
+
+## Current Features
+
+- Python package structure using `pyproject.toml`.
+- Command-line compiler entry point via `python -m pl1compinpy`.
+- Generated API reference for all Python modules, classes, functions, and methods.
+- Layered package organization:
+  - `core` for AST and compiler orchestration
+  - `frontend` for keywords, lexing, and parsing
+  - `runtime` for calling-convention normalization
+  - `codegen` for assembly text, executable lowering, and binary containers
+- PL/1 lexer with contextual keyword metadata.
+- PL/1 parser producing an AST for assignments, declarations, calls, procedures, labels, `DO` groups, and `IF/THEN/ELSE`.
+- Parser support for `DO WHILE`, post-test `DO ... UNTIL`, and `SELECT`/`WHEN`/`OTHERWISE`.
+- PL/I-style expression precedence for power, unary operators, multiplication/division, addition/subtraction, concatenation, comparison, logical AND, and logical OR.
+- Keyword catalog covering PL/1 statements, declaration attributes, storage attributes, I/O words, conditions, and preprocessor/listing words.
+- Python-like text emitter for early compiler validation.
+- Python source output backend.
+- JVM bytecode-style output backend.
+- JVM `.class` file output targeting Java 17 classfile major version 61.
+- .NET ILAsm-compatible CIL output backend.
+- .NET executable emission through ILAsm when the Microsoft tool is installed.
+- Assembly text emitters for:
+  - `x586-windows`
+  - `x586-macos`
+  - `x86_64-windows`
+  - `arm64-macos`
+  - `arm64-windows`
+- Executable pipeline:
+  - source
+  - lexer
+  - parser
+  - AST
+  - executable mnemonics
+  - machine code
+  - executable container
+- Runtime calling convention:
+  - local variables allocated in stack frames
+  - parameters pushed right to left
+  - call by reference
+  - call by name normalized to sorted call by reference
+  - dynamic function table for user procedures
+  - static runtime function table for runtime functions, I/O, allocation, VSAM, TCP/IP, SSL, and TLS helpers
+  - call validation against function parameter and return descriptions
+- Runtime storage and I/O:
+  - heap allocation blocks
+  - heap-backed arrays
+  - `FLOAT` declarations
+  - `PICTURE`/`PIC` pattern metadata and runtime formatting/parsing
+  - fixed decimal and float conversion to/from picture-formatted text
+  - `POINTER` variables
+  - `BASED(pointer)` record storage bound to dedicated pointer locators
+  - calculation engine with a typed numeric tower, casts, and expression evaluation
+  - strings stored as two-byte length plus payload
+  - PL/I-style file declarations
+  - PL/I-style `OPEN`, `READ`, `WRITE`, and `CLOSE` file statements
+  - Unix-style stream files
+  - fixed-length `RECFM(F)` records
+  - variable-length `RECFM(V)` records with a two-byte length prefix
+  - text and binary record payloads
+  - primitive TCP socket runtime with SSL/TLS descriptor support
+  - file-like socket stream runtime for easier payload reads/writes
+  - generic dispatch by argument type with lambda-backed alternatives
+  - VSAM-style catalog/data components for KSDS, ESDS, RRDS, and LDS
+  - VSAM `OPEN`, `WRITE`, `READ`, and `CLOSE` runtime dispatch for KSDS, ESDS, RRDS, and LDS
+- Binary/container writers for:
+  - `pe32-x586-windows`
+  - `pe64-x86_64-windows`
+  - `elf64-x86_64`
+  - `elf64-aarch64`
+  - `macho64-x86_64-macos`
+  - `macho64-arm64-macos`
+- Public linker facade classes for PE, ELF, and Mach-O executable containers.
+- C-style runtime linkage plans for PE, ELF, Mach-O, JVM, and .NET targets.
+- Native runtime startup/shutdown symbol references plus embedded runtime link manifests.
+- Managed runtime references for JVM classpath and .NET assembly linkage.
+- Unit tests for lexer, parser, compiler output, assembly output, and binary signatures.
+- Packaged PL/I builtin source inclusion with a first `SUBSTR` builtin.
+- Static PL/I builtin function table entries that require `DCL name BUILTIN;` before use.
+
+## Supported PL/1 Subset
+
+- Integer variable declarations.
+- Floating-point declarations.
+- Picture declarations such as `DCL AMOUNT PIC'ZZZ9.99';`.
+- Array declarations such as `DCL A(10) FIXED BIN(31);`.
+- Pointer and based declarations such as `DCL P POINTER; DCL REC BASED(P);`.
+- Integer assignments.
+- Arithmetic with `+`, `-`, `*`, and `/`.
+- Power, concatenation, comparison, unary, and logical expression evaluation through the calculation engine.
+- Procedure calls.
+- Function calls resolved and checked through runtime and dynamic function tables.
+- Basic output through `CALL DISPLAY(...)`, `CALL PRINT(...)`, and basic `PUT LIST(...)`.
+- Record I/O statements using forms such as `OPEN FILE(F);`, `READ FILE(F) INTO(BUF);`, `WRITE FILE(F) FROM(BUF);`, and `CLOSE FILE(F);`.
+- Primitive runtime socket I/O for plain TCP, SSL, and TLS sockets.
+- File-like socket payload I/O with Unix-style, `RECFM(F)`, and `RECFM(V)` framing.
+- Procedure calls with by-reference and by-name normalization.
+- File declarations using `FILE`, `RECORD`, `INPUT`, `OUTPUT`, `ENVIRONMENT(RECFM(...), LRECL(...), PATH(...))`, `TEXT`, and `BINARY`.
+- Generic declarations using `GENERIC(... WHEN(...))`.
+- VSAM declarations using `ENVIRONMENT(VSAM(...), KEYOFFSET(...), KEYLENGTH(...))`.
+- VSAM I/O statements using `OPEN FILE(...)`, `WRITE FILE(...) FROM(...)`, `READ FILE(...) KEY(...) INTO(...)`, ESDS `RBA(...)`, RRDS `RRN(...)`, LDS `RBA(...) LENGTH(...)`, and `CLOSE FILE(...)`.
+- Runtime `SUBSTR` behavior using one-based positions, enabled in source with `DCL SUBSTR BUILTIN;`.
+- `PROC OPTIONS(MAIN)` program entry point.
+- `PROC RECURSIVE` metadata and ordinary recursive-call continuation semantics.
+- `PROC RETURNS(...)` function return metadata.
+- `IF/THEN/ELSE` comparisons using `=`, `^=`, `<>`, `<`, `<=`, `>`, and `>=`.
+- `DO WHILE` and post-test `DO ... UNTIL` groups.
+- `SELECT` with `WHEN` and `OTHERWISE`.
+- Labels and simple procedure bodies.
+- Simple `DO` groups.
+
+## Planned Features
+
+- Full declaration attribute validation.
+- Complete PL/1 expression precedence and type semantics.
+- Broader I/O support beyond starter console output.
+- Complete platform runtime/linker integration for generated binaries.
+- More complete x86_64 and ARM64 instruction encoders.
+- Symbol tables, scopes, diagnostics, and semantic analysis.
+- Integration tests that execute generated binaries on supported platforms.
