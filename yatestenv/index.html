@@ -1,0 +1,441 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+   <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title>The hglabplh_tech main page </title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.6">
+  <style type="text/css">
+    p.p3 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px Times; color: #0000e9; -webkit-text-stroke: #0000e3}
+    p.p4 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000}
+    p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; color: #0000e9; -webkit-text-stroke: #0000e3}
+    p.p6 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000; min-height: 14.0px}
+    p.p8 {margin: 0.0px 0.0px 15.9px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000}
+    p.p9 {margin: 0.0px 0.0px 15.9px 0.0px; font: 12.0px Times; color: #0000e9; -webkit-text-stroke: #0000e9}
+    p.p10 {margin: 0.0px 0.0px 15.9px 0.0px; font: 12.0px Times; color: #0000e9; -webkit-text-stroke: #0000e3}
+    p.p11 {margin: 0.0px 0.0px 15.9px 0.0px; font: 12.0px Times; color: #0000e9; -webkit-text-stroke: #000000}
+    p.p12 {margin: 0.0px 0.0px 15.8px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000}
+    p.p13 {margin: 0.0px 0.0px 15.8px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000; min-height: 14.0px}
+    li.li4 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000}
+    span.s1 {font-kerning: none}
+    span.s2 {text-decoration: underline ; font-kerning: none}
+    span.s3 {text-decoration: underline ; font-kerning: none; color: #0c43ff; background-color: rgba(12, 67, 255, 0.15); -webkit-text-stroke: 0px #0c43ff}
+    span.s4 {text-decoration: underline ; font-kerning: none; -webkit-text-stroke: 0px #000000}
+    span.s5 {text-decoration: underline ; font-kerning: none; color: #0000e9}
+    span.s6 {font-kerning: none; -webkit-text-stroke: 0px #000000}
+    span.s7 {font: 12.0px Times; font-kerning: none}
+    span.s8 {-webkit-text-stroke: 0px #000000}
+    ul.ul1 {list-style-type: disc}
+  </style>
+</head>
+<body>
+<p>YATestEnvironment is a mixed Clojure and Java test-engineering project. It brings together reflection utilities, generated test-data pipelines, function spying and mocking, annotation helpers, and early code-generation experiments for Java/Clojure test automation.</p>
+<p>The project can be used as a library and as a research/workbench codebase. Some areas are mature enough for automated tests, while others are intentionally marked as foundations or experiments.</p>
+<p>Here the Link to the project itself</p>
+<p class="p3"><span class="s2"><a href="https://github.com/hglabplh-tech/YATestEnvironment">The YATestEnvironment project on GitHub</a></span></p>
+<h2>Status Legend</h2>
+<ul>
+<li><strong>Available</strong>: implemented and covered by smoke or unit tests in this repository.</li>
+<li><strong>In progress</strong>: implemented enough to use as a foundation, but the API or behavior may still change.</li>
+<li><strong>Experimental</strong>: research-oriented code, prototypes, or partial implementations.</li>
+</ul>
+<h2>What It Provides</h2>
+<h3>Available</h3>
+<ul>
+<li>Java reflection helpers for classes, constructors, methods, fields, annotations, generic types, modifiers, and type attributes.</li>
+<li>Java annotation inspection and conversion into Clojure data.</li>
+<li>Reflection-to-Clojure-data conversion for class definitions, class bodies, constructors, fields, methods, enum data, record data, lambda-related structures, and switch-related structures.</li>
+<li>Clojure function metadata reading, including Active Data/realm schema extraction.</li>
+<li>Clojure function spying and mocking helpers with metadata tracking and call-flow collection.</li>
+<li>Generated test-data pipeline for Clojure functions and reflected Java methods.</li>
+<li>Payload generation for JSON, XML, CSV, text, printed Clojure data, and compact PDF-style payloads.</li>
+<li>Artifact-oriented test-data Player that reads EDN-style jobs and produces TXT, PDF, DOCX, JPEG, TIFF where supported by ImageIO, and relational EDN rows.</li>
+<li>Artifact storage backends for memory and filesystem output.</li>
+<li>SQLite persistence for generated analysis and generated payloads.</li>
+<li>Custom Java test annotation <code>@YATest</code> and test category enum.</li>
+<li>Leiningen, Codox, Javadoc, source classifier, and javadoc classifier project configuration.</li>
+</ul>
+<h3>In Progress</h3>
+<ul>
+<li>Hook-based Java reflection code generation for JSON, XML, YAML, and Java-like output.</li>
+<li>PostgreSQL artifact storage. The implementation is wired through JDBC, but it requires the PostgreSQL JDBC driver on the runtime classpath and a reachable database.</li>
+<li>Python module inspection through JEP and a bundled Python inspector script.</li>
+<li>Static namespace/code analysis for Clojure namespaces.</li>
+<li>Java special-form analysis for lambdas, switch constructs, enums, and records. Enum and record paths are more concrete; lambda and switch inspection still need hardening.</li>
+</ul>
+<h3>Experimental</h3>
+<ul>
+<li>Hygienic macro-system experiments inspired by syntax objects and syntax-case style expansion.</li>
+<li>Agda theory notes.</li>
+<li>Research documentation around entropy-oriented testing and broader testing strategy.</li>
+<li>Legacy namespace compatibility between <code>reflect.java.*</code>, <code>reflect.clojure.*</code>, and newer <code>reflect.code.java.*</code> areas.</li>
+</ul>
+<h2>Project Layout</h2>
+<ul>
+<li><code>src/main/clojure/io/github/hglabplh_tech/reflect</code>: Clojure wrappers and data conversion around Java reflection and code generation.</li>
+<li><code>src/main/clojure/io/github/hglabplh_tech/test/suite</code>: spying, mocking, generated test data, static analysis, and macro experiments.</li>
+<li><code>src/main/java/io/github/hglabplh_tech/reflect</code>: Java reflection utility classes used by the Clojure API.</li>
+<li><code>src/main/java/io/github/hglabplh_tech/tests/framework/annots</code>: custom Java test annotation support.</li>
+<li><code>src/main/java/io/github/hglabplh_tech/python</code>: Java bridge for Python inspection.</li>
+<li><code>src/main/resources</code>: XML schema and Python inspector resources.</li>
+<li><code>src/test/clojure</code> and <code>src/test/java</code>: Clojure and Java fixtures plus tests.</li>
+<li><code>docs</code>: testing-method and project design notes.</li>
+<li><code>refl_comp_gen</code>: notes for reflection compilation and generation.</li>
+</ul>
+<h2>Requirements</h2>
+<ul>
+<li>Java 17.</li>
+<li>Leiningen.</li>
+<li>Clojure dependencies are resolved through <code>project.clj</code>.</li>
+<li>Optional: PostgreSQL JDBC driver and a PostgreSQL database when using the PostgreSQL artifact storage backend.</li>
+<li>Optional: working Python/JEP runtime when using Python inspection.</li>
+</ul>
+<h2>Build and Test</h2>
+<p>Run the Clojure test suite:</p>
+<pre><code class="language-sh">lein test
+</code></pre>
+<p>Run the combined alias for Clojure tests, Java test compilation, Codox, and Javadoc generation:</p>
+<pre><code class="language-sh">lein all-tests
+</code></pre>
+<p>Build source and javadoc classifiers through the configured Leiningen tasks:</p>
+<pre><code class="language-sh">lein jar
+</code></pre>
+<h2>Artifact Test-Data Player</h2>
+<p>The artifact Player lives under:</p>
+<pre><code class="language-clojure">io.github.hglabplh_tech.test.suite.datagen.artifact.player
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-clojure">(require '[io.github.hglabplh_tech.test.suite.datagen.artifact.player :as player])
+
+(player/run!
+ {:defaults {:seed 42}
+  :storage {:type :file
+            :config {:base-dir &quot;target/generated-test-artifacts&quot;}}
+  :jobs [{:format :txt
+          :count 2
+          :hierarchy {:project &quot;atlas&quot;
+                      :feature &quot;document-import&quot;
+                      :subfeature &quot;plain-text&quot;}}
+         {:format :relational
+          :count 1
+          :hierarchy {:project &quot;customer-service&quot;
+                      :class &quot;CustomerRepository&quot;
+                      :method &quot;findActiveCustomers&quot;}}]})
+</code></pre>
+<p>A sample EDN configuration is available at:</p>
+<pre><code class="language-text">src/test/resources/testdatagen/generator.edn
+</code></pre>
+<h2>Generated Analysis Pipeline</h2>
+<p>The generated test-data pipeline can analyze Clojure namespaces and Java classes, generate parameter samples, render payloads, and persist the result to SQLite:</p>
+<pre><code class="language-clojure">(require '[io.github.hglabplh_tech.test.suite.datagen.pipeline :as pipeline])
+
+(pipeline/analyze-files
+ {:namespaces ['some.project.ns]
+  :java-classes [&quot;java.lang.String&quot;]
+  :db-path &quot;target/test-data/generated-test-data.sqlite&quot;})
+</code></pre>
+<p>Java method execution is not automatic in this pipeline yet because it needs a concrete instance or static invocation target.</p>
+<h2>Documentation</h2>
+<ul>
+<li><code>FEATURES.md</code>: detailed feature inventory with completion status.</li>
+<li><code>docs/ClojureTestingFrame.md</code>: Clojure testing, mocking, spying, and macro notes.</li>
+<li><code>docs/Test-Methods.md</code>: testing-method overview.</li>
+<li><code>docs/TestingAgainstEntropy.md</code>: entropy-oriented testing ideas.</li>
+<li><code>docs/ClojureDocu.md</code>: Clojure documentation notes.</li>
+<li><code>refl_comp_gen/README.md</code>: reflection compilation and generation notes.</li>
+</ul>
+<h2>License</h2>
+<p>YATestEnvironment is licensed under the MIT License.</p>
+
+<h1>Funding &amp; Sponsorship</h1>
+<h2>Principle</h2>
+<p>This is a free and open-source learning, research, and engineering project. Funding must not turn access to the software, core documentation, or reference implementations into a paid product.</p>
+<p>Sponsorship is welcome when it helps make sustainable work possible. Its intended purpose is modest and practical: reasonable compensation for contributor time, development/test hardware, infrastructure, documentation, testing, security review, research, student/community work and unavoidable project expenses.</p>
+<p>The <strong>core reference implementation must remain fully usable without proprietary software, paid APIs, subscriptions or commercial licences</strong>. Paid specialist tools may be used during development or validation, but must never become mandatory runtime dependencies.</p>
+<h2>What sponsorship does not buy</h2>
+<p>Funding does not entitle recipients to exclusive core features, ownership of community work, authority to weaken privacy/security requirements, hidden product placement, or control over technical decisions, merely because money was provided. Sponsors may fund work and participate in open technical discussion; architectural decisions remain subject to normal project review.</p>
+<h2>Transparency and proportionality</h2>
+<p>Where practical, material sponsorship should identify its purpose, such as infrastructure, hardware, contributor time, security review, documentation, or a defined research topic. The intention is <strong>cost and effort support, not profit maximization</strong>.</p>
+<h2>Suggested sponsor invitation</h2>
+<blockquote>
+<p>This project is developed as free and open-source software for learning, research and practical enterprise use. Contributions of code, documentation, testing and review are as valuable as financial support.</p>
+<p>Sponsorship is optional. Where organizations or individuals choose to support the project financially, funds are intended primarily to cover project expenses and to give contributors some protected time for maintenance, research, documentation, testing, and implementation.</p>
+<p>Sponsorship does not purchase exclusive features or control over the project. The reference implementation remains free, self-hostable, and accessible to students, researchers, individual developers, and organizations.</p>
+<p>If the project's work is useful to you or your organization and you would like to help sustain it, modest sponsorship is welcome. Just as importantly, we welcome technical collaboration, review, teaching use, research cooperation, and contributions upstream to the open-source projects on which this middleware builds.</p>
+</blockquote>
+<h2>Collaboration before competition</h2>
+<p>The project prefers integration and upstream collaboration over rebuilding mature open-source infrastructure. Sponsored work may therefore include contributions to dependencies or joint work with their communities.</p>
+<h1>Features</h1>
+<p>YATestEnvironment is a Clojure and Java test automation environment. It combines reflection APIs, function metadata analysis, generated test-data pipelines, spying and mocking utilities, and early code-generation research.</p>
+<h2>Status Legend</h2>
+<ul>
+<li><strong>Available</strong>: implemented and exercised by repository tests or smoke tests.</li>
+<li><strong>In progress</strong>: wired into the project, but still needs API hardening, dependency activation, or broader test coverage.</li>
+<li><strong>Experimental</strong>: research/prototype code that should not yet be treated as a stable public API.</li>
+</ul>
+<h2>Core Purpose</h2>
+<p><strong>Available</strong></p>
+<ul>
+<li>Provides reusable building blocks for automated tests.</li>
+<li>Supports generated test data from Clojure function metadata and Java reflection data.</li>
+<li>Helps inspect Java classes, constructors, methods, fields, annotations, generic types, modifiers, and selected special language forms.</li>
+<li>Provides Clojure-focused spying and mocking utilities for unit-test support.</li>
+<li>Includes documentation for unit testing, functional testing, performance testing, test-driven development, and entropy-oriented test design.</li>
+</ul>
+<h2>Build and Runtime</h2>
+<p><strong>Available</strong></p>
+<ul>
+<li>Leiningen project published as <code>org.clojars.hglabplh/YATestEnvironment</code>.</li>
+<li>Uses Clojure 1.12.3.</li>
+<li>Compiles Java sources with Java 17 source and target settings.</li>
+<li>Uses Ahead-of-Time compilation for project namespaces.</li>
+<li>Integrates dependencies for Active Data, Active Clojure, Reflections, JSON handling, Cheshire, JUnit Jupiter, Codox, Javadoc, and JEP-based Python inspection.</li>
+<li>Provides aliases for combined Clojure tests, Java test compilation, Codox, and Javadoc workflows.</li>
+<li>Configures source, Java source, test, and resource paths for mixed Clojure/Java development.</li>
+<li>Provides source and javadoc classifier configuration.</li>
+</ul>
+<h2>Java Test Annotations</h2>
+<p><strong>Available</strong></p>
+<ul>
+<li>Defines a custom <code>@YATest</code> annotation for test methods and annotation types.</li>
+<li>Marks <code>@YATest</code> with JUnit Platform <code>@Testable</code>.</li>
+<li>Stores test metadata including category, test name, and implementation date.</li>
+<li>Provides test categories for unit, functional, smoke, black-box, and white-box tests.</li>
+</ul>
+<h2>Java Reflection API</h2>
+<p><strong>Available</strong></p>
+<ul>
+<li>Loads classes by canonical class name or existing <code>Class</code> object.</li>
+<li>Finds classes from package scanning.</li>
+<li>Retrieves constructors, public constructors, methods, public methods, fields, public fields, subclasses, public subclasses, annotations, interfaces, generic interfaces, superclasses, generic superclasses, enclosing classes, enclosing methods, and enclosing constructors.</li>
+<li>Retrieves members by name where supported.</li>
+<li>Supports annotation lookup by annotation type.</li>
+<li>Exposes direct access to the underlying reflected <code>Class</code>.</li>
+<li>Provides Clojure wrappers around Java utility classes for reflection operations.</li>
+</ul>
+<h2>Member and Type Inspection</h2>
+<p><strong>Available</strong></p>
+<ul>
+<li>Inspects constructor names, parameter counts, parameter types, generic parameter types, exception types, generic exception types, modifiers, and declaring classes.</li>
+<li>Inspects method names, parameter counts, parameter types, generic parameter types, return types, generic return types, exception types, generic exception types, modifiers, and declaring classes.</li>
+<li>Inspects field names, field types, field modifiers, generic field types, and field annotations.</li>
+<li>Detects type/member characteristics such as annotation, anonymous class, array, enum, interface, local class, member class, primitive type, sealed type, synthetic item, record, varargs, default method, bridge method, enum constant, and synthetic field.</li>
+<li>Converts type and member data into readable Clojure values.</li>
+</ul>
+<h2>Annotation Utilities</h2>
+<p><strong>Available</strong></p>
+<ul>
+<li>Reads annotations from classes, constructors, methods, fields, and method/constructor parameters.</li>
+<li>Retrieves annotation return types.</li>
+<li>Converts annotation information into Clojure data.</li>
+<li>Extracts annotation values from annotation methods and fields.</li>
+<li>Includes Java utility classes for lower-level annotation analysis.</li>
+</ul>
+<h2>Reflection to Clojure Data</h2>
+<p><strong>Available</strong></p>
+<ul>
+<li>Converts constructors into maps containing object name, general metadata, parameter annotations, annotations, generic exception types, and declaring class.</li>
+<li>Converts methods into maps containing object name, general metadata, generic parameter types, parameter annotations, annotations, generic return type, generic exception types, and declaring class.</li>
+<li>Converts fields into maps containing object name, general metadata, generic type, and annotations.</li>
+<li>Converts classes into maps containing class definition data and class body data.</li>
+<li>Recursively includes constructor, field, method, and nested-class information in class body output.</li>
+</ul>
+<h2>Special Java Form Analysis</h2>
+<p><strong>Available</strong></p>
+<ul>
+<li>Analyzes enum classes and exposes enum metadata.</li>
+<li>Analyzes Java records and exposes record component information.</li>
+</ul>
+<p><strong>In progress</strong></p>
+<ul>
+<li>Captures lambda-related structures such as functional fields, functional method parameters, constructors, and capture fields.</li>
+<li>Captures switch-related structures such as detected switch methods, descriptors, return types, parameter types, opcodes, and counts.</li>
+<li>Special-form coverage is useful for smoke checks and generated structure, but lambda and switch analysis still need more complete semantic coverage.</li>
+</ul>
+<h2>Clojure Function Metadata and Active Data Support</h2>
+<p><strong>Available</strong></p>
+<ul>
+<li>Reads function metadata such as namespace, name, file, line, column, argument lists, and schema information.</li>
+<li>Parses Active Data / realm schemas into return-type and argument metadata.</li>
+<li>Extracts argument names, schema types, concrete types, and optional flags.</li>
+<li>Provides helpers for inspecting Active Data realm structures.</li>
+<li>Handles realm forms including scalar, integer range, real range, union, intersection, sequence, set, map, enum, tuple, record, function, delayed, and named realms.</li>
+</ul>
+<p><strong>In progress</strong></p>
+<ul>
+<li>Some Active Data parsing branches are marked with FIXME comments and need cleanup around edge cases and realm predicate handling.</li>
+</ul>
+<h2>Clojure Function Spying</h2>
+<p><strong>Available</strong></p>
+<ul>
+<li>Provides function spying through <code>prolog</code> and <code>spy</code>.</li>
+<li>Marks target functions with spy metadata before instrumentation.</li>
+<li>Preserves original function execution while adding metadata and runtime recording.</li>
+<li>Captures call-flow information for instrumented functions.</li>
+<li>Captures stack-trace context to identify invocation locations.</li>
+<li>Structures function metadata for profiling and later test-data generation.</li>
+</ul>
+<h2>Clojure Function Mocking</h2>
+<p><strong>Available</strong></p>
+<ul>
+<li>Provides metadata-driven function mocking through <code>prolog</code>, <code>mock</code>, and <code>restore-orig-funs</code>.</li>
+<li>Marks target functions with mock metadata before instrumentation.</li>
+<li>Rebinds namespace public vars while keeping original function references for restoration.</li>
+<li>Supports conditional mock rules with <code>call-cond-&gt;</code>.</li>
+<li>Supports rule matching by return predicate and parameter predicates.</li>
+<li>Includes built-in predicate keys for boolean, byte, char, collection, double, float, int, list, long, map, object, set, typed set, short, string, and vararg values.</li>
+<li>Provides mock actions for returning a value, throwing an exception, or doing nothing.</li>
+<li>Records mocked call flow as function name, argument values, and return value.</li>
+</ul>
+<h2>Generated Test-Data Pipeline</h2>
+<p><strong>Available</strong></p>
+<ul>
+<li>Loads Clojure source files and derives their declared namespace symbols.</li>
+<li>Analyzes public Clojure functions using function metadata and schema information.</li>
+<li>Analyzes Java classes and methods through the project reflection API.</li>
+<li>Normalizes Clojure functions and Java methods into a shared generated-test-data model.</li>
+<li>Infers parameter value categories such as boolean, string, integer, number, UUID, symbol, set, map, function, and generic values.</li>
+<li>Generates default sample values when no custom rule is provided.</li>
+<li>Supports generated cases per analyzed function or method.</li>
+<li>Generates payloads per configured output format.</li>
+<li>Can execute generated Clojure function cases and record them through the spy call-flow mechanism.</li>
+<li>Persists generated analyses and payloads to SQLite.</li>
+</ul>
+<p><strong>In progress</strong></p>
+<ul>
+<li>Java method execution from generated cases is not automatic yet because it needs an instance/static invocation target.</li>
+</ul>
+<h2>Configurable Generation</h2>
+<p><strong>Available</strong></p>
+<ul>
+<li>Provides default generation settings with JSON output and three samples per function.</li>
+<li>Reads XML generation configuration.</li>
+<li>Validates XML configuration before use.</li>
+<li>Supports configurable output formats.</li>
+<li>Supports per-function and per-parameter rules.</li>
+<li>Supports parameter type overrides, numeric minimum and maximum values, explicit value lists, and format hints.</li>
+<li>Includes an XSD resource for Java-oriented method/parameter rule structures.</li>
+<li>Reads and validates EDN artifact-generation configuration for Player-based artifact jobs.</li>
+<li>Includes a sample EDN artifact-generation configuration under <code>src/test/resources/testdatagen/generator.edn</code>.</li>
+</ul>
+<h2>Generated Payload Formats</h2>
+<p><strong>Available</strong></p>
+<ul>
+<li>Generates JSON payloads.</li>
+<li>Generates XML payloads.</li>
+<li>Generates CSV payloads.</li>
+<li>Generates text payloads.</li>
+<li>Generates Clojure string/printed data payloads.</li>
+<li>Includes compact PDF-style payload generation for generated test-case output.</li>
+<li>Generates standalone artifact payloads for TXT, PDF, DOCX, JPEG, TIFF where ImageIO supports it, and relational EDN rows.</li>
+<li>Creates portable DOCX artifacts through JDK ZIP/OOXML generation without introducing a new runtime dependency.</li>
+</ul>
+<h2>Artifact Test-Data Player</h2>
+<p><strong>Available</strong></p>
+<ul>
+<li>Provides a <code>Player</code> protocol and default <code>TestDataPlayer</code> implementation.</li>
+<li>Processes configured jobs by walking jobs and sample sequences.</li>
+<li>Calls format generators through a multimethod-based artifact generator.</li>
+<li>Supports <code>project/feature/subfeature</code> and <code>project/class/method</code> hierarchy concepts for generated artifact paths.</li>
+<li>Stores artifacts through memory and filesystem storage backends.</li>
+<li>Returns generated artifact references and storage summaries.</li>
+</ul>
+<p><strong>In progress</strong></p>
+<ul>
+<li>PostgreSQL storage is wired through JDBC and validates schema/table creation, but it requires the PostgreSQL JDBC driver and database configuration at runtime.</li>
+<li>TIFF generation depends on an available <code>ImageIO</code> TIFF writer in the runtime environment.</li>
+</ul>
+<h2>Persistence</h2>
+<p><strong>Available</strong></p>
+<ul>
+<li>Creates and initializes a SQLite database for generated analysis results.</li>
+<li>Stores analyzed function rows with namespace, function name, source location, return type, and serialized analysis data.</li>
+<li>Stores analyzed parameter rows with position, name, type, and generated values.</li>
+<li>Stores generated test payloads by function, case index, and output format.</li>
+<li>Uses a default database path under <code>target/test-data/generated-test-data.sqlite</code>.</li>
+<li>Provides artifact storage through memory and filesystem backends.</li>
+</ul>
+<p><strong>In progress</strong></p>
+<ul>
+<li>Provides JDBC-backed PostgreSQL artifact storage as an optional runtime feature.</li>
+</ul>
+<h2>Class Compilation and Code Generation</h2>
+<p><strong>Available</strong></p>
+<ul>
+<li>Compiles a Java class by canonical name into structured reflection data.</li>
+<li>Searches package paths for a class and compiles the discovered class.</li>
+<li>Defines AST-like data tables for class definitions, constructors, class bodies, and enum definitions.</li>
+<li>Provides a registry of hook points for classes, constructors, methods, fields, enums, records, lambdas, switches, and final emission.</li>
+<li>Includes JSON, XML, YAML, and Java-like generator namespaces.</li>
+</ul>
+<p><strong>In progress</strong></p>
+<ul>
+<li>The hook-based generator walks compiled class data and dispatches to the active registry.</li>
+<li>The JSON, XML, YAML, and Java-like outputs are useful as generated structural output, but they should still be treated as a foundation rather than a complete source-code generator.</li>
+<li>Some namespace/path compatibility needs consolidation between older and newer reflection/code generation namespaces.</li>
+</ul>
+<h2>Static Code Analysis</h2>
+<p><strong>In progress</strong></p>
+<ul>
+<li>Registers namespaces for later reflection.</li>
+<li>Captures namespace interns, publics, and related namespace data.</li>
+<li>Represents namespace reflection data with Active Data records.</li>
+<li>Includes early support for finding public functions from reflected namespace data.</li>
+</ul>
+<h2>Python Inspection</h2>
+<p><strong>In progress</strong></p>
+<ul>
+<li>Provides a Clojure wrapper around <code>InspectPythonCode</code>.</li>
+<li>Includes a Python inspector resource.</li>
+<li>Depends on JEP/runtime setup and needs more integration tests before being treated as stable.</li>
+</ul>
+<h2>Hygienic Macro Experimentation</h2>
+<p><strong>Experimental</strong></p>
+<ul>
+<li>Defines syntax objects with datum, scopes, and source metadata.</li>
+<li>Implements pattern matching and syntax-rule style expansion helpers.</li>
+<li>Supports generated renamings for introduced symbols.</li>
+<li>Provides <code>syntax-case</code>, <code>hgp-syntax-rules</code>, <code>defhgp</code>, and <code>define-syntax</code> style forms.</li>
+<li>Includes tests and examples for the macro-system experiment.</li>
+</ul>
+<h2>Examples and Test Fixtures</h2>
+<p><strong>Available</strong></p>
+<ul>
+<li>Includes Java fixture classes for interfaces, abstract classes, implementations, annotations, enums, records, lambdas, switch behavior, and application-style examples.</li>
+<li>Includes Clojure fixture namespaces for function metadata, Active Data records, generated data, spying, mocking, and static analysis tests.</li>
+<li>Contains both Java-oriented and Clojure-oriented reflection namespace layouts for compatibility and migration.</li>
+</ul>
+<h2>Documentation</h2>
+<p><strong>Available</strong></p>
+<ul>
+<li><code>README.md</code> summarizes purpose, status, setup, and usage examples.</li>
+<li><code>docs/ClojureTestingFrame.md</code> documents Clojure-specific mocking, spying, and macro background.</li>
+<li><code>docs/Test-Methods.md</code> explains test-driven development, unit tests, functional tests, and performance tests.</li>
+<li><code>docs/TestingAgainstEntropy.md</code> explains entropy-driven complexity in testing and motivates generated/statistical/formal test approaches.</li>
+<li><code>docs/ClojureDocu.md</code> and generated documentation configuration support API documentation.</li>
+<li><code>refl_comp_gen/README.md</code> documents reflection compilation and generation notes.</li>
+</ul>
+<h2>Project Metadata</h2>
+<p><strong>Available</strong></p>
+<ul>
+<li>Licensed under the MIT License.</li>
+<li>Includes a code of conduct.</li>
+<li>Configured with SCM and deployment metadata for Clojars.</li>
+<li>Includes GitHub Sponsors funding metadata and sponsorship context.</li>
+</ul>
+
+<p class="p6"><span class="s1"></span><br></p>
+<ul class="ul1">
+  <li class="li4"><span class="s8"></span><span class="s1">Harald Glab-Plhak</span></li>
+
+  <li class="li4"><span class="s8"></span><span class="s1">Computer Sience since 1992</span></li>
+  <li class="li4"><span class="s8"></span><span class="s1">© Harald Glab-Plhak (2024, 2025, 2026)</span></li>
+</ul>
+<p class="p6"><span class="s1"></span><br></p>
+</body>
+</html>
