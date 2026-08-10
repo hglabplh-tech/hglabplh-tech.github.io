@@ -251,7 +251,7 @@ Ok I talked about how data were handled in former times. By structuring also cod
 
 
 - Harald Glab-Plhak
-- 03.05.1966 Computer Science since 1992
+- Computer Science since 1992
 
 - &copy; Harald Glab-Plhak (2024, 2025)
 
