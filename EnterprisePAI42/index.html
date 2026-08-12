@@ -40,7 +40,9 @@
 <p>This project is planned as a  free, self-hostable Python middleware for making enterprise data searchable and AI-accessible <b>without making operational Sources of Truth directly searchable</b>.
 
 The project combines enterprise data integration, fine-grained authorization, segmented and incrementally refreshable caches, BM25 full-text retrieval, vector similarity search, hybrid ranking, workflow-derived context, Legal Hold, auditability, and privacy-aware AI/RAG access.</p>
-
+<p>
+The project's distinguishing idea is not a new search engine or IAM system, but a privacy-aware control layer between enterprise Sources of Truth and retrieval: tenant-specific permissions define what may be searched, segmented caches define how it is exposed, and the same controlled boundary applies to humans, workflows and AI.
+</p>
 <h3 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 20.0px Times; -webkit-text-stroke: #000000"><span class="s1"><b>The main intention</b></span></h3>
 <p>This project is not intended to compete with established open-source projects such as OpenSearch, Qdrant, OpenFGA, Keycloak, Open Policy Agent (OPA), or Presidio. Instead, it builds on and integrates their proven capabilities, extending the overall approach with additional concepts for privacy-aware enterprise retrieval, incremental authorization-aware caching, workflow-based access, Legal Hold, and controlled AI/RAG access to enterprise data. The goal is to complement the existing open-source ecosystem, learn from it, and, wherever possible, collaborate with and contribute back to the communities behind these projects. </p>
 <h3 style="margin: 0.0px 0.0px 14.0px 0.0px; font: 20.0px Times; -webkit-text-stroke: #000000"><span class="s1"><b>Why writing it in Python</b></span></h3>
