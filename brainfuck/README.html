@@ -35,6 +35,9 @@
 </head>
 <body>
 <h1>Brainfuck Fun</h1>
+<h2>Why this FUN project:</h2>
+<p>The language BrainFuck is a very minimalistic language it has only a very few 'commands':</p>
+<h2>Something about the language:</h2>
 <p>Brainfuck Fun compiles the typed <strong>MyLittleLang</strong> language to standard
 wrapping-byte Brainfuck. The language includes unsigned bytes, distinct signed
 64-bit integer types, numeric arrays, C-style NUL-terminated strings,
@@ -43,8 +46,8 @@ wrapping-byte Brainfuck. The language includes unsigned bytes, distinct signed
 <p>Read <a href="LANGUAGE.md">LANGUAGE.md</a> for the complete semantics and
 <a href="bnf/my-little-lang.bnf">bnf/my-little-lang.bnf</a> for the canonical BNF.</p>
 <h2>Project layout</h2>
-<pre><code class="language-text">bnf/my-little-lang.bnf                    canonical grammar
-examples/example.mll                      example program
+<pre><code class="language-text">bnf/my-little-lang.bnf canonical grammar
+examples/example.mll 					   example program
 examples/README.md                        guide to the whimsical examples
 src/python/mini_compiler.py               canonical compiler and BF runtime generator
 src/main/java/.../MiniCompiler.java       Java API and CLI
@@ -123,6 +126,39 @@ and enough tape for variables and compiler temporaries. Signed 64-bit values
 occupy eight little-endian cells and are manipulated by generated software
 routines. As expected for an esoteric target, wide multiplication, power,
 decimal parsing, and decimal output can generate large programs and run slowly.</p>
+<h1>MyLittleLang examples</h1>
+<p>These programs are intentionally whimsical. Together they exercise the main
+language features without pretending that goblin machinery is a sensible
+business domain.</p>
+<ul>
+<li><code>example.mll</code> is the compact general introduction.</li>
+<li><code>clockwork-goblin.mll</code> uses a loop, arithmetic, an <code>if</code>/<code>else</code>, string
+concatenation, and a <code>break</code> that exits only its surrounding <code>if</code>.</li>
+<li><code>emergency-moon-stop.mll</code> places <code>break</code> directly in a loop, so the remaining
+loop body and all later iterations are skipped.</li>
+<li><code>dragon-accounting.mll</code> uses an <code>integer</code> array, signed 64-bit arithmetic,
+precedence, and a profit-or-tragedy branch.</li>
+<li><code>tea-oracle.mll</code> reads a NUL-terminated string, concatenates it, converts it
+with <code>.toNumeric</code>, and branches on a <code>long</code> value.</li>
+<li><code>comet-calculator.mll</code> combines power, multiplication, addition, a countdown
+loop, and an <code>if</code>/<code>else</code> collision detector.</li>
+<li><code>number-arithmetic.mll</code> covers all five operators on unsigned 8-bit values.</li>
+<li><code>integer-arithmetic.mll</code> covers signed 64-bit <code>integer</code> arithmetic.</li>
+<li><code>long-arithmetic.mll</code> demonstrates the distinct signed 64-bit <code>long</code> type.</li>
+<li><code>float32-arithmetic.mll</code> covers binary32 constants, every operator, signed
+zero, the smallest subnormal, the smallest normal, and overflow.</li>
+<li><code>float64-arithmetic.mll</code> provides the corresponding binary64 cases.</li>
+<li><code>direct-tape.mll</code> embeds a terminal Brainfuck block that grows across tape
+cells at runtime and then walks back over them. This direct, unbounded-tape
+capability is the feature that makes the full language Turing complete;
+the typed subset by itself remains finite-state.</li>
+</ul>
+<p>Compile one example:</p>
+<pre><code class="language-sh">python3 ../src/python/mini_compiler.py clockwork-goblin.mll -o clockwork-goblin.bf
+</code></pre>
+<p>Or compile this entire directory recursively:</p>
+<pre><code class="language-sh">python3 ../src/python/mini_compiler.py -d . -o ../build/examples
+</code></pre>
 <h5>(c) Harald Glab-Plhak, 2026</h5>
 
 </body>

@@ -126,5 +126,44 @@ routines. As expected for an esoteric target, wide multiplication, power,
 decimal parsing, and decimal output can generate large programs and run slowly.
 
 
+# MyLittleLang examples
+
+These programs are intentionally whimsical. Together they exercise the main
+language features without pretending that goblin machinery is a sensible
+business domain.
+
+- `example.mll` is the compact general introduction.
+- `clockwork-goblin.mll` uses a loop, arithmetic, an `if`/`else`, string
+  concatenation, and a `break` that exits only its surrounding `if`.
+- `emergency-moon-stop.mll` places `break` directly in a loop, so the remaining
+  loop body and all later iterations are skipped.
+- `dragon-accounting.mll` uses an `integer` array, signed 64-bit arithmetic,
+  precedence, and a profit-or-tragedy branch.
+- `tea-oracle.mll` reads a NUL-terminated string, concatenates it, converts it
+  with `.toNumeric`, and branches on a `long` value.
+- `comet-calculator.mll` combines power, multiplication, addition, a countdown
+  loop, and an `if`/`else` collision detector.
+- `number-arithmetic.mll` covers all five operators on unsigned 8-bit values.
+- `integer-arithmetic.mll` covers signed 64-bit `integer` arithmetic.
+- `long-arithmetic.mll` demonstrates the distinct signed 64-bit `long` type.
+- `float32-arithmetic.mll` covers binary32 constants, every operator, signed
+  zero, the smallest subnormal, the smallest normal, and overflow.
+- `float64-arithmetic.mll` provides the corresponding binary64 cases.
+- `direct-tape.mll` embeds a terminal Brainfuck block that grows across tape
+  cells at runtime and then walks back over them. This direct, unbounded-tape
+  capability is the feature that makes the full language Turing complete;
+  the typed subset by itself remains finite-state.
+
+Compile one example:
+
+```sh
+python3 ../src/python/mini_compiler.py clockwork-goblin.mll -o clockwork-goblin.bf
+```
+
+Or compile this entire directory recursively:
+
+```sh
+python3 ../src/python/mini_compiler.py -d . -o ../build/examples
+```
 ##### (c) Harald Glab-Plhak, 2026
 
