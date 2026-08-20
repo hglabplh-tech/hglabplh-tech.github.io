@@ -1,0 +1,219 @@
+<html>
+<head>
+ <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title>The hglabplh_tech main page </title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.6">
+  <style type="text/css">
+    p.p3 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px Times; color: #0000e9; -webkit-text-stroke: #0000e3}
+    p.p4 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000}
+    p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; color: #0000e9; -webkit-text-stroke: #0000e3}
+    p.p6 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000; min-height: 14.0px}
+    p.p8 {margin: 0.0px 0.0px 15.9px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000}
+    p.p9 {margin: 0.0px 0.0px 15.9px 0.0px; font: 12.0px Times; color: #0000e9; -webkit-text-stroke: #0000e9}
+    p.p10 {margin: 0.0px 0.0px 15.9px 0.0px; font: 12.0px Times; color: #0000e9; -webkit-text-stroke: #0000e3}
+    p.p11 {margin: 0.0px 0.0px 15.9px 0.0px; font: 12.0px Times; color: #0000e9; -webkit-text-stroke: #000000}
+    p.p12 {margin: 0.0px 0.0px 15.8px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000}
+    p.p13 {margin: 0.0px 0.0px 15.8px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000; min-height: 14.0px}
+    li.li4 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000}
+    span.s1 {font-kerning: none}
+    span.s2 {text-decoration: underline ; font-kerning: none}
+    span.s3 {text-decoration: underline ; font-kerning: none; color: #0c43ff; background-color: rgba(12, 67, 255, 0.15); -webkit-text-stroke: 0px #0c43ff}
+    span.s4 {text-decoration: underline ; font-kerning: none; -webkit-text-stroke: 0px #000000}
+    span.s5 {text-decoration: underline ; font-kerning: none; color: #0000e9}
+    span.s6 {font-kerning: none; -webkit-text-stroke: 0px #000000}
+    span.s7 {font: 12.0px Times; font-kerning: none}
+    span.s8 {-webkit-text-stroke: 0px #000000}
+    ul.ul1 {list-style-type: disc}
+  </style>
+
+</head>
+<body>
+<h2>The BNF - definition of <strong>MLL</strong> (<strong>MyLittleLang</strong>)</h2>
+<pre><code class="language-bnf"># (c) Harald Glab-Plhak, 2026
+
+program
+    ::= statement* EOF
+
+statement
+    ::= declaration &quot;;&quot;
+      | assignment &quot;;&quot;
+      | input &quot;;&quot;
+      | output &quot;;&quot;
+      | gotoStatement &quot;;&quot;
+      | breakStatement &quot;;&quot;
+      | whileStatement
+      | ifStatement
+      | labelStatement
+
+declaration
+    ::= &quot;dcl&quot; type IDENTIFIER sizedDimension*
+
+# The number of sized dimensions after the identifier must equal the number
+# of [] suffixes in type.  Sizes are positive compile-time integer literals.
+type
+    ::= baseType arraySuffix*
+
+baseType
+    ::= &quot;string&quot;
+      | &quot;number&quot;
+      | &quot;integer&quot;
+      | &quot;long&quot;
+      | &quot;float&quot;
+      | &quot;double&quot;
+
+arraySuffix
+    ::= &quot;[&quot; &quot;]&quot;
+
+sizedDimension
+    ::= &quot;[&quot; INTEGER_LITERAL &quot;]&quot;
+
+assignment
+    ::= reference &quot;=&quot; expression
+
+input
+    ::= &quot;in&quot; reference
+
+output
+    ::= &quot;out&quot; expression
+
+reference
+    ::= IDENTIFIER indexSuffix*
+
+indexSuffix
+    ::= &quot;[&quot; INTEGER_LITERAL &quot;]&quot;
+
+labelStatement
+    ::= IDENTIFIER &quot;:&quot;
+      | &quot;label&quot; IDENTIFIER &quot;:&quot;
+
+gotoStatement
+    ::= &quot;goto&quot; IDENTIFIER
+
+breakStatement
+    ::= &quot;break&quot;
+
+whileStatement
+    ::= &quot;while&quot; expression &quot;do&quot; &quot;;&quot;
+        statement*
+        &quot;end&quot; &quot;;&quot;
+
+ifStatement
+    ::= &quot;if&quot; expression &quot;then&quot; &quot;;&quot;
+        statement*
+        (&quot;else&quot; &quot;;&quot; statement*)?
+        &quot;end&quot; &quot;;&quot;
+
+expression
+    ::= comparison
+
+comparison
+    ::= additive
+        ((&quot;==&quot; | &quot;!=&quot; | &quot;&lt;&quot; | &quot;&lt;=&quot; | &quot;&gt;&quot; | &quot;&gt;=&quot;) additive)?
+
+additive
+    ::= multiplicative ((&quot;+&quot; | &quot;-&quot;) multiplicative)*
+
+multiplicative
+    ::= power ((&quot;*&quot; | &quot;/&quot;) power)*
+
+power
+    ::= postfix (&quot;^&quot; power)?
+
+postfix
+    ::= primary postfixOperation*
+
+postfixOperation
+    ::= &quot;.&quot; &quot;concat&quot; &quot;(&quot; expression &quot;)&quot;
+      | &quot;.&quot; &quot;toNumeric&quot; (&quot;(&quot; &quot;)&quot;)?
+
+primary
+    ::= literal
+      | (&quot;+&quot; | &quot;-&quot;) literal
+      | reference
+      | &quot;(&quot; expression &quot;)&quot;
+
+literal
+    ::= INTEGER_LITERAL
+      | DECIMAL_FLOAT_LITERAL
+      | HEX_FLOAT_LITERAL
+      | STRING_LITERAL
+
+DECIMAL_FLOAT_LITERAL
+    ::= decimalFraction decimalExponent? FLOAT_SUFFIX?
+      | DIGIT+ decimalExponent FLOAT_SUFFIX?
+      | DIGIT+ FLOAT_SUFFIX
+
+decimalFraction
+    ::= DIGIT* &quot;.&quot; DIGIT+
+      | DIGIT+ &quot;.&quot; DIGIT*
+
+decimalExponent
+    ::= (&quot;e&quot; | &quot;E&quot;) SIGN? DIGIT+
+
+HEX_FLOAT_LITERAL
+    ::= (&quot;0x&quot; | &quot;0X&quot;) hexSignificand binaryExponent FLOAT_SUFFIX?
+
+hexSignificand
+    ::= HEX_DIGIT+ (&quot;.&quot; HEX_DIGIT*)?
+      | &quot;.&quot; HEX_DIGIT+
+
+binaryExponent
+    ::= (&quot;p&quot; | &quot;P&quot;) SIGN? DIGIT+
+
+# f/F selects binary32; no suffix selects binary64. l/L is tokenized so the
+# compiler can issue a precise unsupported-long-double diagnostic.
+FLOAT_SUFFIX
+    ::= &quot;f&quot; | &quot;F&quot; | &quot;l&quot; | &quot;L&quot;
+
+SIGN
+    ::= &quot;+&quot; | &quot;-&quot;
+
+STRING_LITERAL
+    ::= '&quot;' stringCharacter* '&quot;'
+
+stringCharacter
+    ::= anySourceByteExceptQuoteBackslashOrNewline
+      | simpleEscape
+      | octalEscape
+      | hexadecimalEscape
+
+simpleEscape
+    ::= &quot;\\'&quot; | '\\&quot;' | &quot;\\?&quot; | &quot;\\\\&quot;
+      | &quot;\\a&quot; | &quot;\\b&quot; | &quot;\\f&quot; | &quot;\\n&quot;
+      | &quot;\\r&quot; | &quot;\\t&quot; | &quot;\\v&quot;
+
+octalEscape
+    ::= &quot;\\&quot; OCTAL_DIGIT OCTAL_DIGIT? OCTAL_DIGIT?
+
+hexadecimalEscape
+    ::= &quot;\\x&quot; HEX_DIGIT+
+
+IDENTIFIER
+    ::= LETTER (LETTER | DIGIT | &quot;_&quot;)*
+
+INTEGER_LITERAL
+    ::= DIGIT+
+
+LETTER
+    ::= &quot;A&quot;...&quot;Z&quot; | &quot;a&quot;...&quot;z&quot; | &quot;_&quot;
+
+DIGIT
+    ::= &quot;0&quot;...&quot;9&quot;
+
+OCTAL_DIGIT
+    ::= &quot;0&quot;...&quot;7&quot;
+
+HEX_DIGIT
+    ::= DIGIT | &quot;A&quot;...&quot;F&quot; | &quot;a&quot;...&quot;f&quot;
+
+</code></pre>
+<h5>(c) Harald Glab-Plhak, 2026</h5>
+</body>
+</html>
+
