@@ -73,6 +73,26 @@
   font-style: italic;
 }
 
+/*
+----------------------------- tag styles -------------------- 
+*/
+
+a:link {
+	font-weight:12pt;
+	color:blue	
+}
+
+a.more:hover {
+	font-weight:12pt !important;
+	color: red
+}
+
+a.more:visited {
+        font-weight:12pt !important;
+        color: green
+}
+
+
 /* ---------------------------------------- */
 /* Racket text styles */
 
