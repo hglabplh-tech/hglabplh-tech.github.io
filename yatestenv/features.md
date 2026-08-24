@@ -1,3 +1,8 @@
+- [Go Top](../index.html)
+- [Go Index](./index.html)
+- [Go Next - Sponsoring](./sponsoring.html)
+- [Go Back - Project](./project.html)
+
 # Features
 
 YATestEnvironment is a Clojure and Java test automation environment. It combines reflection APIs, function metadata analysis, generated test-data pipelines, spying and mocking utilities, and early code-generation research.

@@ -1,8 +1,13 @@
+
+- [Go Top](../index.html)
+- [Go Index](./index.html)
+- [Go Next - Features](./features.html)
+
 # YATestEnvironment
 
 YATestEnvironment is a mixed Clojure and Java test-engineering project. It brings together reflection utilities, generated test-data pipelines, function spying and mocking, annotation helpers, and early code-generation experiments for Java/Clojure test automation.
 
-The project can be used as a library and as a research/workbench codebase. Some areas are mature enough for automated tests, while others are intentionally marked as foundations or experiments.
+You can use the project as a library or as a research/workbench codebase. Some areas are mature enough for automated tests, while others are intentionally marked as foundations or experiments.
 
 ## Status Legend
 
@@ -130,7 +135,7 @@ The generated test-data pipeline can analyze Clojure namespaces and Java classes
   :db-path "target/test-data/generated-test-data.sqlite"})
 ```
 
-Java method execution is not automatic in this pipeline yet because it needs a concrete instance or static invocation target.
+Java method execution isn't automatic in this pipeline yet because it needs a concrete instance or a static invocation target.
 
 ## Documentation
 
@@ -144,3 +149,7 @@ Java method execution is not automatic in this pipeline yet because it needs a c
 ## License
 
 YATestEnvironment is licensed under the MIT License.
+
+- Harald Glab-Plhak
+- Computer Science since 1992
+- &copy; Harald Glab-Plhak (2026)
