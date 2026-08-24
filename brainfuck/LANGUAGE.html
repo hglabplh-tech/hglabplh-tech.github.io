@@ -1,7 +1,7 @@
 <html>
 <head>
  <meta charset="UTF-8">
-
+ <link rel="stylesheet" href="../styles.css">
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -9,31 +9,341 @@
   <title>The hglabplh_tech main page </title>
   <meta name="Generator" content="Cocoa HTML Writer">
   <meta name="CocoaVersion" content="2685.6">
-  <style type="text/css">
-    p.p3 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px Times; color: #0000e9; -webkit-text-stroke: #0000e3}
-    p.p4 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000}
-    p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; color: #0000e9; -webkit-text-stroke: #0000e3}
-    p.p6 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000; min-height: 14.0px}
-    p.p8 {margin: 0.0px 0.0px 15.9px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000}
-    p.p9 {margin: 0.0px 0.0px 15.9px 0.0px; font: 12.0px Times; color: #0000e9; -webkit-text-stroke: #0000e9}
-    p.p10 {margin: 0.0px 0.0px 15.9px 0.0px; font: 12.0px Times; color: #0000e9; -webkit-text-stroke: #0000e3}
-    p.p11 {margin: 0.0px 0.0px 15.9px 0.0px; font: 12.0px Times; color: #0000e9; -webkit-text-stroke: #000000}
-    p.p12 {margin: 0.0px 0.0px 15.8px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000}
-    p.p13 {margin: 0.0px 0.0px 15.8px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000; min-height: 14.0px}
-    li.li4 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000}
-    span.s1 {font-kerning: none}
-    span.s2 {text-decoration: underline ; font-kerning: none}
-    span.s3 {text-decoration: underline ; font-kerning: none; color: #0c43ff; background-color: rgba(12, 67, 255, 0.15); -webkit-text-stroke: 0px #0c43ff}
-    span.s4 {text-decoration: underline ; font-kerning: none; -webkit-text-stroke: 0px #000000}
-    span.s5 {text-decoration: underline ; font-kerning: none; color: #0000e9}
-    span.s6 {font-kerning: none; -webkit-text-stroke: 0px #000000}
-    span.s7 {font: 12.0px Times; font-kerning: none}
-    span.s8 {-webkit-text-stroke: 0px #000000}
-    ul.ul1 {list-style-type: disc}
-  </style>
-
 </head>
 <body>
+<h1>MyLittleLang</h1>
+<p>MyLittleLang is a small typed language that compiles to standard Brainfuck
+with wrapping 8-bit cells. Its compiler performs lexical analysis, parsing,
+semantic analysis, feature analysis, tape layout, Brainfuck generation, and
+transitive runtime linking.</p>
+<p>The canonical grammar is
+<a href="./LANG-DEF.html"><code>The BNF for the language</code></a>. This document describes
+the language semantics and the supported compiler interfaces.</p>
+<h2>Compilation model</h2>
+<pre><code class="language-text">MyLittleLang source
+  → lexer
+  → parser and AST
+  → semantic and type analysis
+  → feature analysis
+  → tape layout and Brainfuck generation
+  → minimal runtime dependency closure
+  → Brainfuck
+</code></pre>
+<p>Declarations are collected globally before code generation, including
+declarations written inside structured blocks. Duplicate declarations,
+unknown variables, invalid indexes, incompatible types, unknown labels, and
+invalid <code>break</code> statements are compile-time errors.</p>
+<p>The generated program expects a Brainfuck implementation with wrapping 8-bit
+cells, byte-oriented input and output, and sufficient tape space. Turing
+completeness additionally assumes the conventional theoretically unbounded
+tape model.</p>
+<h2>Lexical rules</h2>
+<ul>
+<li>Keywords and identifiers are case-sensitive.</li>
+<li>Identifiers begin with a letter or <code>_</code> and may subsequently contain letters,
+digits, or <code>_</code>.</li>
+<li>Simple statements end with <code>;</code>.</li>
+<li><code>;;</code> begins a line comment. <code>#</code> remains accepted for compatibility.</li>
+<li><code>;;;</code> is one statement delimiter followed by a line comment.</li>
+<li>String literals use double quotes and support C-style simple, octal, and
+hexadecimal byte escapes.</li>
+</ul>
+<h2>Types</h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Runtime representation</th>
+<th>Semantics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>number</code></td>
+<td>one cell</td>
+<td>unsigned 8-bit value, 0 through 255</td>
+</tr>
+<tr>
+<td><code>integer</code></td>
+<td>eight cells</td>
+<td>signed 64-bit two's complement</td>
+</tr>
+<tr>
+<td><code>long</code></td>
+<td>eight cells</td>
+<td>distinct signed 64-bit compatibility type</td>
+</tr>
+<tr>
+<td><code>float</code></td>
+<td>four cells</td>
+<td>IEEE-754 binary32 bit pattern</td>
+</tr>
+<tr>
+<td><code>double</code></td>
+<td>eight cells</td>
+<td>IEEE-754 binary64 bit pattern</td>
+</tr>
+<tr>
+<td><code>string</code></td>
+<td>64 cells by default</td>
+<td>NUL-terminated byte string</td>
+</tr>
+</tbody>
+</table>
+<p>Integer and number arithmetic wraps to the destination width. Integer division
+truncates toward zero. Division by zero currently produces zero for
+<code>number</code>, <code>integer</code>, and <code>long</code>.</p>
+<p>Mixed arithmetic follows this promotion order:</p>
+<pre><code class="language-text">integer → number → float → double
+</code></pre>
+<p><code>long</code> is deliberately distinct and is not implicitly mixed with this chain.
+Narrowing conversions are rejected.</p>
+<h2>Declarations and assignment</h2>
+<p>Scalar declarations use <code>dcl</code>, followed by a type and identifier:</p>
+<pre><code class="language-mll">dcl number counter;
+dcl integer total;
+dcl long distance;
+dcl float ratio;
+dcl double precise;
+dcl string name;
+</code></pre>
+<p>Assignments require a compatible expression:</p>
+<pre><code class="language-mll">counter = 10;
+total = -125;
+name = &quot;Ada&quot;;
+</code></pre>
+<p><code>string</code> uses a 64-byte buffer by default. The legacy declaration
+<code>dcl string[20] text;</code> declares a scalar string with a 20-byte capacity,
+including its terminating NUL.</p>
+<h2>Arrays</h2>
+<p>Arrays are structural types. Empty brackets belong to the type, while fixed
+positive dimensions follow the identifier:</p>
+<pre><code class="language-mll">dcl string[] names[3];
+dcl integer[] values[10];
+dcl float[] samples[4];
+dcl double[][] matrix[2][5];
+</code></pre>
+<p>Arrays use row-major inline layout. Every reference must currently contain one
+compile-time integer index for each dimension:</p>
+<pre><code class="language-mll">values[0] = 42;
+matrix[1][3] = 0x1.8p+2;
+</code></pre>
+<p>Dynamic index expressions, partial array references, whole-array assignment,
+and dynamically resized typed arrays are not implemented. The legacy numeric
+form <code>dcl integer[4] values;</code> remains accepted as a one-dimensional array.</p>
+<h2>Expressions</h2>
+<p>Operators are evaluated in this precedence order, from highest to lowest:</p>
+<ol>
+<li>Parentheses and postfix methods</li>
+<li>Power <code>^</code>, right-associative</li>
+<li>Multiplication <code>*</code> and division <code>/</code></li>
+<li>Addition <code>+</code> and subtraction <code>-</code></li>
+<li>One optional comparison</li>
+</ol>
+<p>Comparisons are <code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, and <code>&gt;=</code>. They produce a
+<code>number</code> containing <code>0</code> or <code>1</code>. Zero is false and every nonzero numeric value
+is true.</p>
+<p>Power is right-associative:</p>
+<pre><code class="language-text">a ^ b ^ c  means  a ^ (b ^ c)
+</code></pre>
+<p>The five arithmetic operators are available for <code>number</code>, <code>integer</code>, and
+<code>long</code>. Complete floating constant expressions are evaluated by the compiler's
+IEEE reference model.</p>
+<h2>Floating-point literals</h2>
+<p><code>float</code> is IEEE-754 binary32 and <code>double</code> is binary64. Supported source forms
+include decimal fractions, decimal <code>e</code>/<code>E</code> exponents, and hexadecimal
+significands with a mandatory binary <code>p</code>/<code>P</code> exponent:</p>
+<pre><code class="language-mll">dcl float small;
+dcl double exact;
+
+small = 1.25f;
+exact = 0x1.921fb54442d18p+1;
+</code></pre>
+<p>The suffix <code>f</code> or <code>F</code> selects binary32. No suffix selects binary64. A suffix
+<code>l</code> or <code>L</code> is recognized but rejected because long-double representation is
+platform-dependent.</p>
+<p>Literal conversion uses an exact mathematical value followed by direct
+rounding to binary32 or binary64 with round-to-nearest, ties-to-even. The
+reference model covers signed zero, normal and subnormal values, infinity,
+NaN, overflow, underflow, comparisons, and <code>+ - * / ^</code>.</p>
+<p>Variable-based Float32/Float64 arithmetic, comparisons, input/output
+conversion, and their Brainfuck software-FPU emitters are not yet complete.
+Such uses produce an explicit compiler error rather than approximate code.
+General noninteger reference <code>pow</code> currently uses the host <code>libm</code>; correct
+rounding is therefore not guaranteed for every possible halfway case.</p>
+<h2>Strings</h2>
+<p>Strings are NUL-terminated byte sequences. Source characters are encoded as
+UTF-8. Operations stop at the first NUL byte.</p>
+<p><code>.concat</code> constructs a checked string expression:</p>
+<pre><code class="language-mll">dcl string first;
+dcl string result;
+
+first = &quot;Ada&quot;;
+result = first.concat(&quot; Lovelace&quot;);
+</code></pre>
+<p>The compiler rejects a concatenation when the destination capacity cannot
+hold the proven maximum result plus its terminating NUL.</p>
+<p><code>.toNumeric</code> parses a decimal string in the destination's integer type:</p>
+<pre><code class="language-mll">dcl integer value;
+value = &quot;-9987&quot;.toNumeric;
+</code></pre>
+<p>Invalid text or overflow produces zero.</p>
+<h2>Input and output</h2>
+<p><code>in</code> currently accepts a string destination. It reads bytes through LF,
+removes the LF, appends NUL, and drains excess input when the buffer is full:</p>
+<pre><code class="language-mll">dcl string line;
+in line;
+</code></pre>
+<p><code>out</code> accepts an expression. Strings are written through their first NUL;
+integer types are formatted as human-readable decimal text:</p>
+<pre><code class="language-mll">out line;
+out 40 + 2;
+</code></pre>
+<p>Floating-point input and formatted output remain part of the pending
+Brainfuck software-FPU work.</p>
+<h2>Structured control flow</h2>
+<h3>While</h3>
+<pre><code class="language-mll">while condition do;
+    statements
+end;
+</code></pre>
+<p>The condition is evaluated before the first iteration and again after every
+completed iteration.</p>
+<h3>If and else</h3>
+<pre><code class="language-mll">if condition then;
+    statements
+else;
+    statements
+end;
+</code></pre>
+<p>The <code>else</code> branch is optional.</p>
+<h3>Break</h3>
+<p><code>break;</code> exits the innermost lexically enclosing <code>while</code> or <code>if</code> block. A
+<code>break</code> in an <code>if</code> nested inside a loop therefore exits the <code>if</code>, not the
+surrounding loop. Using <code>break</code> outside both constructs is an error.</p>
+<h2>Labels and goto</h2>
+<p>Top-level labels and jumps use these forms:</p>
+<pre><code class="language-mll">start:
+label alternative:
+goto start;
+</code></pre>
+<p>Labels and <code>goto</code> are currently restricted to the top level, and a <code>goto</code>
+must terminate its basic block. When a program contains <code>goto</code>, the compiler
+emits a program-counter dispatcher. Programs without <code>goto</code> receive no
+dispatcher runtime.</p>
+<h2>Direct Brainfuck and Turing completeness</h2>
+<p>The statement below embeds Brainfuck commands directly:</p>
+<pre><code class="language-mll">brainfuck &quot;&gt;,[&gt;,]&lt;[.&lt;]&quot;;
+</code></pre>
+<p>Only <code>&gt;</code>, <code>&lt;</code>, <code>+</code>, <code>-</code>, <code>.</code>, <code>,</code>, <code>[</code>, <code>]</code>, and whitespace are accepted.
+Whitespace is discarded and brackets are validated.</p>
+<p>When normal compiled statements follow a direct block, every loop in that
+block must restore its starting pointer position, allowing the compiler to
+calculate a safe net displacement. A pointer-dynamic block must be the final
+top-level statement and cannot be combined with the goto dispatcher.</p>
+<p>For every Brainfuck program <code>P</code>, this terminal MyLittleLang program:</p>
+<pre><code class="language-text">brainfuck &quot;P&quot;;
+</code></pre>
+<p>compiles byte-for-byte to <code>P</code>. Brainfuck with an unbounded tape is Turing
+complete; consequently the full MyLittleLang language is Turing complete under
+the same model. The typed subset without direct tape access remains
+finite-state.</p>
+<h2>Feature analysis and runtime linking</h2>
+<p>The compiler analyzes the typed AST before generation and records only the
+features actually used. Runtime components declare their dependencies, and the
+linker computes a deduplicated transitive closure.</p>
+<p>Examples of features include <code>number.div</code>, <code>integer.pow</code>, <code>long.mul</code>,
+<code>float32.add</code>, <code>array.address</code>, <code>io.string.input</code>, <code>goto.dispatch</code>, and
+<code>tape.direct</code>. Unused Float, string, array, output, or goto components are not
+linked automatically.</p>
+<p>The Python API <code>compile_detailed()</code> exposes the selected feature set and linked
+component names for verification.</p>
+<h2>Calling the compiler</h2>
+<h3>Python</h3>
+<p>Compile one file and write Brainfuck to standard output:</p>
+<pre><code class="language-sh">python3 src/python/mini_compiler.py program.mll
+</code></pre>
+<p>Write to a selected file. <code>.bf</code> is added when the path has no extension:</p>
+<pre><code class="language-sh">python3 src/python/mini_compiler.py program.mll -o build/program
+</code></pre>
+<p>Compile every <code>*.mll</code> file below a directory while preserving its relative
+subdirectories:</p>
+<pre><code class="language-sh">python3 src/python/mini_compiler.py -d examples -o build/examples
+</code></pre>
+<p>Use <code>-v</code> for compiler phases and <code>-h</code> for help:</p>
+<pre><code class="language-sh">python3 src/python/mini_compiler.py -v program.mll -o program.bf
+python3 src/python/mini_compiler.py -h
+</code></pre>
+<h3>Java</h3>
+<pre><code class="language-sh">mkdir -p build/java
+javac -d build/java \
+  src/main/java/io/github/hglabplh_tech/mini_bf_comp/MiniCompiler.java
+
+java -cp build/java \
+  io.github.hglabplh_tech.mini_bf_comp.MiniCompiler \
+  program.mll -o program.bf
+</code></pre>
+<h3>Kotlin</h3>
+<p>Compile the Java core first, then:</p>
+<pre><code class="language-sh">mkdir -p build/kotlin
+kotlinc \
+  src/main/kotlin/io/github/hglabplh_tech/mini_bf_comp/MiniCompilerKotlin.kt \
+  -classpath build/java -d build/kotlin
+
+kotlin -classpath build/java:build/kotlin \
+  io.github.hglabplh_tech.mini_bf_comp.MiniCompilerKotlin \
+  program.mll -o program.bf
+</code></pre>
+<h3>Scala</h3>
+<p>Compile the Java core first, then:</p>
+<pre><code class="language-sh">scala run --server=false --classpath build/java \
+  --main-class io.github.hglabplh_tech.mini_bf_comp.MiniCompilerScala \
+  src/main/scala/io/github/hglabplh_tech/mini_bf_comp/MiniCompilerScala.scala \
+  -- program.mll -o program.bf
+</code></pre>
+<h3>Clojure</h3>
+<p>Compile the Java core first, then:</p>
+<pre><code class="language-sh">clojure -Sdeps '{:paths [&quot;src/main/clojure&quot; &quot;build/java&quot;]}' \
+  -M -m io.github.hglabplh-tech.mini-bf-comp.mini-compiler-clojure \
+  program.mll -o program.bf
+</code></pre>
+<p>All five command-line entry points use the canonical Python compiler and share
+the same options and generated output.</p>
+<h2>Python library API</h2>
+<p>When <code>src/python</code> is on <code>PYTHONPATH</code>, source text can be compiled directly:</p>
+<pre><code class="language-python">from mini_compiler import compile_source, compile_detailed
+
+brainfuck = compile_source(source)
+details = compile_detailed(source)
+
+print(details.features)
+print(details.runtime_components)
+</code></pre>
+<p>The reference IEEE functions are in <code>src/python/ieee754.py</code>. They are intended
+for compile-time constants and tests, not as a replacement for generated
+Brainfuck runtime behavior.</p>
+<h2>Exit status and diagnostics</h2>
+<p>The CLI returns zero after successful compilation and nonzero after an error.
+Diagnostics are written to standard error. With <code>-v</code>, phase messages also go
+to standard error, so standard output remains valid Brainfuck.</p>
+<p>Common errors include:</p>
+<ul>
+<li>duplicate or unknown identifiers;</li>
+<li>type mismatches and unsupported narrowing conversions;</li>
+<li>invalid array dimensions or indexes;</li>
+<li>string-capacity overflow;</li>
+<li>invalid control-flow placement;</li>
+<li>unknown goto labels;</li>
+<li>invalid direct Brainfuck characters or brackets;</li>
+<li>unsupported variable floating-point runtime operations.</li>
+</ul>
+<h2>Further references</h2>
+<ul>
+<li><a href="bnf/my-little-lang.bnf">Canonical BNF</a></li>
+<li><a href="LANGUAGE.md">Implementation-oriented language notes</a></li>
+<li><a href="README.md">Compiler and project setup</a></li>
+<li><a href="examples/README.md">Example programs</a></li>
+</ul>
 
 </body>
 </html>
