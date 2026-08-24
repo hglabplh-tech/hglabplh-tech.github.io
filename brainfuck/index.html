@@ -16,11 +16,42 @@
 <li><a href="../index.html">GoTo Top</a></li>
 <li><a href="./README.html">GoTo Next</a></li>
 </ul>
-<h3>This project is a little language I defined in one day. The language is compiled to BrainFuck <strong><strong>[trade mark]</strong> ;-)</strong></h3>
-<p>I made this project because I am fascinated by the BrainFuck language. It is a 'crazy' language. But of course you can code many things with it, and it is Turing Complete.</p>
-<pre><code class="language-scala">/* A system is Turing complete if it can solve any computational problem that a theoretical Alan Turing machine can solve. */
-</code></pre>
-<h4>See here for more information:</h4>
+</p>
+<h1>My Little Language (MLL) a language which compiles to BrainFuck</h1>
+<p>
+<b>This is an experiment about:</b>
+</p>
+<p>
+<i>&quot;How much conventional language/runtime machinery can be lowered onto an absurdly minimal computational machine?&quot;</i>
+</p>
+MyLittleLang is a typed language compiled to standard 8-bit-cell Brainfuck through a real pipeline:
+</p>
+<p>
+<b><i>source → lexer → parser/AST → semantic/type analysis → feature analysis → tape layout/code generation → runtime dependency closure → Brainfuck.</i></b> 
+</p>
+<p>
+<b>The language currently has:</b>
+<ul>
+<li>number: unsigned 8-bit</li>
+<li>integer: signed 64-bit</li>
+<li>long: distinct signed 64-bit type</li>
+<li>float: IEEE-754 binary32</li>
+<li>double: IEEE-754 binary64
+<li>NUL-terminated strings</li>
+<li>multidimensional typed arrays</li>
+<li>arithmetic and comparisons</li>
+<li>while</li>
+<li>if/else</li>
+<li>break</li>
+<li>labels and goto</li>
+<li>string concatenation</li>
+<li>string → numeric conversion</li>
+<li>direct Brainfuck embedding.</li>
+</ul>
+And the compiler itself contains a lexer, parser, type checker, tape allocator, string routines, 64-bit software arithmetic, decimal conversion and Brainfuck generator.
+</p>
+<h3>See here for more information:</h3>
+<p>
 <ul>
 <li><a href="https://github.com/hglabplh-tech/BrainFuckFun">The project BrainFuck FUN on GitHub</a></li>
 <li><a href="./README.html">The Read Me</a></li>
