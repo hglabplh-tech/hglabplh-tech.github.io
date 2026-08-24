@@ -1,7 +1,7 @@
 
 ###### [Goto top](../index.html)
 ###### [Goto index](./index.html)
-###### [Go back](./travelling-through-comp-scienceP1.html)
+###### [Go back](./traveling-through-comp-scienceP1.html)
 
 # The idea of functional programming 
 
@@ -16,7 +16,7 @@ The history of functional programming and design started in the 1930's (no joke)
   Conceptualized computation using mathematical abstraction and variable binding.
 ```
 
-At the time, it was not possible to realize anything from it, and I don't think he was aware of the influence his theory would have on modern computation and programming languages, or that a complete paradigm of design and programming would be invented based on that theory.
+At the time, it was not possible to realize anything from it, and I don't think he was aware of the influence his theory would have on modern computation and programming languages, or that a complete design and programming paradigm would be invented based on it.
 
 ##### How data are processed in a functional way:
 <!--
@@ -74,7 +74,7 @@ __**Key Syntax Concepts**__
 (funcall add-ten 20) ; Returns 30
 ```
 Here, the currying is shown by defining a simple add function with two parameters. In Common LISP and other functional languages like Scheme or Haskell, currying happens under the hood.
-To show two other languages here the way of curriing in **Scheme** and **Clojure** :
+To show two other languages here, the way of currying in **Scheme** and **Clojure** :
 ```scheme
 ;; Define the curried function
 (define ((curried-add x) y)
@@ -355,6 +355,508 @@ Landin coined the phrase "syntactic sugar". He used it to describe user-friendly
 ##### Inventing the "Closure"
 
 When figuring out how to make higher-order functions work on physical computers, Landin realized that a function passed around as data needs to remember the variables that surrounded it when it was born. He invented the concept of a closure (a function bundled with references to its surrounding state). Today, closures are vital components of **JavaScript**, **Swift**, and **Rust**, as well as other languages that use the functional paradigm, like **Java**, **Python**, **LISP**, and many others.
+
+##### Now let us look under the hood of a **SECD machine**
+ 
+A __**SECD machine**__ is a pure functional machine which can be easily defined in a few steps:
+
+###### The components of the **SECD**
+
+
+```text
+S = Stack
+    parameters, temporary values, results
+
+E = Environment
+    known parameters + locale variables
+
+C = Code
+    functions/instructions to be executed
+
+D = Dump
+    previous environment generations/call frames
+```
+
+###### The abstract of the control flow
+
+```text
+Caller environment
+       │
+       ▼
+      CALL f(x)
+       │
+       ├── x push to stack 
+       ├── generate a new environment generation
+       ├── pop x from stack → environment
+       ├── store the prior environment → dump
+       │
+       ▼
+Function environment
+       │
+       ├── local variables 
+       ├── recursive calls are possible
+       │
+       ▼
+     RETURN
+       │
+       ├── return value → stack
+       ├── remove actual environment 
+       └── restore the last environment from dump
+```
+###### And now the abstract of the runtime
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
+/* ============================================================
+ * Types
+ * ============================================================ */
+
+typedef enum {
+    TYPE_VOID = 0,
+    TYPE_INTEGER,
+    TYPE_FLOAT,
+    TYPE_DOUBLE,
+    TYPE_STRING,
+    TYPE_FUNCTION
+} Type;
+
+
+struct Function;
+
+
+typedef struct Value {
+
+    Type type;
+
+    union {
+        long integer_value;
+        float float_value;
+        double double_value;
+        char *string_value;
+
+        struct Function *function_value;
+    } data;
+
+} Value;
+
+
+/* ============================================================
+ * VALUE STACK
+ * ============================================================ */
+
+typedef struct StackEntry {
+
+    Value value;
+
+    struct StackEntry *next;
+
+} StackEntry;
+
+
+typedef struct {
+
+    StackEntry *top;
+
+    size_t size;
+
+} Stack;
+
+
+static void stack_init(Stack *stack)
+{
+    stack->top = NULL;
+    stack->size = 0;
+}
+
+
+static int stack_push(
+    Stack *stack,
+    Value value
+)
+{
+    StackEntry *entry =
+        malloc(sizeof(StackEntry));
+
+    if (entry == NULL)
+        return 0;
+
+    entry->value = value;
+
+    entry->next = stack->top;
+
+    stack->top = entry;
+
+    stack->size++;
+
+    return 1;
+}
+
+
+static int stack_pop(
+    Stack *stack,
+    Value *value
+)
+{
+    if (stack == NULL ||
+        stack->top == NULL)
+        return 0;
+
+    StackEntry *entry =
+        stack->top;
+
+    stack->top =
+        entry->next;
+
+    stack->size--;
+
+    if (value != NULL)
+        *value = entry->value;
+
+    free(entry);
+
+    return 1;
+}
+
+
+/* ============================================================
+ * ENVIRONMENT
+ * ============================================================ */
+
+typedef struct EnvironmentEntry {
+
+    char *identifier;
+
+    Value value;
+
+    struct EnvironmentEntry *next;
+
+} EnvironmentEntry;
+
+
+typedef struct Environment {
+
+    EnvironmentEntry *variables;
+
+    /*
+     * Lexical outer scope.
+     *
+     * Wichtig für Closures / Currying.
+     */
+    struct Environment *parent;
+
+    /*
+     * Generation des Runtime-Environments.
+     */
+    size_t generation;
+
+} Environment;
+
+
+static Environment *environment_create(
+    Environment *parent,
+    size_t generation
+)
+{
+    Environment *environment =
+        malloc(sizeof(Environment));
+
+    if (environment == NULL)
+        return NULL;
+
+    environment->variables = NULL;
+    environment->parent = parent;
+    environment->generation = generation;
+
+    return environment;
+}
+
+
+static int environment_define(
+    Environment *environment,
+    const char *identifier,
+    Value value
+)
+{
+    if (environment == NULL ||
+        identifier == NULL)
+        return 0;
+
+    EnvironmentEntry *entry =
+        malloc(sizeof(EnvironmentEntry));
+
+    if (entry == NULL)
+        return 0;
+
+    entry->identifier =
+        malloc(strlen(identifier) + 1);
+
+    if (entry->identifier == NULL) {
+        free(entry);
+        return 0;
+    }
+
+    strcpy(
+        entry->identifier,
+        identifier
+    );
+
+    entry->value = value;
+
+    entry->next =
+        environment->variables;
+
+    environment->variables =
+        entry;
+
+    return 1;
+}
+
+
+static Value *environment_lookup(
+    Environment *environment,
+    const char *identifier
+)
+{
+    while (environment != NULL) {
+
+        EnvironmentEntry *entry =
+            environment->variables;
+
+        while (entry != NULL) {
+
+            if (strcmp(
+                    entry->identifier,
+                    identifier
+                ) == 0)
+                return &entry->value;
+
+            entry = entry->next;
+        }
+
+        environment =
+            environment->parent;
+    }
+
+    return NULL;
+}
+
+
+static int environment_assign(
+    Environment *environment,
+    const char *identifier,
+    Value value
+)
+{
+    while (environment != NULL) {
+
+        EnvironmentEntry *entry =
+            environment->variables;
+
+        while (entry != NULL) {
+
+            if (strcmp(
+                    entry->identifier,
+                    identifier
+                ) == 0) {
+
+                entry->value = value;
+
+                return 1;
+            }
+
+            entry = entry->next;
+        }
+
+        environment =
+            environment->parent;
+    }
+
+    return 0;
+}
+
+
+static void environment_free(
+    Environment *environment
+)
+{
+    if (environment == NULL)
+        return;
+
+    EnvironmentEntry *entry =
+        environment->variables;
+
+    while (entry != NULL) {
+
+        EnvironmentEntry *next =
+            entry->next;
+
+        free(entry->identifier);
+
+        free(entry);
+
+        entry = next;
+    }
+
+    free(environment);
+}
+```
+
+###### Now the dump is defined. Here we make an important change to the original SECD model: The dump explicitly stores the full runtime-call-context.
+
+```c
+/* ============================================================
+ * DUMP / CALL FRAMES
+ * ============================================================ */
+
+typedef struct DumpFrame {
+
+    /*
+     * Environment of the callers.
+     */
+    Environment *environment;
+
+    /*
+     * Stack-state of the callers.
+     *
+     * we use one runtime-stack;
+     * stack_base tells us the call depth.
+     */
+    size_t stack_base;
+
+    struct DumpFrame *next;
+
+} DumpFrame;
+
+
+typedef struct {
+
+    DumpFrame *top;
+
+    size_t depth;
+
+} Dump;
+
+
+static void dump_init(Dump *dump)
+{
+    dump->top = NULL;
+    dump->depth = 0;
+}
+
+
+static int dump_push(
+    Dump *dump,
+    Environment *environment,
+    size_t stack_base
+)
+{
+    DumpFrame *frame =
+        malloc(sizeof(DumpFrame));
+
+    if (frame == NULL)
+        return 0;
+
+    frame->environment =
+        environment;
+
+    frame->stack_base =
+        stack_base;
+
+    frame->next =
+        dump->top;
+
+    dump->top =
+        frame;
+
+    dump->depth++;
+
+    return 1;
+}
+
+
+static int dump_pop(
+    Dump *dump,
+    Environment **environment,
+    size_t *stack_base
+)
+{
+    if (dump == NULL ||
+        dump->top == NULL)
+        return 0;
+
+    DumpFrame *frame =
+        dump->top;
+
+    dump->top =
+        frame->next;
+
+    dump->depth--;
+
+    if (environment != NULL)
+        *environment =
+            frame->environment;
+
+    if (stack_base != NULL)
+        *stack_base =
+            frame->stack_base;
+
+    free(frame);
+
+    return 1;
+}
+```
+
+###### Function modeling. A function has only one parameter at all times. If there are more parameters, it is realized by currying 
+
+```c
+typedef int (*FunctionBody)(
+    Runtime *runtime
+);
+
+
+typedef struct Function {
+
+    char *parameter_name;
+
+    Type parameter_type;
+
+    Type return_type;
+
+    /*
+     * Lexikalisches Environment für Closures.
+     */
+    Environment *closure_environment;
+
+    FunctionBody body;
+
+} Function;
+```
+
+######  **FunctionBody**: The function resolves the parameter during runtime. The **FunctionBody** holds only the function and function signature description:
+
+```text
+Stack
+   ↓
+CALL
+   ↓
+Environment
+   ↓
+Function Body
+```
+###### The lookup of a reference in the environment. If the reference is not found in the actual generation, the lookup looks in the older generation; if not found, the lookup searches up to the top-level environment (root)
+
+```c
+Value *x =
+    environment_lookup(
+        runtime->environment,
+        "x"
+    );
+```
+
 
 **NOTE**: TO BE CONTINUED
 

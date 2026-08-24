@@ -1,6 +1,6 @@
-###### [Goto top](../index.html)
-###### [Go next](././travelling-through-comp-scienceP2.html)
-###### [Go back](./index.html)
+- [Goto top](../index.html)
+- [Go next](././traveling-through-comp-scienceP2.html)
+- [Go back](./index.html)
 
 # An article about the history - how data and code design changed
 

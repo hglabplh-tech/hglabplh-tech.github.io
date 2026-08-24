@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-<title>travelling-through-comp-scienceP2</title>
+<title>traveling-through-comp-scienceP1</title>
 <style type="text/css">
 :root {
     --color-scale-black: #1b1f23;
@@ -1349,680 +1349,478 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 </head>
 <body>
 <textarea id="source" style="display: none">
+- [Goto top](../index.html)
+- [Go next](././traveling-through-comp-scienceP2.html)
+- [Go back](./index.html)
 
-###### [Goto top](../index.html)
-###### [Goto index](./index.html)
-###### [Go back](./travelling-through-comp-scienceP1.html)
-
-# The idea of functional programming 
-
-## My coding / designing thoughts Part II - Functional Part
-
-### First steps - a long time ago
-
-#### Step one - the introduction of the lambda calculus
-
-The history of functional programming and design started in the 1930's (no joke). At that time, a mathematical Genius, Alonzo Church, introduced the theory of the lambda calculus. For short, it is:
-```text
-  Conceptualized computation using mathematical abstraction and variable binding.
-```
-
-At the time, it was not possible to realize anything from it, and I don't think he was aware of the influence his theory would have on modern computation and programming languages, or that a complete paradigm of design and programming would be invented based on that theory.
-
-##### How data are processed in a functional way:
-<!--
-Source - https://stackoverflow.com/a/41912122
-Posted by Philipp Schwarz, modified by community. See post 'Timeline' for change history
-Retrieved 2026-08-24, License - CC BY-SA 4.0
--->
-
-![Flow image cannot be displayed](./fun-coding.png "The flow of data in the functional paradigm")
+# An article about the history - how data and code design changed
 
 
-#### Pioneering (1950s–1960s) - The introduction of a new computing language (LISP)
-
-John McCarthy had the idea to create a programming language out of this theory, so LISP was invented. LISP stands for  LISt Processor or LISt processing. Here is a little code snippet of the first LISP version (the Fibonacci):
-
-```lisp
-(label fib
-  (lambda (n)
-    (cond ((eq n 0) 0)
-          ((eq n 1) 1)
-          (t (+ (fib (- n 1)) (fib (- n 2)))))))
-```
-and to be a bit more modern here, the same in the widespread version of LISP (Common LISP)
-
-```lisp
-(defun fib (n)
-  (cond ((= n 0) 0)
-        ((= n 1) 1)
-        (t (+ (fib (- n 1)) (fib (- n 2))))))
-
-```
-Now a function is shown to explain currying in code. Currying is done because, by definition, the functions contain that only one parameter per function is allowed. So the creators had to think about how to define a function with 1..n parameters. The solution was currying.
-
-__**Key Syntax Concepts**__
-- lambda: Returns an anonymous function that captures the value of x from its surrounding environment (a lexical closure).
-- funcall: Required in Common Lisp to evaluate an anonymous function or a function stored inside a variable.
-- setf: Binds the newly generated anonymous function to the variable add-ten.
-```lisp
-;; Here is how the add function is defined without currying
-(defun non-curried-add (x y)  
-    (+ x y))
-
-;; Define the curried function generator
-(defun curried-add (x)
-  (lambda (y)
-    (+ x y)))
-
-;; 1. Use it directly to add 5 and 10
-(funcall (curried-add 5) 10) ; Returns 15
-
-;; 2. Create a specialized "partial" function
-(setf add-ten (curried-add 10))
-
-;; 3. Call the specialized function later
-(funcall add-ten 20) ; Returns 30
-```
-Here, the currying is shown by defining a simple add function with two parameters. In Common LISP and other functional languages like Scheme or Haskell, currying happens under the hood.
-To show two other languages here the way of curriing in **Scheme** and **Clojure** :
-```scheme
-;; Define the curried function
-(define ((curried-add x) y)
-  (+ x y))
-
-;; 1. Use it directly
-((curried-add 5) 10)         ; Returns 15
-
-;; 2. Create a partial function
-(define add-ten (curried-add 10))
-
-;; 3. Call it directly like a regular function
-(add-ten 20)                 ; Returns 30
-```
-```clojure
-;; Take a normal multi-argument function
-(defn add [x y] (+ x y))
-
-;; Instantly create a partial function
-(def add-ten (partial add 10))
-
-(add-ten 20) ;; returns 30
-```
+## My coding / designing thoughts Part I - A walk through history
 
 
-#### Typing & Purity (1970s–1990s) - Introduce types and introduce purity
+### My way of looking at code and data
 
-In the 1970s to 1990s, the idea was to introduce data types, that is, pure functional behavior, to functional languages. The leading languages here were ML (Meta Language) and Haskell.
-Here are two examples one in **Haskell** and one in **ML (Meta Language)** in our case **SML => Standard ML** :
-```haskell
--- Define a normal-looking function
-add :: Int -> Int -> Int
-add x y = x + y
+When I learned computer science, I developed my own way to look at code, processing, and data that is processed
 
--- 1. Use it directly (looks like a normal call, no commas or parentheses needed)
-result = add 5 10      -- Returns 15
+It started with the imperative way of looking at it. Dealing with languages like Pascal, C, PL/1, COBOL, and REXX (VM/CMS interpreter version), I started to look at the code as something manipulating a defined instance of data, and I learned to know data structures and a kind of streams and blocks:
 
--- 2. Create a partial function just by leaving out the second argument
-addTen = add 10
+#### "Streams" and "Blocks"
 
--- 3. Call it later
-finalResult = addTen 20 -- Returns 30
-```
-```sml
-(* 1. Define a curried add function *)
-fun add x y = x + y
+The first stream I looked at was stream-like file reading and reading files as "records" (meaning fixed-length blocks of 80 bytes / 72-byte punch/reader format). Unlike the text files on UNIX, these files had no line delimiter on the host, like '\n'.
+But in most cases, it is unstructured data; text data is "structured" by processing it in code.
 
-(* The compiler infers the type as: fn : int -> int -> int *)
+##### fixed length record data
+
+With these fixed-length record files, there is a direct connection to the former puncher and reader formats, which can be emulated. 
+
+##### variable length record data
+The next step is a variable
+Record length. Here the first 2 bytes tell the length.
+
+#### How to structure one record 
+
+total 80 byte (F 80)
+###### Positions:
+- 0..19 name
+- 20..39 surname
+- 40..54 street
+- 55..74 city
+- 75..80 postal code
+
+You can imagine that the code to parse and structure for writing the changed record is a bit complicated, and it is sometimes annoying to code that way, even if the "structures" get more complex compound data.
 
 
-(* 2. Use it directly *)
-val result = add 5 10         (* Returns 15 *)
+#### Structured Data 
 
+After that, I learned that programming languages can structure data. This can be done (I use ANSI C as an example language) by a structure like
+You can also define these structures as a type.
 
-(* 3. Create a partial function by supplying only the first argument *)
-val addTen = add 10           (* Returns a function of type: int -> int *)
-
-
-(* 4. Call the partial function later *)
-val finalResult = addTen 20   (* Returns 30 *)
-```
-
-Another high-impact idea is purity, which means a pure functional implementation of functionality like I/O (in the examples, standard I/O). Haskell implements a feature called **Monads**. Here is the monadic way of implementing standard I/O:
-
-```haskell
--- A pure function: No I/O allowed here. Given the same input, it always returns the same output.
-greetPure :: String -> String
-greetPure name = "Hello, " ++ name ++ "!"
-
--- A monadic I/O function: It returns an action of type 'IO ()'
-main :: IO ()
-main = do
-    putStrLn "What is your name?"
-    name <- getLine                    -- Extract the String out of the IO Monad
-    let greeting = greetPure name      -- Call the pure function inside the impure block
-    putStrLn greeting                  -- Print the result
-```   
-Other languages, e.g., ML, use the imperative approach directly. This results in a mixture of two paradigms for I/O; use this as an example. Here is an example:
-
-```sml
-(* A pure function *)
-fun greetPure name = "Hello, " ^ name ^ "!"
-
-(* An impure function that does I/O directly *)
-fun main () =
-    let
-        val _ = print "What is your name?\n"
-        val name = valOf (TextIO.inputLine TextIO.stdIn) (* Directly reads from console *)
-        val cleanName = String.substring (name, 0, String.size name - 1) (* Remove trailing newline *)
-        val greeting = greetPure cleanName
-    in
-        print (greeting ^ "\n")                         (* Directly prints to console *)
-    end
-```
-But in languages like **ML**, **Clojure** and **Scheme**, you can define monads easily to get a pure functional implementation in the application itself. Here is an example in **Clojure**:
-```clojure
-;; The abstract for that kind of logic
-;; 1. The Monad Context Creator
-;; An IO action is represented simply as a 0-argument function (a thunk)
-(defn io-return [v]
-  (fn [] v))
-
-;; 2. The Monad Binder
-;; Sequences two IO actions together without executing them yet
-(defn io-bind [io-action f]
-  (fn []
-    (let [pure-val (io-action)]     ;; Run the first action to get the inner value
-      ((f pure-val)))))            ;; Pass it to function f, then run the resulting action
-
-;; 3. The Runner (The Impure Entry Point)
-;; Forces the execution of the entire monadic chain
-(defn run-io [io-action]
-  (io-action))
-
-```
-
-Now a bit more practical
-
-```clojure
-;; The implementation in the way of the abstract above
-;; A monadic action that prints a string to the console
-(defn io-print [s]
-  (fn [] 
-    (println s)
-    nil)) ;; Returns nil inside the monad context
-
-;; A monadic action that reads a line from the console
-(def io-read-line
-  (fn [] 
-    (read-line)))
-```
-These enhancements introduced new aspects of the functional paradigm and made it more usable in production, where types make it easier to ensure code robustness.
-
-#### Modern (2000s–Present) - The adoption of the functional paradigm in mainstream languages
-
-The functional paradigm is very useful. Especially if functions run in parallel. This is because the functional paradigm has no side effects. Functions take defined arguments and return freshly created values or aggregates rather than manipulating aggregates or values defined in the calling function, procedure, or method. Or globally defined values. Here are some examples of the functional paradigm integration in popular languages:
-
-Example in **Scala**:
-```scala
-def makeMultiplier(x: Int): Int => Int = {
-  y => x * y
+```C
+struct address {
+	char* name;
+	char* surname;
+	char* street;
+	char* city;
+	char* postal-code;
 }
 
-@main def run() = {
-  // Create a specialized function that doubles a number
-  val totalDoubler = makeMultiplier(2)
-  
-  println(totalDoubler(5)) // Output: 10
-}
-```
-Example in **Java Version 8 or higher**:
-```java
-import java.util.function.Function;
+typedef struct _BILL {
+	int     rec_type;
+	long 	part_number;
+	char*	articel_name;
+	int 	count;
+	float   price;
+	double  total; 
+} BILL, PBILL*;
 
-public class Main {
-    public static Function<Integer, Integer> makeMultiplier(int x) {
-        // x is captured inside the lambda block below
-        return (y) -> x * y;
-    }
-
-    public static void main(String[] args) {
-        // Create a specialized function that doubles a number
-        Function<Integer, Integer> totalDoubler = makeMultiplier(2);
-        
-        System.out.println(totalDoubler.apply(5)); // Output: 10
-    }
-}
-```
-Example in **Clojure**:
-```clojure
-(defn make-multiplier [x]
-  (fn [y] (* x y)))
-
-;; Create a specialized function that doubles a number
-(def total-doubler (make-multiplier 2))
-
-(println (total-doubler 5)) ; Output: 10
 ```
 
-```javascript
-const makeMultiplier = (x) => {
-  return (y) => x * y;
-};
+With this kind of data, a program can be better structured and more flexible; it handles complex compound data much better this way.
 
-// Create a specialized function that doubles a number
-const totalDoubler = makeMultiplier(2);
+The next thing I learned was that, by the language feature 'BASED' in PL/1 (union in C does nearly the same), it is possible to have variants of data coming in the same storage that can be handled by simply adding a record type, and so there are more possibilities for what kind of data can appear in the same place.
 
-console.log(totalDoubler(5)); // Output: 10
-```
-Example in **Kotlin**:
-```kotlin
-fun makeMultiplier(x: Int): (Int) -> Int {
-    return { y -> x * y }
-}
+Think about our BILL now we do that 
 
-fun main() {
-    // Create a specialized function that doubles a number
-    val totalDoubler = makeMultiplier(2)
-    
-    println(totalDoubler(5)) // Output: 10
-}
-```
-Example in **Python**:
-```python
-def make_multiplier(x):
-    def multiplier(y):
-        return x * y
-    return multiplier
+```C
+typedef struct _BILL_FORM_1 {
+	long 	part_number;
+	char*	articel_name;
+	int 	count;
+	float   price;
+	double  total; 
+} BILL_FORM_1, *P;
 
-# Create a specialized function that doubles a number
-total_doubler = make_multiplier(2)
+typedef struct _BILL_FORM_2 {
+	long 	liter;
+	char*	articel_name;
+	int 	count;
+	float   price;
+	double  total; 
+} BILL_FORM_2;
 
-print(total_doubler(5)) # Output: 10
-```
-Example in **Rust**
-```rust
-// impl Fn(i32) -> i32 means "returns something that implements this function signature"
-fn make_multiplier(x: i32) -> impl Fn(i32) -> i32 {
-    // The "move" keyword forces the closure to take ownership of 'x'
-    move |y| x * y
-}
-
-fn main() {
-    // Create a specialized function that doubles a number
-    let total_doubler = make_multiplier(2);
-    
-    println!("{}", total_doubler(5)); // Output: 10
-}
-```
-Example in **C++ -> V11 or higher**
-```cpp
-#include <iostream>
-#include <functional>
-
-// std::function<int(int)> defines a function taking an int and returning an int
-std::function<int(int)> makeMultiplier(int x) {
-    // [x] copies 'x' into the lambda's internal storage
-    return [x](int y) {
-        return x * y;
-    };
-}
-
-int main() {
-    // Create a specialized function that doubles a number
-    auto totalDoubler = makeMultiplier(2);
-    
-    std::cout << totalDoubler(5) << std::endl; // Output: 10
-    return 0;
-}
 ```
 
-The takeaway is that the functional paradigm is very old, like the multi-threading idea. The problem was how to implement the paradigm with limited memory and non-parallel processors with only one core and a low instruction-per-second rate. 
+And now comes the trick: Let's think the first type is 1 and the second type is 2
 
-### Now let's look under the hood
+So we can do it like that (I found that fascinating):
 
-One great step in the history was the introduction of the **SECD** machine by Peter Landin. 
 
-#### The history and abstract of the __SECD__ ( __S__ tack __E__ nvironment __C__ ode / __C__ ontrol __D__ ump) machine
+```C
+typedef union _BILL_DATA {
+		BILL_FORM_1 bill_t_1;
+		BILL_FORM_2 bill_t_2;
+} BILL_DATA;
 
-Peter Landin was the crucial bridge between abstract mathematics and practical computer science. While Alonzo Church invented lambda calculus as a logic tool and John McCarthy used it loosely to inspire LISP, Landin was the first to realize that lambda calculus could model and decode real-world programming languages.
-In the 1960s, Landin introduced several revolutionary concepts that laid the groundwork for modern functional compiler design:
+typedef struct _THE_BILL {
+	int bill_type;
+	BILL_DATA the_bill_data;
+} THE_BILL
 
-##### 1964 - Landin invented the SECD Machine
+```
 
-- It was the world's first abstract machine (virtual machine) specifically designed to run functional code.
-- Instead of mapping functions to mechanical computer hardware, compilers could target this virtual machine.
-- It mathematically proved how to handle things like nested variables and environments safely.
+Thinking in those structures opened a completely new world because the logic was simpler. For example when deciding which record we need:
 
-##### 1965 - Landin invented the ISWIM and the "Off-Side Rule"
+```C
+switch (rec_type) {
+	case 1:
+		/* do something with BILL_FORM_1 */
+		break;
+	case 2:
+		/* do something with BILL_FORM_2 */
+		break;
+	default:
+		printf("%s", "error"); 
+} 
 
-- It was arguably the first language to align perfectly with the core ethos of modern functional programming.
-- He introduced the Off-Side Rule, which uses indentation and whitespace to define code blocks. 
-- If you have ever written Python, Haskell, or F#, you are using Landin's whitespace logic.
+```
 
-##### Coining "Syntactic Sugar"
-Landin coined the phrase "syntactic sugar". He used it to describe user-friendly features in a language's syntax that do not change what the code can do, but make it much easier for humans to read and write. He showed that many complex programming language commands were just "sugar" built on top of basic lambda calculus.
+The next thing, opening a new step of thinking about logic by handling complex data, started in the 1970s:
 
-##### Inventing the "Closure"
+```
+ :h1 id='intr'.Chapter 1:  Introduction
+   :p.GML supported hierarchical containers, such as
+   :ol.
+   :li. Ordered lists (like this one),
+   :li. Unordered lists, and
+   :li. Definition lists
+   :eol.
+   as well as simple structures.
+   :p.Markup minimization (later generalized and formalised in SGML),
+   allowed the end-tags to be omitted for the "h1" and "p" elements.
+```
 
-When figuring out how to make higher-order functions work on physical computers, Landin realized that a function passed around as data needs to remember the variables that surrounded it when it was born. He invented the concept of a closure (a function bundled with references to its surrounding state). Today, closures are vital components of **JavaScript**, **Swift**, and **Rust**, as well as other languages that use the functional paradigm, like **Java**, **Python**, **LISP**, and many others.
+This **GML**(General Markup Language) mutated to **SGML** (Structured General Markup Langage):
 
-**NOTE**: TO BE CONTINUED
+``` XML
+<lines>
+	<line>first line</line>
+	<line>second line</line>
+</lines>
+
+```
+
+Two standards were developed out of **SGML** -> **_XML_** and **_HTML_** (the well-known standards).
+
+With this method, I thought ok now I can handle much more complex data with low effort, for the languages are parsed not by my own program, but there are parser libraries delivering a structured output, like for **_XML_** **DOM** parser (**DOM** -> Document Object Model)
+
+This data is very good for some kind of structured data
+
+The other thing I was excited about was relational data storage (**_DB2_**, my first Relational Database).
+
+I think to explain the functionality of relational databases in that place is a bit to much.
+I only showed these examples because this opened my mind to a new kind of programming and processing data
+
+#### Data and functionality:
+
+At one point in my career coding and designing in **ANSI C**, I reached a point where the logic was too complex to handle in a conventional way, so I thought, why not mix data and functionality in a structure? This was possible by using function pointers
+
+ 
+```C
+typedef struct _MIX_FUN_DAT {
+	int a;
+	int b;
+	int (*add_pointer)(int,int);
+} MIX_FUN_DAT, PMIX_FUN_DAT*
+
+// Function definition
+int addition(int x, int y) {
+  return x + y;
+}
+
+int main () {
+	MIX_FUN_DAT my_struct;
+	my_struct.a = 7;
+	my_struct.b = 9;
+	my_struct.add_pointer = &addition;
+	int result = (*my_struct.add_pointer)(my_struct.a, my_struct.b);
+	// result is 16
+}
+````
+
+Now what you see here is a very complicated way to add two integers, but let us see what happens if:
+
+```C
+typedef struct _MIX_FUN_DAT {
+	_MIX_FUN_DAT *self;
+	int a;
+	int b;
+	int (*add)(_MIX_FUN_DAT *self);
+	void (*display_add_res)(_MIX_FUN_DAT *self);
+} MIX_FUN_DAT, PMIX_FUN_DAT*
+
+// function for add
+int addition(PMIX_FUN_DAT self) {
+  return (self->a + self->b);
+}
+
+// function for display
+void display_addition_res(PMIX_FUN_DAT self) {
+  int result = (*self->add)(self);
+  printf("The result is: %d\n", result);
+}
+
+
+
+int main () {
+	MIX_FUN_DAT my_struct;
+	my_struct.self = &my_struct;
+	my_struct.a = 7;
+	my_struct.b = 9;
+	my_struct.add_pointer = &addition;
+	(*my_struct.display_add_res)(my_struct.self);
+	int result = (*my_struct.add)(my_struct.self);
+	// result is 16
+}
+````
+
+Ok, now you can think about what you associate with that code. For me it is nearly 
+like an object
+
+And of course it is not far away from:
+
+```C
+
+typedef struct _FUN_AND_ENV {
+	_FUN_AND_ENV *self;
+	char** env; 
+	int (*get_at)(_FUN_AND_ENV *self, int);
+	char* (*concat)(_FUN_AND_ENV *self), int ,int);
+} FUN_AND_ENV, PFUN_AND_ENV*
+
+
+char* fun_get_at(PFUN_AND_ENV self, int index) {
+	return self->env[index];
+}
+
+char* fun_concat(PFUN_AND_ENV self, int first, int second) {
+	char* the_first = (*self->get_at)(first);
+	char* the_first = (*self->get_at)(second);
+	return strcat(the_first, the_second);
+}
+
+
+```
+
+And finally, it should be clear how flexible this kind of structuring can be.
+
+#### The way it went
+Ok, I talked about how data were handled in former times. By structuring, code was also structured the same way with Nassi / Schneidermann. If you try to do that today, you will fail because in comparison to earlier times, there is a huge amount of data that has to be handled, and to be successful with that, the code is much more complex, and other ways to store data have changed more and more from local storage to distributed storage systems and Cloud storage. These architectures also require new ways to express application logic. Also, the most-used paradigms in software development have changed. Pure imperative languages have largely been replaced by object-oriented and/or functional languages. Even C++ (object oriented) is one of the languages built on top a imperative language in this case ANSI C. There are things like streaming libraries in Java / Python / C# and the structure of the data is often defined by data 'structures' like __JSON__(**J**ava **S**cript **O**bject **N**otation) or __XML__ (**E**xtended **M**arkup **L**anguage). But we often also need full-text search in RTF, WORD, PDF, or other formats. Here, libraries like Hadoop (Apache) come in. These tools search in an 'intelligent' way, like with backtracking, thesaurus, parsing PDF, fuzzy match, and/or AI. To see what I experienced as these strategies emerged, I invite you to read the next article about changes in application design. The object-oriented paradigm and what happens under the hood in object-oriented languages. And the same for the functional paradigm.
 
 - Harald Glab-Plhak
 - Computer Science since 1992
 
-- &copy; Harald Glab-Plhak (2026)
+- &copy; Harald Glab-Plhak (2024-2026)
+
+
 
 
 
 </textarea>
 <div id="markdown">
-<h6><a href="../index.html">Goto top</a></h6>
-<h6><a href="./index.html">Goto index</a></h6>
-<h6><a href="./travelling-through-comp-scienceP1.html">Go back</a></h6>
-<h1>The idea of functional programming</h1>
-<h2>My coding / designing thoughts Part II - Functional Part</h2>
-<h3>First steps - a long time ago</h3>
-<h4>Step one - the introduction of the lambda calculus</h4>
-<p>The history of functional programming and design started in the 1930's (no joke). At that time, a mathematical Genius, Alonzo Church, introduced the theory of the lambda calculus. For short, it is:</p>
-<pre><code class="language-text">  Conceptualized computation using mathematical abstraction and variable binding.
-</code></pre>
-<p>At the time, it was not possible to realize anything from it, and I don't think he was aware of the influence his theory would have on modern computation and programming languages, or that a complete paradigm of design and programming would be invented based on that theory.</p>
-<h5>How data are processed in a functional way:</h5>
-<!--
-Source - https://stackoverflow.com/a/41912122
-Posted by Philipp Schwarz, modified by community. See post 'Timeline' for change history
-Retrieved 2026-08-24, License - CC BY-SA 4.0
--->
-<p><img src="./fun-coding.png" alt="Flow image cannot be displayed" title="The flow of data in the functional paradigm" /></p>
-<h4>Pioneering (1950s–1960s) - The introduction of a new computing language (LISP)</h4>
-<p>John McCarthy had the idea to create a programming language out of this theory, so LISP was invented. LISP stands for  LISt Processor or LISt processing. Here is a little code snippet of the first LISP version (the Fibonacci):</p>
-<pre><code class="language-lisp">(label fib
-  (lambda (n)
-    (cond ((eq n 0) 0)
-          ((eq n 1) 1)
-          (t (+ (fib (- n 1)) (fib (- n 2)))))))
-</code></pre>
-<p>and to be a bit more modern here, the same in the widespread version of LISP (Common LISP)</p>
-<pre><code class="language-lisp">(defun fib (n)
-  (cond ((= n 0) 0)
-        ((= n 1) 1)
-        (t (+ (fib (- n 1)) (fib (- n 2))))))
-
-</code></pre>
-<p>Now a function is shown to explain currying in code. Currying is done because, by definition, the functions contain that only one parameter per function is allowed. So the creators had to think about how to define a function with 1..n parameters. The solution was currying.</p>
-<p><strong><strong>Key Syntax Concepts</strong></strong></p>
 <ul>
-<li>lambda: Returns an anonymous function that captures the value of x from its surrounding environment (a lexical closure).</li>
-<li>funcall: Required in Common Lisp to evaluate an anonymous function or a function stored inside a variable.</li>
-<li>setf: Binds the newly generated anonymous function to the variable add-ten.</li>
+<li><a href="../index.html">Goto top</a></li>
+<li><a href="././traveling-through-comp-scienceP2.html">Go next</a></li>
+<li><a href="./index.html">Go back</a></li>
 </ul>
-<pre><code class="language-lisp">;; Here is how the add function is defined without currying
-(defun non-curried-add (x y)  
-    (+ x y))
-
-;; Define the curried function generator
-(defun curried-add (x)
-  (lambda (y)
-    (+ x y)))
-
-;; 1. Use it directly to add 5 and 10
-(funcall (curried-add 5) 10) ; Returns 15
-
-;; 2. Create a specialized &quot;partial&quot; function
-(setf add-ten (curried-add 10))
-
-;; 3. Call the specialized function later
-(funcall add-ten 20) ; Returns 30
-</code></pre>
-<p>Here, the currying is shown by defining a simple add function with two parameters. In Common LISP and other functional languages like Scheme or Haskell, currying happens under the hood.
-To show two other languages here the way of curriing in <strong>Scheme</strong> and <strong>Clojure</strong> :</p>
-<pre><code class="language-scheme">;; Define the curried function
-(define ((curried-add x) y)
-  (+ x y))
-
-;; 1. Use it directly
-((curried-add 5) 10)         ; Returns 15
-
-;; 2. Create a partial function
-(define add-ten (curried-add 10))
-
-;; 3. Call it directly like a regular function
-(add-ten 20)                 ; Returns 30
-</code></pre>
-<pre><code class="language-clojure">;; Take a normal multi-argument function
-(defn add [x y] (+ x y))
-
-;; Instantly create a partial function
-(def add-ten (partial add 10))
-
-(add-ten 20) ;; returns 30
-</code></pre>
-<h4>Typing &amp; Purity (1970s–1990s) - Introduce types and introduce purity</h4>
-<p>In the 1970s to 1990s, the idea was to introduce data types, that is, pure functional behavior, to functional languages. The leading languages here were ML (Meta Language) and Haskell.
-Here are two examples one in <strong>Haskell</strong> and one in <strong>ML (Meta Language)</strong> in our case <strong>SML =&gt; Standard ML</strong> :</p>
-<pre><code class="language-haskell">-- Define a normal-looking function
-add :: Int -&gt; Int -&gt; Int
-add x y = x + y
-
--- 1. Use it directly (looks like a normal call, no commas or parentheses needed)
-result = add 5 10      -- Returns 15
-
--- 2. Create a partial function just by leaving out the second argument
-addTen = add 10
-
--- 3. Call it later
-finalResult = addTen 20 -- Returns 30
-</code></pre>
-<pre><code class="language-sml">(* 1. Define a curried add function *)
-fun add x y = x + y
-
-(* The compiler infers the type as: fn : int -&gt; int -&gt; int *)
-
-
-(* 2. Use it directly *)
-val result = add 5 10         (* Returns 15 *)
-
-
-(* 3. Create a partial function by supplying only the first argument *)
-val addTen = add 10           (* Returns a function of type: int -&gt; int *)
-
-
-(* 4. Call the partial function later *)
-val finalResult = addTen 20   (* Returns 30 *)
-</code></pre>
-<p>Another high-impact idea is purity, which means a pure functional implementation of functionality like I/O (in the examples, standard I/O). Haskell implements a feature called <strong>Monads</strong>. Here is the monadic way of implementing standard I/O:</p>
-<pre><code class="language-haskell">-- A pure function: No I/O allowed here. Given the same input, it always returns the same output.
-greetPure :: String -&gt; String
-greetPure name = &quot;Hello, &quot; ++ name ++ &quot;!&quot;
-
--- A monadic I/O function: It returns an action of type 'IO ()'
-main :: IO ()
-main = do
-    putStrLn &quot;What is your name?&quot;
-    name &lt;- getLine                    -- Extract the String out of the IO Monad
-    let greeting = greetPure name      -- Call the pure function inside the impure block
-    putStrLn greeting                  -- Print the result
-</code></pre>
-<p>Other languages, e.g., ML, use the imperative approach directly. This results in a mixture of two paradigms for I/O; use this as an example. Here is an example:</p>
-<pre><code class="language-sml">(* A pure function *)
-fun greetPure name = &quot;Hello, &quot; ^ name ^ &quot;!&quot;
-
-(* An impure function that does I/O directly *)
-fun main () =
-    let
-        val _ = print &quot;What is your name?\n&quot;
-        val name = valOf (TextIO.inputLine TextIO.stdIn) (* Directly reads from console *)
-        val cleanName = String.substring (name, 0, String.size name - 1) (* Remove trailing newline *)
-        val greeting = greetPure cleanName
-    in
-        print (greeting ^ &quot;\n&quot;)                         (* Directly prints to console *)
-    end
-</code></pre>
-<p>But in languages like <strong>ML</strong>, <strong>Clojure</strong> and <strong>Scheme</strong>, you can define monads easily to get a pure functional implementation in the application itself. Here is an example in <strong>Clojure</strong>:</p>
-<pre><code class="language-clojure">;; The abstract for that kind of logic
-;; 1. The Monad Context Creator
-;; An IO action is represented simply as a 0-argument function (a thunk)
-(defn io-return [v]
-  (fn [] v))
-
-;; 2. The Monad Binder
-;; Sequences two IO actions together without executing them yet
-(defn io-bind [io-action f]
-  (fn []
-    (let [pure-val (io-action)]     ;; Run the first action to get the inner value
-      ((f pure-val)))))            ;; Pass it to function f, then run the resulting action
-
-;; 3. The Runner (The Impure Entry Point)
-;; Forces the execution of the entire monadic chain
-(defn run-io [io-action]
-  (io-action))
-
-</code></pre>
-<p>Now a bit more practical</p>
-<pre><code class="language-clojure">;; The implementation in the way of the abstract above
-;; A monadic action that prints a string to the console
-(defn io-print [s]
-  (fn [] 
-    (println s)
-    nil)) ;; Returns nil inside the monad context
-
-;; A monadic action that reads a line from the console
-(def io-read-line
-  (fn [] 
-    (read-line)))
-</code></pre>
-<p>These enhancements introduced new aspects of the functional paradigm and made it more usable in production, where types make it easier to ensure code robustness.</p>
-<h4>Modern (2000s–Present) - The adoption of the functional paradigm in mainstream languages</h4>
-<p>The functional paradigm is very useful. Especially if functions run in parallel. This is because the functional paradigm has no side effects. Functions take defined arguments and return freshly created values or aggregates rather than manipulating aggregates or values defined in the calling function, procedure, or method. Or globally defined values. Here are some examples of the functional paradigm integration in popular languages:</p>
-<p>Example in <strong>Scala</strong>:</p>
-<pre><code class="language-scala">def makeMultiplier(x: Int): Int =&gt; Int = {
-  y =&gt; x * y
-}
-
-@main def run() = {
-  // Create a specialized function that doubles a number
-  val totalDoubler = makeMultiplier(2)
-  
-  println(totalDoubler(5)) // Output: 10
-}
-</code></pre>
-<p>Example in <strong>Java Version 8 or higher</strong>:</p>
-<pre><code class="language-java">import java.util.function.Function;
-
-public class Main {
-    public static Function&lt;Integer, Integer&gt; makeMultiplier(int x) {
-        // x is captured inside the lambda block below
-        return (y) -&gt; x * y;
-    }
-
-    public static void main(String[] args) {
-        // Create a specialized function that doubles a number
-        Function&lt;Integer, Integer&gt; totalDoubler = makeMultiplier(2);
-        
-        System.out.println(totalDoubler.apply(5)); // Output: 10
-    }
-}
-</code></pre>
-<p>Example in <strong>Clojure</strong>:</p>
-<pre><code class="language-clojure">(defn make-multiplier [x]
-  (fn [y] (* x y)))
-
-;; Create a specialized function that doubles a number
-(def total-doubler (make-multiplier 2))
-
-(println (total-doubler 5)) ; Output: 10
-</code></pre>
-<pre><code class="language-javascript">const makeMultiplier = (x) =&gt; {
-  return (y) =&gt; x * y;
-};
-
-// Create a specialized function that doubles a number
-const totalDoubler = makeMultiplier(2);
-
-console.log(totalDoubler(5)); // Output: 10
-</code></pre>
-<p>Example in <strong>Kotlin</strong>:</p>
-<pre><code class="language-kotlin">fun makeMultiplier(x: Int): (Int) -&gt; Int {
-    return { y -&gt; x * y }
-}
-
-fun main() {
-    // Create a specialized function that doubles a number
-    val totalDoubler = makeMultiplier(2)
-    
-    println(totalDoubler(5)) // Output: 10
-}
-</code></pre>
-<p>Example in <strong>Python</strong>:</p>
-<pre><code class="language-python">def make_multiplier(x):
-    def multiplier(y):
-        return x * y
-    return multiplier
-
-# Create a specialized function that doubles a number
-total_doubler = make_multiplier(2)
-
-print(total_doubler(5)) # Output: 10
-</code></pre>
-<p>Example in <strong>Rust</strong></p>
-<pre><code class="language-rust">// impl Fn(i32) -&gt; i32 means &quot;returns something that implements this function signature&quot;
-fn make_multiplier(x: i32) -&gt; impl Fn(i32) -&gt; i32 {
-    // The &quot;move&quot; keyword forces the closure to take ownership of 'x'
-    move |y| x * y
-}
-
-fn main() {
-    // Create a specialized function that doubles a number
-    let total_doubler = make_multiplier(2);
-    
-    println!(&quot;{}&quot;, total_doubler(5)); // Output: 10
-}
-</code></pre>
-<p>Example in <strong>C++ -&gt; V11 or higher</strong></p>
-<pre><code class="language-cpp">#include &lt;iostream&gt;
-#include &lt;functional&gt;
-
-// std::function&lt;int(int)&gt; defines a function taking an int and returning an int
-std::function&lt;int(int)&gt; makeMultiplier(int x) {
-    // [x] copies 'x' into the lambda's internal storage
-    return [x](int y) {
-        return x * y;
-    };
-}
-
-int main() {
-    // Create a specialized function that doubles a number
-    auto totalDoubler = makeMultiplier(2);
-    
-    std::cout &lt;&lt; totalDoubler(5) &lt;&lt; std::endl; // Output: 10
-    return 0;
-}
-</code></pre>
-<p>The takeaway is that the functional paradigm is very old, like the multi-threading idea. The problem was how to implement the paradigm with limited memory and non-parallel processors with only one core and a low instruction-per-second rate.</p>
-<h3>Now let's look under the hood</h3>
-<p>One great step in the history was the introduction of the <strong>SECD</strong> machine by Peter Landin.</p>
-<h4>The history and abstract of the <strong>SECD</strong> ( <strong>S</strong> tack <strong>E</strong> nvironment <strong>C</strong> ode / <strong>C</strong> ontrol <strong>D</strong> ump) machine</h4>
-<p>Peter Landin was the crucial bridge between abstract mathematics and practical computer science. While Alonzo Church invented lambda calculus as a logic tool and John McCarthy used it loosely to inspire LISP, Landin was the first to realize that lambda calculus could model and decode real-world programming languages.
-In the 1960s, Landin introduced several revolutionary concepts that laid the groundwork for modern functional compiler design:</p>
-<h5>1964 - Landin invented the SECD Machine</h5>
+<h1>An article about the history - how data and code design changed</h1>
+<h2>My coding / designing thoughts Part I - A walk through history</h2>
+<h3>My way of looking at code and data</h3>
+<p>When I learned computer science, I developed my own way to look at code, processing, and data that is processed</p>
+<p>It started with the imperative way of looking at it. Dealing with languages like Pascal, C, PL/1, COBOL, and REXX (VM/CMS interpreter version), I started to look at the code as something manipulating a defined instance of data, and I learned to know data structures and a kind of streams and blocks:</p>
+<h4>&quot;Streams&quot; and &quot;Blocks&quot;</h4>
+<p>The first stream I looked at was stream-like file reading and reading files as &quot;records&quot; (meaning fixed-length blocks of 80 bytes / 72-byte punch/reader format). Unlike the text files on UNIX, these files had no line delimiter on the host, like '\n'.
+But in most cases, it is unstructured data; text data is &quot;structured&quot; by processing it in code.</p>
+<h5>fixed length record data</h5>
+<p>With these fixed-length record files, there is a direct connection to the former puncher and reader formats, which can be emulated.</p>
+<h5>variable length record data</h5>
+<p>The next step is a variable
+Record length. Here the first 2 bytes tell the length.</p>
+<h4>How to structure one record</h4>
+<p>total 80 byte (F 80)</p>
+<h6>Positions:</h6>
 <ul>
-<li>It was the world's first abstract machine (virtual machine) specifically designed to run functional code.</li>
-<li>Instead of mapping functions to mechanical computer hardware, compilers could target this virtual machine.</li>
-<li>It mathematically proved how to handle things like nested variables and environments safely.</li>
+<li>0..19 name</li>
+<li>20..39 surname</li>
+<li>40..54 street</li>
+<li>55..74 city</li>
+<li>75..80 postal code</li>
 </ul>
-<h5>1965 - Landin invented the ISWIM and the &quot;Off-Side Rule&quot;</h5>
-<ul>
-<li>It was arguably the first language to align perfectly with the core ethos of modern functional programming.</li>
-<li>He introduced the Off-Side Rule, which uses indentation and whitespace to define code blocks.</li>
-<li>If you have ever written Python, Haskell, or F#, you are using Landin's whitespace logic.</li>
-</ul>
-<h5>Coining &quot;Syntactic Sugar&quot;</h5>
-<p>Landin coined the phrase &quot;syntactic sugar&quot;. He used it to describe user-friendly features in a language's syntax that do not change what the code can do, but make it much easier for humans to read and write. He showed that many complex programming language commands were just &quot;sugar&quot; built on top of basic lambda calculus.</p>
-<h5>Inventing the &quot;Closure&quot;</h5>
-<p>When figuring out how to make higher-order functions work on physical computers, Landin realized that a function passed around as data needs to remember the variables that surrounded it when it was born. He invented the concept of a closure (a function bundled with references to its surrounding state). Today, closures are vital components of <strong>JavaScript</strong>, <strong>Swift</strong>, and <strong>Rust</strong>, as well as other languages that use the functional paradigm, like <strong>Java</strong>, <strong>Python</strong>, <strong>LISP</strong>, and many others.</p>
-<p><strong>NOTE</strong>: TO BE CONTINUED</p>
+<p>You can imagine that the code to parse and structure for writing the changed record is a bit complicated, and it is sometimes annoying to code that way, even if the &quot;structures&quot; get more complex compound data.</p>
+<h4>Structured Data</h4>
+<p>After that, I learned that programming languages can structure data. This can be done (I use ANSI C as an example language) by a structure like
+You can also define these structures as a type.</p>
+<pre><code class="language-C">struct address {
+	char* name;
+	char* surname;
+	char* street;
+	char* city;
+	char* postal-code;
+}
+
+typedef struct _BILL {
+	int     rec_type;
+	long 	part_number;
+	char*	articel_name;
+	int 	count;
+	float   price;
+	double  total; 
+} BILL, PBILL*;
+
+</code></pre>
+<p>With this kind of data, a program can be better structured and more flexible; it handles complex compound data much better this way.</p>
+<p>The next thing I learned was that, by the language feature 'BASED' in PL/1 (union in C does nearly the same), it is possible to have variants of data coming in the same storage that can be handled by simply adding a record type, and so there are more possibilities for what kind of data can appear in the same place.</p>
+<p>Think about our BILL now we do that</p>
+<pre><code class="language-C">typedef struct _BILL_FORM_1 {
+	long 	part_number;
+	char*	articel_name;
+	int 	count;
+	float   price;
+	double  total; 
+} BILL_FORM_1, *P;
+
+typedef struct _BILL_FORM_2 {
+	long 	liter;
+	char*	articel_name;
+	int 	count;
+	float   price;
+	double  total; 
+} BILL_FORM_2;
+
+</code></pre>
+<p>And now comes the trick: Let's think the first type is 1 and the second type is 2</p>
+<p>So we can do it like that (I found that fascinating):</p>
+<pre><code class="language-C">typedef union _BILL_DATA {
+		BILL_FORM_1 bill_t_1;
+		BILL_FORM_2 bill_t_2;
+} BILL_DATA;
+
+typedef struct _THE_BILL {
+	int bill_type;
+	BILL_DATA the_bill_data;
+} THE_BILL
+
+</code></pre>
+<p>Thinking in those structures opened a completely new world because the logic was simpler. For example when deciding which record we need:</p>
+<pre><code class="language-C">switch (rec_type) {
+	case 1:
+		/* do something with BILL_FORM_1 */
+		break;
+	case 2:
+		/* do something with BILL_FORM_2 */
+		break;
+	default:
+		printf(&quot;%s&quot;, &quot;error&quot;); 
+} 
+
+</code></pre>
+<p>The next thing, opening a new step of thinking about logic by handling complex data, started in the 1970s:</p>
+<pre><code> :h1 id='intr'.Chapter 1:  Introduction
+   :p.GML supported hierarchical containers, such as
+   :ol.
+   :li. Ordered lists (like this one),
+   :li. Unordered lists, and
+   :li. Definition lists
+   :eol.
+   as well as simple structures.
+   :p.Markup minimization (later generalized and formalised in SGML),
+   allowed the end-tags to be omitted for the &quot;h1&quot; and &quot;p&quot; elements.
+</code></pre>
+<p>This <strong>GML</strong>(General Markup Language) mutated to <strong>SGML</strong> (Structured General Markup Langage):</p>
+<pre><code class="language-XML">&lt;lines&gt;
+	&lt;line&gt;first line&lt;/line&gt;
+	&lt;line&gt;second line&lt;/line&gt;
+&lt;/lines&gt;
+
+</code></pre>
+<p>Two standards were developed out of <strong>SGML</strong> -&gt; <strong><em>XML</em></strong> and <strong><em>HTML</em></strong> (the well-known standards).</p>
+<p>With this method, I thought ok now I can handle much more complex data with low effort, for the languages are parsed not by my own program, but there are parser libraries delivering a structured output, like for <strong><em>XML</em></strong> <strong>DOM</strong> parser (<strong>DOM</strong> -&gt; Document Object Model)</p>
+<p>This data is very good for some kind of structured data</p>
+<p>The other thing I was excited about was relational data storage (<strong><em>DB2</em></strong>, my first Relational Database).</p>
+<p>I think to explain the functionality of relational databases in that place is a bit to much.
+I only showed these examples because this opened my mind to a new kind of programming and processing data</p>
+<h4>Data and functionality:</h4>
+<p>At one point in my career coding and designing in <strong>ANSI C</strong>, I reached a point where the logic was too complex to handle in a conventional way, so I thought, why not mix data and functionality in a structure? This was possible by using function pointers</p>
+<pre><code class="language-C">typedef struct _MIX_FUN_DAT {
+	int a;
+	int b;
+	int (*add_pointer)(int,int);
+} MIX_FUN_DAT, PMIX_FUN_DAT*
+
+// Function definition
+int addition(int x, int y) {
+  return x + y;
+}
+
+int main () {
+	MIX_FUN_DAT my_struct;
+	my_struct.a = 7;
+	my_struct.b = 9;
+	my_struct.add_pointer = &amp;addition;
+	int result = (*my_struct.add_pointer)(my_struct.a, my_struct.b);
+	// result is 16
+}
+</code></pre>
+<p>Now what you see here is a very complicated way to add two integers, but let us see what happens if:</p>
+<pre><code class="language-C">typedef struct _MIX_FUN_DAT {
+	_MIX_FUN_DAT *self;
+	int a;
+	int b;
+	int (*add)(_MIX_FUN_DAT *self);
+	void (*display_add_res)(_MIX_FUN_DAT *self);
+} MIX_FUN_DAT, PMIX_FUN_DAT*
+
+// function for add
+int addition(PMIX_FUN_DAT self) {
+  return (self-&gt;a + self-&gt;b);
+}
+
+// function for display
+void display_addition_res(PMIX_FUN_DAT self) {
+  int result = (*self-&gt;add)(self);
+  printf(&quot;The result is: %d\n&quot;, result);
+}
+
+
+
+int main () {
+	MIX_FUN_DAT my_struct;
+	my_struct.self = &amp;my_struct;
+	my_struct.a = 7;
+	my_struct.b = 9;
+	my_struct.add_pointer = &amp;addition;
+	(*my_struct.display_add_res)(my_struct.self);
+	int result = (*my_struct.add)(my_struct.self);
+	// result is 16
+}
+</code></pre>
+<p>Ok, now you can think about what you associate with that code. For me it is nearly
+like an object</p>
+<p>And of course it is not far away from:</p>
+<pre><code class="language-C">
+typedef struct _FUN_AND_ENV {
+	_FUN_AND_ENV *self;
+	char** env; 
+	int (*get_at)(_FUN_AND_ENV *self, int);
+	char* (*concat)(_FUN_AND_ENV *self), int ,int);
+} FUN_AND_ENV, PFUN_AND_ENV*
+
+
+char* fun_get_at(PFUN_AND_ENV self, int index) {
+	return self-&gt;env[index];
+}
+
+char* fun_concat(PFUN_AND_ENV self, int first, int second) {
+	char* the_first = (*self-&gt;get_at)(first);
+	char* the_first = (*self-&gt;get_at)(second);
+	return strcat(the_first, the_second);
+}
+
+
+</code></pre>
+<p>And finally, it should be clear how flexible this kind of structuring can be.</p>
+<h4>The way it went</h4>
+<p>Ok, I talked about how data were handled in former times. By structuring, code was also structured the same way with Nassi / Schneidermann. If you try to do that today, you will fail because in comparison to earlier times, there is a huge amount of data that has to be handled, and to be successful with that, the code is much more complex, and other ways to store data have changed more and more from local storage to distributed storage systems and Cloud storage. These architectures also require new ways to express application logic. Also, the most-used paradigms in software development have changed. Pure imperative languages have largely been replaced by object-oriented and/or functional languages. Even C++ (object oriented) is one of the languages built on top a imperative language in this case ANSI C. There are things like streaming libraries in Java / Python / C# and the structure of the data is often defined by data 'structures' like <strong>JSON</strong>(<strong>J</strong>ava <strong>S</strong>cript <strong>O</strong>bject <strong>N</strong>otation) or <strong>XML</strong> (<strong>E</strong>xtended <strong>M</strong>arkup <strong>L</strong>anguage). But we often also need full-text search in RTF, WORD, PDF, or other formats. Here, libraries like Hadoop (Apache) come in. These tools search in an 'intelligent' way, like with backtracking, thesaurus, parsing PDF, fuzzy match, and/or AI. To see what I experienced as these strategies emerged, I invite you to read the next article about changes in application design. The object-oriented paradigm and what happens under the hood in object-oriented languages. And the same for the functional paradigm.</p>
 <ul>
 <li>
 <p>Harald Glab-Plhak</p>
@@ -2031,7 +1829,7 @@ In the 1960s, Landin introduced several revolutionary concepts that laid the gro
 <p>Computer Science since 1992</p>
 </li>
 <li>
-<p>© Harald Glab-Plhak (2026)</p>
+<p>© Harald Glab-Plhak (2024-2026)</p>
 </li>
 </ul>
 
