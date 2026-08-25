@@ -1,3 +1,8 @@
+
+- [GoTo Top](../index.html)
+- [GoTo Index](./index.html)
+- [Go Back](./features.html)
+
 # PL1CompInPy API Reference
 
 This file is generated from the Python source tree. Regenerate it with `python scripts/generate_api_docs.py`.

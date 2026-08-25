@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-<title>README</title>
+<title>index</title>
 <style type="text/css">
 :root {
     --color-scale-black: #1b1f23;
@@ -1349,356 +1349,53 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 </head>
 <body>
 <textarea id="source" style="display: none">
-# HGPPascal
+- [GoTo Top](../index.html)
+- [GoTo Next](./readme.html)
 
-HGPPascal is a small Pascal compiler written in Clojure. It currently compiles
-a Turbo Pascal-style subset into portable C99, textual Pascal P-Code, or JVM
-`.class` files, and can build native M3/arm64 or x86_64 executables through
-generated C and GCC.
+# PL1CompInPy: A Python-Based PL/I Compiler and Learning Runtime 
 
-The project is designed as a GitHub-ready starting point for a larger
-Turbo Pascal-compatible compiler, with a real lexer, parser, AST, code
-generators, runnable examples, tests, CI, and a legal notice separating
-compatibility work from any Borland-owned material.
+**ABSTRACT:** PL1CompInPy is an educational compiler project that explores PL/I parsing, AST construction, semantic analysis, runtime services, and multi-target code generation in Python. It supports core PL/I language features including procedures, control flow, declarations, structures, pointers, builtins, file I/O, VSAM-style datasets, and numeric computation. The project includes experimental backends for Python source, JVM bytecode, .NET IL, native assembler, and binary container formats such as PE, ELF, and Mach-O. It is designed for students, researchers, and compiler enthusiasts who want to study how to model, bootstrap, and gradually compile a classic systems language across modern platforms.
 
-## Current Compiler Features
+### The project links
 
-See `FEATURES.md` for the fuller feature matrix and compatibility roadmap.
-See `docs/ARCHITECTURE.md` for the SECD/Visitor/Descriptor direction.
-See `docs/BACKEND_STANDARDS.md` for C, JVM, and P-Code debug/profile contracts.
+- [The readme](./readme.html)
+- [The features](./features.html)
+- [The internal API](./api.html)
+- [The GitHub repository](https://github.com/hglabplh-tech/PL1CompInPy)
 
-- Program headers, `uses` clauses, `unit`/`interface`/`implementation`, `const`, `var`, `begin ... end.`
-- Integer, real, boolean, string, simple array, record, object, and pointer declarations
-- Assignments, procedure/function calls, compound statements
-- `if ... then ... else`, `while`, `repeat ... until`, and `for ... to/downto`
-- Pascal comments: `{ ... }`, `(* ... *)`, and `// ...`
-- Pascal strings with doubled quote escaping
-- Record fields, typed pointers, `nil`, `@`, and pointer dereference with `^`
-- Turbo Pascal 5.5-style `object` types with fields, methods, `Self^`, and method calls
-- Function-valued type aliases, lambda expressions with `capture`, and higher-order calls
-- Visitor-based analysis, split descriptors, SECD runtime shape, and debug/profile hooks
-- SECD/SSTD-linked numeric runtime with `sqrt`, `pow`, `round`, `mod`, trigonometric, logarithmic, and rounding functions
-- Runtime heap management for allocated variables, records, aggregates, handles, dereference checks, and `new`/`dispose`
-- Optional backend register allocation, instruction scheduling, and peephole optimization for C, P-Code, and JVM
-- Native executable build targets for Apple M3/arm64 and x86_64 through the C backend and GCC
-- Operators: `+`, `-`, `*`, `/`, `div`, `mod`, `and`, `or`, `not`, comparisons
-- Built-ins: `write`, `writeln`, `readln`, `inc`, `dec`, `new`, `dispose`, `halt`
-- Procedures and functions with value parameters
+**NOTE:** The description and the links will be updated when the project changes.
 
-## Turbo Pascal Compatibility Roadmap
+- Harald Glab-Plhak
+- Computer Science since 1992
 
-- Unit finalization and fuller standard unit compatibility
-- Full type system: sets, enumerations, subranges, packed types, and fuller pointer modes
-- `case`, `with`, `goto`, labels, packed types, file types
-- Fuller procedure variables, broader closure signatures, and by-reference parameter behavior
-- Standard CRT/DOS/System compatibility layers
-- Better semantic analysis and diagnostics
-- Native back ends in addition to C99 output
-
-## Usage
-
-Compile Pascal to C:
-
-```sh
-clojure -M:run examples/hello.pas -o out/hello.c
-```
-
-Then compile the generated C with your system compiler:
-
-```sh
-cc out/hello.c -o out/hello
-./out/hello
-```
-
-Generate Pascal P-Code:
-
-```sh
-clojure -M:run examples/hello.pas --target pcode -o out/hello.pcode
-```
-
-The P-Code format is documented in `docs/P_CODE.md`. It uses a readable
-stack-machine IR plus explicit HGPPascal extensions for runtime services,
-arrays with Pascal lower bounds, and Turbo Pascal-style built-ins.
-
-Generate JVM class files:
-
-```sh
-clojure -M:run examples/hello.pas --target jvm -o out/classes
-java -cp out/classes Hello
-```
-
-The same bytecode backend is also available as `--target bytecode`,
-`--target java-bytecode`, or `--target jvm-bytecode`.
-
-The JVM backend is documented in `docs/JVM_BACKEND.md`. It generates Java as
-an internal lowering step and uses the JDK compiler to produce real `.class`
-files.
-
-Compile a program that uses a source-backed Pascal unit:
-
-```sh
-clojure -M:run examples/unit_uses_demo.pas --target c -o out/unit_uses_demo.c
-```
-
-The compiler resolves `uses MathUtil;` by loading `MathUtil.pas` next to the
-main source file. Programmatic callers can pass unit source strings through the
-`:unit-sources` compile option.
-
-Build a native executable through C and GCC:
-
-```sh
-clojure -M:run examples/hello.pas --target native-m3 -o out/hello-m3
-clojure -M:run examples/hello.pas --target native-x86_64 -o out/hello-x86_64
-clojure -M:run examples/numeric_runtime.pas --target native-m3 -o out/numeric-runtime-m3
-```
-
-The native pipeline is lexer -> parser -> AST -> unit resolver -> C code ->
-GCC. On Apple platforms the generated GCC command uses `-arch arm64` for M3 and
-`-arch x86_64` for x86_64. Use `--gcc <command>` to select a GCC-compatible
-compiler and `--native-source out/hello.c` to keep the generated C file.
-
-The generated C and JVM outputs include the SECD/SSTD/NUMERIC/HEAP runtime
-support inside the artifact. P-Code carries a `RUNTIME_BLOCK
-hgppascal_runtime` block so a future P-Code executable host can discover and
-invoke the attached runtime engines.
-
-Enable the optional backend optimization triple:
-
-```sh
-clojure -M:run examples/hello.pas --target pcode --backend-optimizations -o out/hello.opt.pcode
-```
-
-Or enable a canonical-order subset:
-
-```sh
-clojure -M:run examples/hello.pas --target c --backend-optimization-passes register-allocation,peephole -o out/hello.opt.c
-```
-
-Run the test suite:
-
-```sh
-clojure -M:test
-```
-
-Or use Leiningen:
-
-```sh
-lein test
-lein run examples/hello.pas --target c -o out/hello.c
-```
-
-## Examples
-
-See `docs/EXAMPLES.md` for the full example guide.
-
-| Example | Feature Focus |
-| --- | --- |
-| `examples/hello.pas` | Basic program, loop, output |
-| `examples/control_flow.pas` | `for`, `if`, `repeat`, `inc`, `dec` |
-| `examples/record_fields.pas` | Record type and field access |
-| `examples/record_pointer.pas` | Typed pointers, `@`, `^`, `nil` |
-| `examples/pointer_new_dispose.pas` | `new`, `dispose`, nil-after-dispose |
-| `examples/precedence_numeric_tower.pas` | Operator precedence and real division |
-| `examples/runtime_calls.pas` | Runtime built-ins |
-| `examples/function_call_table.pas` | User functions and call-table metadata |
-| `examples/object_methods.pas` | Turbo Pascal 5.5-style objects, `Self^`, and method calls |
-| `examples/higher_order_lambda.pas` | Function type aliases, `capture`, and higher-order lambdas |
-| `examples/unit_uses_demo.pas` | `uses`, source-backed units, and unit initialization |
-
-The test suite compiles every example through the C, P-Code, and JVM backends.
-
-## Example
-
-```pascal
-program Hello;
-
-var
-  i: integer;
-
-begin
-  writeln('HGPPascal');
-  for i := 1 to 3 do
-    writeln('line ', i);
-end.
-```
-
-## Trademark And Copyright
-
-HGPPascal is independent. It aims for source compatibility with Pascal features
-historically associated with Turbo Pascal, but it does not include Borland
-source code, manuals, binaries, or copyrighted assets. See `NOTICE.md`.
-
+- &copy; Harald Glab-Plhak (2026)
 </textarea>
 <div id="markdown">
-<h1>HGPPascal</h1>
-<p>HGPPascal is a small Pascal compiler written in Clojure. It currently compiles
-a Turbo Pascal-style subset into portable C99, textual Pascal P-Code, or JVM
-<code>.class</code> files, and can build native M3/arm64 or x86_64 executables through
-generated C and GCC.</p>
-<p>The project is designed as a GitHub-ready starting point for a larger
-Turbo Pascal-compatible compiler, with a real lexer, parser, AST, code
-generators, runnable examples, tests, CI, and a legal notice separating
-compatibility work from any Borland-owned material.</p>
-<h2>Current Compiler Features</h2>
-<p>See <code>FEATURES.md</code> for the fuller feature matrix and compatibility roadmap.
-See <code>docs/ARCHITECTURE.md</code> for the SECD/Visitor/Descriptor direction.
-See <code>docs/BACKEND_STANDARDS.md</code> for C, JVM, and P-Code debug/profile contracts.</p>
 <ul>
-<li>Program headers, <code>uses</code> clauses, <code>unit</code>/<code>interface</code>/<code>implementation</code>, <code>const</code>, <code>var</code>, <code>begin ... end.</code></li>
-<li>Integer, real, boolean, string, simple array, record, object, and pointer declarations</li>
-<li>Assignments, procedure/function calls, compound statements</li>
-<li><code>if ... then ... else</code>, <code>while</code>, <code>repeat ... until</code>, and <code>for ... to/downto</code></li>
-<li>Pascal comments: <code>{ ... }</code>, <code>(* ... *)</code>, and <code>// ...</code></li>
-<li>Pascal strings with doubled quote escaping</li>
-<li>Record fields, typed pointers, <code>nil</code>, <code>@</code>, and pointer dereference with <code>^</code></li>
-<li>Turbo Pascal 5.5-style <code>object</code> types with fields, methods, <code>Self^</code>, and method calls</li>
-<li>Function-valued type aliases, lambda expressions with <code>capture</code>, and higher-order calls</li>
-<li>Visitor-based analysis, split descriptors, SECD runtime shape, and debug/profile hooks</li>
-<li>SECD/SSTD-linked numeric runtime with <code>sqrt</code>, <code>pow</code>, <code>round</code>, <code>mod</code>, trigonometric, logarithmic, and rounding functions</li>
-<li>Runtime heap management for allocated variables, records, aggregates, handles, dereference checks, and <code>new</code>/<code>dispose</code></li>
-<li>Optional backend register allocation, instruction scheduling, and peephole optimization for C, P-Code, and JVM</li>
-<li>Native executable build targets for Apple M3/arm64 and x86_64 through the C backend and GCC</li>
-<li>Operators: <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>div</code>, <code>mod</code>, <code>and</code>, <code>or</code>, <code>not</code>, comparisons</li>
-<li>Built-ins: <code>write</code>, <code>writeln</code>, <code>readln</code>, <code>inc</code>, <code>dec</code>, <code>new</code>, <code>dispose</code>, <code>halt</code></li>
-<li>Procedures and functions with value parameters</li>
+<li><a href="../index.html">GoTo Top</a></li>
+<li><a href="./readme.html">GoTo Next</a></li>
 </ul>
-<h2>Turbo Pascal Compatibility Roadmap</h2>
+<h1>PL1CompInPy: A Python-Based PL/I Compiler and Learning Runtime</h1>
+<p><strong>ABSTRACT:</strong> PL1CompInPy is an educational compiler project that explores PL/I parsing, AST construction, semantic analysis, runtime services, and multi-target code generation in Python. It supports core PL/I language features including procedures, control flow, declarations, structures, pointers, builtins, file I/O, VSAM-style datasets, and numeric computation. The project includes experimental backends for Python source, JVM bytecode, .NET IL, native assembler, and binary container formats such as PE, ELF, and Mach-O. It is designed for students, researchers, and compiler enthusiasts who want to study how to model, bootstrap, and gradually compile a classic systems language across modern platforms.</p>
+<h3>The project links</h3>
 <ul>
-<li>Unit finalization and fuller standard unit compatibility</li>
-<li>Full type system: sets, enumerations, subranges, packed types, and fuller pointer modes</li>
-<li><code>case</code>, <code>with</code>, <code>goto</code>, labels, packed types, file types</li>
-<li>Fuller procedure variables, broader closure signatures, and by-reference parameter behavior</li>
-<li>Standard CRT/DOS/System compatibility layers</li>
-<li>Better semantic analysis and diagnostics</li>
-<li>Native back ends in addition to C99 output</li>
+<li><a href="./readme.html">The readme</a></li>
+<li><a href="./features.html">The features</a></li>
+<li><a href="./api.html">The internal API</a></li>
+<li><a href="https://github.com/hglabplh-tech/PL1CompInPy">The GitHub repository</a></li>
 </ul>
-<h2>Usage</h2>
-<p>Compile Pascal to C:</p>
-<pre><code class="language-sh">clojure -M:run examples/hello.pas -o out/hello.c
-</code></pre>
-<p>Then compile the generated C with your system compiler:</p>
-<pre><code class="language-sh">cc out/hello.c -o out/hello
-./out/hello
-</code></pre>
-<p>Generate Pascal P-Code:</p>
-<pre><code class="language-sh">clojure -M:run examples/hello.pas --target pcode -o out/hello.pcode
-</code></pre>
-<p>The P-Code format is documented in <code>docs/P_CODE.md</code>. It uses a readable
-stack-machine IR plus explicit HGPPascal extensions for runtime services,
-arrays with Pascal lower bounds, and Turbo Pascal-style built-ins.</p>
-<p>Generate JVM class files:</p>
-<pre><code class="language-sh">clojure -M:run examples/hello.pas --target jvm -o out/classes
-java -cp out/classes Hello
-</code></pre>
-<p>The same bytecode backend is also available as <code>--target bytecode</code>,
-<code>--target java-bytecode</code>, or <code>--target jvm-bytecode</code>.</p>
-<p>The JVM backend is documented in <code>docs/JVM_BACKEND.md</code>. It generates Java as
-an internal lowering step and uses the JDK compiler to produce real <code>.class</code>
-files.</p>
-<p>Compile a program that uses a source-backed Pascal unit:</p>
-<pre><code class="language-sh">clojure -M:run examples/unit_uses_demo.pas --target c -o out/unit_uses_demo.c
-</code></pre>
-<p>The compiler resolves <code>uses MathUtil;</code> by loading <code>MathUtil.pas</code> next to the
-main source file. Programmatic callers can pass unit source strings through the
-<code>:unit-sources</code> compile option.</p>
-<p>Build a native executable through C and GCC:</p>
-<pre><code class="language-sh">clojure -M:run examples/hello.pas --target native-m3 -o out/hello-m3
-clojure -M:run examples/hello.pas --target native-x86_64 -o out/hello-x86_64
-clojure -M:run examples/numeric_runtime.pas --target native-m3 -o out/numeric-runtime-m3
-</code></pre>
-<p>The native pipeline is lexer -&gt; parser -&gt; AST -&gt; unit resolver -&gt; C code -&gt;
-GCC. On Apple platforms the generated GCC command uses <code>-arch arm64</code> for M3 and
-<code>-arch x86_64</code> for x86_64. Use <code>--gcc &lt;command&gt;</code> to select a GCC-compatible
-compiler and <code>--native-source out/hello.c</code> to keep the generated C file.</p>
-<p>The generated C and JVM outputs include the SECD/SSTD/NUMERIC/HEAP runtime
-support inside the artifact. P-Code carries a <code>RUNTIME_BLOCK hgppascal_runtime</code> block so a future P-Code executable host can discover and
-invoke the attached runtime engines.</p>
-<p>Enable the optional backend optimization triple:</p>
-<pre><code class="language-sh">clojure -M:run examples/hello.pas --target pcode --backend-optimizations -o out/hello.opt.pcode
-</code></pre>
-<p>Or enable a canonical-order subset:</p>
-<pre><code class="language-sh">clojure -M:run examples/hello.pas --target c --backend-optimization-passes register-allocation,peephole -o out/hello.opt.c
-</code></pre>
-<p>Run the test suite:</p>
-<pre><code class="language-sh">clojure -M:test
-</code></pre>
-<p>Or use Leiningen:</p>
-<pre><code class="language-sh">lein test
-lein run examples/hello.pas --target c -o out/hello.c
-</code></pre>
-<h2>Examples</h2>
-<p>See <code>docs/EXAMPLES.md</code> for the full example guide.</p>
-<table>
-<thead>
-<tr>
-<th>Example</th>
-<th>Feature Focus</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>examples/hello.pas</code></td>
-<td>Basic program, loop, output</td>
-</tr>
-<tr>
-<td><code>examples/control_flow.pas</code></td>
-<td><code>for</code>, <code>if</code>, <code>repeat</code>, <code>inc</code>, <code>dec</code></td>
-</tr>
-<tr>
-<td><code>examples/record_fields.pas</code></td>
-<td>Record type and field access</td>
-</tr>
-<tr>
-<td><code>examples/record_pointer.pas</code></td>
-<td>Typed pointers, <code>@</code>, <code>^</code>, <code>nil</code></td>
-</tr>
-<tr>
-<td><code>examples/pointer_new_dispose.pas</code></td>
-<td><code>new</code>, <code>dispose</code>, nil-after-dispose</td>
-</tr>
-<tr>
-<td><code>examples/precedence_numeric_tower.pas</code></td>
-<td>Operator precedence and real division</td>
-</tr>
-<tr>
-<td><code>examples/runtime_calls.pas</code></td>
-<td>Runtime built-ins</td>
-</tr>
-<tr>
-<td><code>examples/function_call_table.pas</code></td>
-<td>User functions and call-table metadata</td>
-</tr>
-<tr>
-<td><code>examples/object_methods.pas</code></td>
-<td>Turbo Pascal 5.5-style objects, <code>Self^</code>, and method calls</td>
-</tr>
-<tr>
-<td><code>examples/higher_order_lambda.pas</code></td>
-<td>Function type aliases, <code>capture</code>, and higher-order lambdas</td>
-</tr>
-<tr>
-<td><code>examples/unit_uses_demo.pas</code></td>
-<td><code>uses</code>, source-backed units, and unit initialization</td>
-</tr>
-</tbody>
-</table>
-<p>The test suite compiles every example through the C, P-Code, and JVM backends.</p>
-<h2>Example</h2>
-<pre><code class="language-pascal">program Hello;
-
-var
-  i: integer;
-
-begin
-  writeln('HGPPascal');
-  for i := 1 to 3 do
-    writeln('line ', i);
-end.
-</code></pre>
-<h2>Trademark And Copyright</h2>
-<p>HGPPascal is independent. It aims for source compatibility with Pascal features
-historically associated with Turbo Pascal, but it does not include Borland
-source code, manuals, binaries, or copyrighted assets. See <code>NOTICE.md</code>.</p>
+<p><strong>NOTE:</strong> The description and the links will be updated when the project changes.</p>
+<ul>
+<li>
+<p>Harald Glab-Plhak</p>
+</li>
+<li>
+<p>Computer Science since 1992</p>
+</li>
+<li>
+<p>© Harald Glab-Plhak (2026)</p>
+</li>
+</ul>
 
 </div>
 <script type="text/javascript">

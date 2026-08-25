@@ -1,13 +1,14 @@
+
+- [GoTo Top](../index.html)
+- [GoTo Index](./index.html)
+- [GoTo Next](./features.html)
+
+
 # PL1CompInPy
 
 PL1CompInPy is a starter Python project for a PL/1 compiler.
 
-## Project Documents
-
-- [Features](FEATURES.md)
-- [Generated API Reference](docs/API.md)
-- [Code of Conduct](CODE_OF_CONDUCT.md)
-- [MIT License](LICENSE)
+## Description
 
 The initial implementation provides a small compiler pipeline:
 
