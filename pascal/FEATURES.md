@@ -1,6 +1,12 @@
+- [GoTo Top](../index.html)
+- [GoTo Index](./index.html)
+- [GoTo Next](./architecture.html)
+- [GoTo Back](./readme.html)
+
+
 # HGPPascal Features
 
-This document describes the first supported feature set for HGPPascal. It is a
+This document describes the first set of supported HGPPascal features. It is a
 living compatibility map: features listed as implemented are covered by the
 current lexer, parser, AST, and at least one backend.
 
@@ -251,3 +257,9 @@ clojure -M:test
 HGPPascal is an independent implementation. Turbo Pascal and Borland names are
 used only to describe compatibility goals. The project does not include
 Borland source code, manuals, binaries, or copyrighted assets.
+
+
+- Harald Glab-Plhak
+- Computer Science since 1992
+
+- &copy; Harald Glab-Plhak (2026)

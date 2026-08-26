@@ -1,3 +1,8 @@
+
+- [GoTo Top](../index.html)
+- [GoTo Index](./index.html)
+- [GoTo Next](./features.html)
+
 # HGPPascal
 
 HGPPascal is a small Pascal compiler written in Clojure. It currently compiles
@@ -176,3 +181,8 @@ end.
 HGPPascal is independent. It aims for source compatibility with Pascal features
 historically associated with Turbo Pascal, but it does not include Borland
 source code, manuals, binaries, or copyrighted assets. See `NOTICE.md`.
+
+- Harald Glab-Plhak
+- Computer Science since 1992
+
+- &copy; Harald Glab-Plhak (2026)

@@ -1,3 +1,8 @@
+- [GoTo Top](../index.html)
+- [GoTo Index](./index.html)
+- [GoTo Next](./p-code.html)
+- [Go Back](./features.html)
+
 # HGPPascal Architecture Direction
 
 This document captures the integrated architecture direction taken from the
@@ -103,3 +108,8 @@ documented in `docs/BACKEND_STANDARDS.md`.
 - JVM follows JVM/Java conventions and keeps runtime support in pure generated
   Java, with a path toward class-file line tables.
 - P-Code remains the explicit research IR with stable uppercase extension tags.
+
+- Harald Glab-Plhak
+- Computer Science since 1992
+
+- &copy; Harald Glab-Plhak (2026)

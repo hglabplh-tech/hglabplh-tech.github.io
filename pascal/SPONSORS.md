@@ -1,3 +1,7 @@
+- [GoTo Top](../index.html)
+- [GoTo Index](./index.html)
+- [Go Back](./p-code.html)
+
 # Sponsor HGPPascal
 
 Thank you for considering sponsoring **HGPPascal**!
@@ -44,3 +48,9 @@ Your sponsorship helps fund:
 - Create example projects
 
 Every contribution helps move HGPPascal toward becoming one of the most complete modern open-source Pascal compilers.
+
+
+- Harald Glab-Plhak
+- Computer Science since 1992
+
+- &copy; Harald Glab-Plhak (2026)

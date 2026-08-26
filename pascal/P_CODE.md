@@ -1,3 +1,8 @@
+- [GoTo Top](../index.html)
+- [GoTo Index](./index.html)
+- [GoTo Next](./sponsors.html)
+- [Go Back](./architecture.html)
+
 # HGPPascal Pascal P-Code
 
 HGPPascal can generate either C99 or a textual Pascal P-Code IR. The P-Code
@@ -203,3 +208,8 @@ descriptors as inspectable runtime objects.
 The P-Code backend is covered by examples for arrays, records, objects,
 pointers, runtime calls, user routines, higher-order lambdas, numeric promotion,
 and control flow. See `docs/EXAMPLES.md` for the full list.
+
+- Harald Glab-Plhak
+- Computer Science since 1992
+
+- &copy; Harald Glab-Plhak (2026)
