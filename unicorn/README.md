@@ -1,5 +1,5 @@
 - [Go Top](../index.html)
-- [Go Index](./index.html)
+- [Go Index](./project-plan.html)
 - [Go Next - Features](./features.html)
 
 # Unicorn Project
