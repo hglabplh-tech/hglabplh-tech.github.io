@@ -7,6 +7,7 @@ Unicorn is an open-source platform for digital trust, certificates, and electron
 
 The project is written in Java and, so far, uses Bouncy Castle and the IAIK library for PKI, security, and the OCSP Responder. The trust lists are checked according to the rules of eIDAS, but there is no general guarantee that the checks are 100 % complete. This is because a further check against the ETSI / eIDAS reference project is required, which is also written in pure Java.
 
+- [The project status quo and target](./project-plan.html)
 - [The project README](./readme.html)
 - [The project Features](./features.html)
 - [Information about sponsoring](./sponsoring.html)
