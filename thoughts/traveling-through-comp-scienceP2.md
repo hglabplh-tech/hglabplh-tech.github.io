@@ -857,6 +857,207 @@ Value *x =
     );
 ```
 
+###### And now the code for a function call takes place 
+
+```c
+static int runtime_call(
+    Runtime *runtime,
+    Function *function
+)
+{
+    if (runtime == NULL ||
+        function == NULL)
+        return 0;
+
+
+    /*
+     * ========================================================
+     * 1. Argument liegt auf S
+     * ========================================================
+     */
+
+    Value argument;
+
+    if (!stack_pop(
+            &runtime->stack,
+            &argument
+        ))
+        return 0;
+
+
+    if (argument.type !=
+        function->parameter_type)
+        return 0;
+
+
+    /*
+     * ========================================================
+     * 2. Caller auf D sichern
+     * ========================================================
+     */
+
+    if (!dump_push(
+            &runtime->dump,
+            runtime->environment,
+            runtime->stack.size
+        ))
+        return 0;
+
+
+    /*
+     * ========================================================
+     * 3. Neue Generation
+     * ========================================================
+     */
+
+    runtime->generation++;
+
+
+    Environment *new_environment =
+        environment_create(
+            function->closure_environment,
+            runtime->generation
+        );
+
+    if (new_environment == NULL)
+        return 0;
+
+
+    runtime->environment =
+        new_environment;
+
+
+    /*
+     * ========================================================
+     * 4. Parameter S -> E
+     * ========================================================
+     */
+
+    if (!environment_define(
+            runtime->environment,
+            function->parameter_name,
+            argument
+        ))
+        return 0;
+
+
+    /*
+     * ========================================================
+     * 5. Function Body ausführen
+     * ========================================================
+     */
+
+    if (!function->body(runtime))
+        return 0;
+
+
+    /*
+     * Convention:
+     *
+     * Nach Ende des Bodies liegt exakt der
+     * Return-Wert oben auf dem Stack.
+     */
+
+    Value return_value;
+
+    if (!stack_pop(
+            &runtime->stack,
+            &return_value
+        ))
+        return 0;
+
+
+    /*
+     * ========================================================
+     * 6. Function Environment verwerfen
+     * ========================================================
+     */
+
+    Environment *dead_environment =
+        runtime->environment;
+
+
+    /*
+     * ========================================================
+     * 7. Caller aus Dump restaurieren
+     * ========================================================
+     */
+
+    Environment *caller_environment;
+    size_t caller_stack_base;
+
+    if (!dump_pop(
+            &runtime->dump,
+            &caller_environment,
+            &caller_stack_base
+        ))
+        return 0;
+
+
+    runtime->environment =
+        caller_environment;
+
+    runtime->generation--;
+
+
+    environment_free(
+        dead_environment
+    );
+
+
+    /*
+     * ========================================================
+     * 8. Return-Wert auf Caller-Stack
+     * ========================================================
+     */
+
+    stack_push(
+        &runtime->stack,
+        return_value
+    );
+
+
+    return 1;
+}
+```
+###### Here is a plain text visualization of the code above
+```text             
+CALL
+
+Stack:
+    parameter
+       │
+       ▼
+    POP
+       │
+       ▼
+Environment Generation N+1
+
+    parameter = value
+    locals...
+       │
+       ▼
+   function body
+       │
+       ▼
+    result
+       │
+       ▼
+    Stack
+       │
+       ▼
+Generation N+1 löschen
+       │
+       ▼
+Generation N restaurieren
+       │
+       ▼
+Caller Stack:
+    resulttext
+
+``` 
+
+So now we have a sceleton of a SECD logic. This logic can explain how higher-order functions are implemented and how they work. This explains the essential idea of modern functional programming. 
 
 **NOTE**: TO BE CONTINUED
 
