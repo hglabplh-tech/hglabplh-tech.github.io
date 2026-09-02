@@ -1,6 +1,7 @@
 
 ###### [Goto top](../index.html)
 ###### [Goto index](./index.html)
+###### [Go next](./traveling-through-comp-scienceP3.html)
 ###### [Go back](./traveling-through-comp-scienceP1.html)
 
 # The idea of functional programming 
@@ -1057,9 +1058,14 @@ Caller Stack:
 
 ``` 
 
-So now we have a sceleton of a SECD logic. This logic can explain how higher-order functions are implemented and how they work. This explains the essential idea of modern functional programming. 
+So now we have a skeleton of a SECD logic. This logic can explain how higher-order functions are implemented and how they work. This explains the essential idea of modern functional programming. 
 
-**NOTE**: TO BE CONTINUED
+For a long time, this functional paradigm was underestimated as too theoretical. The mainstream was, for a long time, the imperative paradigm, and later the object-oriented paradigm. But in recent years, software has become too complex to manage without the functional paradigm, so many languages like Python and Java have adopted higher-order lambda functions to express complex algorithms much more compactly. 
+
+#### Here the whole thing again as concept
+
+!["Concept cannot be shown](./fun-lambda-concept.png) 
+
 
 - Harald Glab-Plhak
 - Computer Science since 1992

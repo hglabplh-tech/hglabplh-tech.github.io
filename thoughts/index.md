@@ -7,6 +7,7 @@ I write these articles for professionals and students who want to learn how stat
 
 - [Traveling through the times - how the past gets the present and the future](./traveling-through-comp-scienceP1.html)
 - [The functional paradigm - a better way for coding without side-effects than the imperative paradigm](./traveling-through-comp-scienceP2.html)
+- [The object-oriented paradigm - see the world in objects and messaging interaction](./traveling-through-comp-scienceP3.html)
 
 There will be many more topics to write about. If you are interested, visit this page from time to time. You can also [e-mail](mailto:hglabplhak@gmail.com) me  
 
