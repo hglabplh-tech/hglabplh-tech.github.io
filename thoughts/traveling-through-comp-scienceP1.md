@@ -1,6 +1,7 @@
 - [Goto top](../index.html)
+- [Goto index](./index.html)
 - [Go next](././traveling-through-comp-scienceP2.html)
-- [Go back](./index.html)
+- [Go back](./timelines.html)
 
 # An article about the history - how data and code design changed
 
@@ -12,7 +13,7 @@
 
 When I learned computer science, I developed my own way to look at code, processing, and data that is processed
 
-It started with the imperative way of looking at it. Dealing with languages like Pascal, C, PL/1, COBOL, and REXX (VM/CMS interpreter version), I started to look at the code as something manipulating a defined instance of data, and I learned to know data structures and a kind of streams and blocks:
+It started with the imperative way of looking at it. Dealing with languages like Pascal, C, PL/1, COBOL, and REXX (VM/CMS interpreter version), I started to look at the code as something manipulating a defined instance of data, and I learned about data structures and a kind of streams and blocks:
 
 #### "Streams" and "Blocks"
 
