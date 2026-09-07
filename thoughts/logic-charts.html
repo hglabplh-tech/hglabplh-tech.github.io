@@ -1355,7 +1355,697 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 
 # Charts to express logic and their evolution
 
+The way to express the logic of **routines** and **procedures** has changed over the decades. The reason is that the foundation of expressions and theories in developing **programs/logics**
+is scientific and mathematical. This explains why, at the beginning, ways to show logic were very close to how mathematical functions and expressions are defined. As programming paradigms changed and evolved, flowcharts and similar tools became insufficient. For this reason, ways of expressing logic have changed over time. The more complex the systems and paradigms, the more complex the description logic becomes. The goal is always to simplify these descriptions so each team member can understand them at the same level.
+
 ## The history of charts to design and express logic
+
+Now you may say, why should I learn these old things? It is just history. The point is that many applications and systems are described using these older ways of expressing logic. For that reason, a professional should be able at last to read these **FlowCharts** and **PSEUDOCODE** and all the other ways to express logic. Even nowadays, some applications are designed in that way; for example, assembler-written modules. 
+
+### The ways to express logic in a timeline
+
+#### **Flowchart(1950s) -** A flowchart is a way to show logic as a picture with the following figures: 
+> ##### **Figures Table:**__Here is a table of figures and symbols used for a flowchart__ 
+
+| Symbol  | Name |Meaning / Use| 
+| ------- | ------ | -- |     
+|⬭| Terminator|  Start or end of a program/process|         
+|▭| Process    |An operation, calculation, assignment, or action|
+|◇| Decision|Condition or question; branches typically into **Yes/No** or **True/False**|
+|▱|Input/Output|Read input or produce/output data|
+|→|Flow Line|Shows the direction of Control Flow|
+|○|On-page connector|Connects two separated flow lines on the same page|
+|⬟|Off-page connector|Flow continues on another page/diagram|
+|▭ with double vertical edges|Predefined process/Subroutine|Call to another procedure, function, or predefined process|
+|⬡|Preparation|Initialization or preparation, e.g. i = 0|
+|D-shaped symbol|Delay|Waiting or delay in processing|
+|Document shape (rectangle with wavy bottom)|Document|A document/report produced or consumed|
+|Stacked documents|Multiple Documents|Several documents|
+|Cylinder|Data sources (e.g.: Database(s))|Persistent stored data, traditionally disk/database|
+|Trapezoid|Manual Operation|An operation performed manually|
+|Inverted Trapezoid|Manual input|Data entered manually, traditionally via keyboard|
+|Hexagon-like display symbol|Display|Information shown on a display|
+|Annotation/bracket|Comment/Annotation|Additional explanation associated with part of the flowchart|
+
+
+
+> ##### __A Simple program example__
+
+```text
+              ╭───────────╮
+              │   START   │
+              ╰─────┬─────╯
+                    │
+                    ▼
+             ╱─────────────╲
+            ╱    Read X     ╲       INPUT
+            ╲               ╱
+             ╲──────┬──────╱
+                    │
+                    ▼
+              ┌───────────┐
+              │  Y = X*2  │             PROCESS
+              └─────┬─────┘
+                    │
+                    ▼
+                 ╱─────╲
+                ╱ Y > 10╲                 DECISION
+                ╲       ╱
+                 ╲──┬──╱
+               Yes  │  No
+          ┌─────────┴─────────┐
+          ▼                   ▼
+    ╱────────────╲       ╱────────────╲
+   ╱ Print "big"  ╲     ╱Print "small" ╲
+   ╲               ╱     ╲              ╱
+    ╲──────┬──────╱       ╲──────┬─────╱
+           │                     │
+           └──────────┬──────────┘
+                      ▼
+                ╭───────────╮
+                │    END    │
+                ╰───────────╯
+```
+
+> ##### __An elaborated example__
+
+```text
+                         ╭────────────────────╮
+                         │       START        │
+                         ╰─────────┬──────────╯
+                                   │
+                                   ▼
+                         ⬡ PREPARATION
+                    Initialize order system
+                    attempts = 0
+                                   │
+                                   ▼
+                       ╱────────────────────╲
+                      ╱   MANUAL INPUT       ╲
+                     │ Enter customer number  │
+                      ╲──────────────────────╱
+                                   │
+                                   ▼
+                         ▱ INPUT / OUTPUT
+                    Read customer record
+                                   │
+                                   ▼
+                            ◇ DECISION
+                       Customer exists?
+                         /           \
+                      YES             NO
+                       │               │
+                       │               ▼
+                       │       ┌────────────────┐
+                       │       │    PROCESS     │
+                       │       │ Create customer│
+                       │       └───────┬────────┘
+                       │               │
+                       └───────┬───────┘
+                               │
+                               ▼
+                   ║────────────────────║
+                   ║ PREDEFINED PROCESS ║
+                   ║ CalculatePrice()   ║
+                   ║────────────────────║
+                               │
+                               ▼
+                         ◇ DECISION
+                     Payment required?
+                       /          \
+                     YES           NO
+                      │             │
+                      ▼             │
+               ▱ INPUT / OUTPUT     │
+                Request payment     │
+                      │             │
+                      ▼             │
+                 D-SHAPE            │
+                   DELAY             │
+             Wait for payment       │
+                      │             │
+                      ▼             │
+                 ◇ DECISION         │
+              Payment received?     │
+                /        \           │
+              YES        NO          │
+               │          │          │
+               │          ▼          │
+               │    ○ CONNECTOR A    │
+               │          │          │
+               └────┬─────┘          │
+                    │                │
+                    └────────┬───────┘
+                             │
+                             ▼
+                       ┌───────────┐
+                       │  PROCESS  │
+                       │ Save order│
+                       └─────┬─────┘
+                             │
+                             ▼
+                          CYLINDER
+                       ╭─────────────╮
+                       │  DATABASE   │
+                       │ Store order │
+                       ╰──────┬──────╯
+                              │
+                              ▼
+                    DOCUMENT SYMBOL
+                       ┌─────────────┐
+                       │   Invoice   │
+                       └~~~~~~~~~~~~~┘
+                              │
+                              ▼
+                MULTIPLE DOCUMENTS
+                     ┌──────────────┐
+                    ┌──────────────┐~
+                   │ Invoice      │~~
+                   │ Delivery note│~
+                   └~~~~~~~~~~~~~~┘
+                              │
+                              ▼
+                     MANUAL OPERATION
+                        ╱───────────╲
+                       │ Employee   │
+                       │ packs goods│
+                        ╲───────────╱
+                              │
+                              ▼
+                       DISPLAY SYMBOL
+                      ╭───────────────╮
+                     / "Order ready"  │
+                    ╰─────────────────╯
+                              │
+                              ├────────────── [ANNOTATION]
+                              │               Order is now
+                              │               ready to ship
+                              ▼
+                      ⬟ OFF-PAGE
+                       CONNECTOR B
+                   "Continue on page 2"
+
+
+              ───────────── PAGE 2 ─────────────
+
+                       ⬟ CONNECTOR B
+                              │
+                              ▼
+                      ┌──────────────┐
+                      │   PROCESS    │
+                      │ Ship goods   │
+                      └──────┬───────┘
+                             │
+                             ▼
+                       ○ CONNECTOR C
+                             │
+                             ▼
+                      ╭──────────────╮
+                      │     END      │
+                      ╰──────────────╯
+```
+
+One historical detail is worth noting: **flowchart symbol sets vary somewhat between standards and eras.*** The rectangle, diamond, parallelogram, terminator, and arrows are extremely stable, while symbols such as display, manual input, preparation, delay, and particular storage symbols are less commonly used in modern software flowcharts.
+
+#### **PSEUDOCODE(1960s) -** Independent code, like in a computer language, to show the logic
+
+> ##### __Keywords table of PSEUDOCODE__
+
+| Command/Keyword  | Purpose  | Example  |
+|:----------|:----------|:----------|
+| BEGIN    | Start of block/program| BEGIN    |
+| END    | End of block/program    | END    |
+| SET/←   | Assignment   | SET x ← 10  |
+| INPUT/READ|   READ input  | READ name |
+| OUTPUT/PRINT |  Produce output| PRINT message |
+| IF    | Conditional Execution    |IF x > 10 THEN |
+| THEN | True branch    | THEN...    |
+| ELSE | Alternative branch | ELSE...   |
+| ELSE IF    | Next if case|  ELSE IF x = 10 THEN    |
+| END IF    | End of if expression |END IF  |
+| CASE/SWITCH | Multiple branch expression/select | CASE command OF|
+| WHEN | Selection Alternative|WHEN 1: ...|
+| END CASE | End selection | END CASE |
+| WHILE | The pre-condition Loop| WHILE x < 10 DO |
+| END WHILE | End pre-cond loop    | END WHILE|
+| REPEAT    | The start post-condition loop    | Cell 3    |
+| UNTIL    | The post-condition end | UNTIL x = 10|
+| FOR   | Counter loop   | FOR i ← 1 TO 10 DO|
+| TO    | Counter is ascending  | 1 TO 10    |
+| DOWNTO    | Counter is descending    | 10 DOWNTO 1 | 
+| STEP    | Change increment/decrement step value/default 1/-1| STEP 2/-2|
+| END FOR | End for loop    | END FOR | 
+| FOR EACH | Iterate through list  | FOR EACH item IN list    |
+| BREAK   | leave loop immediate| BREAK |
+| CONTINUE | Iterate immediate  | CONTINUE |
+| FUNCTION | Define Function | FUNCTION max(a,b) |
+| PROCEDURE| Define Procedure | PROCEDURE printString(s)|
+| CALL | Call Procudure | CALL printString()|
+| RETURN | return a value| RETURN value|
+| DECLARE | declare a variable | DECLARE x AS INTEGER |
+| ARRAY | declare an array | DECLARE values AS ARRAY |
+| GOTO | jump without condition | GOTO retry |
+| LABEL | JUMP label | LABEL retry |
+| AND | logical AND | 3 < x AND y= 9 | 
+| OR | logical OR | 3 > t OR z >= 100 |
+| NOT | logical negation | NOT finished | 
+| TRUE, FALSE| True/False - boolean constants | finished ← FALSE    |
+
+> ##### __Examples using PSEUDOCODE__
+
+1. Sequence
+```text
+BEGIN
+    READ x
+    SET y ← x * 2
+    PRINT y
+END
+```
+
+2. IF/THEN/ELSE
+```text
+IF age >= 18 THEN
+    PRINT "adult"
+ELSE
+    PRINT "minor"
+END IF
+```
+> - Here is a flowchart-like structure for comparison
+```text
+             ◇
+         age >= 18?
+          /       \
+       TRUE       FALSE
+        ↓            ↓
+ PRINT "adult"  PRINT "minor"
+```
+
+3. WHILE
+```text
+SET i ← 0
+
+WHILE i < 10 DO
+    PRINT i
+    SET i ← i + 1
+END WHILE
+```
+
+4. REPEAT/UNTIL
+```text
+REPEAT
+    PRINT "Enter system password:"
+    READ password
+UNTIL password = correctPassword
+```
+
+5. FOR
+```text
+FOR i ← 1 TO 10 DO
+    PRINT i
+END FOR
+```
+
+
+6. SWITCH/CASE
+
+```text
+CASE command OF
+    WHEN 1:
+        PRINT "Open"
+    WHEN 2:
+        PRINT "Save"
+    WHEN 3:
+        PRINT "Exit"
+    OTHERWISE:
+        PRINT "Unknown command"
+END CASE
+```
+
+
+7. Functions
+> ##### The definition
+```text
+FUNCTION maximum(a, b)
+    IF a > b THEN
+        RETURN a
+    ELSE
+        RETURN b
+    END IF
+END FUNCTION
+```
+>##### The invocation
+```text
+largest ← maximum(x, y)
+```
+
+8. Procedures
+```text
+PROCEDURE printAddress(address)
+    PRINT address.name
+    PRINT address.street
+    PRINT address.city
+END PROCEDURE
+
+CALL printAddress(customerAddress)
+```
+
+
+9. A tiny program
+
+```text
+BEGIN
+
+    DECLARE numbers AS ARRAY
+    DECLARE searchValue AS INTEGER
+    DECLARE found AS BOOLEAN
+
+    READ numbers
+    READ searchValue
+
+    SET found ← FALSE
+
+    FOR EACH number IN numbers DO
+
+        IF number = searchValue THEN
+            SET found ← TRUE
+            BREAK
+        END IF
+
+    END FOR
+
+    IF found THEN
+        PRINT "Value found"
+    ELSE
+        PRINT "Value not found"
+    END IF
+
+END
+```
+
+
+10. A little minimalistic language core  
+
+```text
+BEGIN / END
+
+READ
+PRINT
+SET
+
+IF / THEN / ELSE / END IF
+
+WHILE / DO / END WHILE
+REPEAT / UNTIL
+FOR / TO / STEP / END FOR
+
+FUNCTION / PROCEDURE
+CALL
+RETURN
+
+BREAK
+CONTINUE
+```
+
+**REMARK:** With sequence + selection (**IF**) + iteration (**WHILE**), you already have the fundamental structured-programming control structures. **FOR**, **CASE**, **REPEAT**, etc. mainly make algorithms easier for humans to express and read.
+
+
+###### Datatypes in PSEUDOCODE:
+```text
+DATA TYPE DEFINITIONS
+=====================
+
+Primitive Data Types
+--------------------
+
+BOOLEAN
+    Logical value.
+    Values: TRUE, FALSE
+
+CHARACTER
+    A single character.
+    Example: 'A'
+
+STRING
+    A sequence of characters.
+    Example: "Hello World"
+
+INTEGER
+    Whole signed number.
+    Examples: -100, 0, 42
+
+NATURAL
+    Non-negative whole number.
+    Examples: 0, 1, 2, 100
+
+REAL
+    Real / floating-point number.
+    Examples: 3.14, -0.25, 1.0
+
+FLOAT
+    Single-precision floating-point number.
+    Example: 3.14159
+
+DOUBLE
+    Double-precision floating-point number.
+    Example: 3.141592653589793
+
+DECIMAL
+    Decimal number with defined decimal precision.
+    Often useful for financial calculations.
+    Example: 123.45
+
+
+Special Data Types
+------------------
+
+VOID
+    Represents no value.
+    Typically used as the return type of procedures.
+
+NULL
+    Represents the absence of a value.
+
+ANY
+    Represents a value of any supported type.
+
+
+Collection / Compound Data Types
+--------------------------------
+
+ARRAY OF <TYPE>
+    Fixed-size or indexed collection of elements
+    having the same type.
+
+    Example:
+        DECLARE numbers AS ARRAY[10] OF INTEGER
+
+
+LIST OF <TYPE>
+    Ordered collection of elements.
+
+    Example:
+        DECLARE names AS LIST OF STRING
+
+
+SET OF <TYPE>
+    Unordered collection containing unique elements.
+
+    Example:
+        DECLARE numbers AS SET OF INTEGER
+
+
+MAP OF <KEY_TYPE, VALUE_TYPE>
+    Collection of key/value associations.
+
+    Example:
+        DECLARE ages AS MAP OF <STRING, INTEGER>
+
+
+QUEUE OF <TYPE>
+    First-In-First-Out collection.
+
+    Example:
+        DECLARE jobs AS QUEUE OF STRING
+
+
+STACK OF <TYPE>
+    Last-In-First-Out collection.
+
+    Example:
+        DECLARE values AS STACK OF INTEGER
+
+
+RECORD / STRUCTURE
+------------------
+
+RECORD
+    Compound data type containing named fields.
+
+    Example:
+
+        TYPE Address = RECORD
+            name    AS STRING
+            street  AS STRING
+            city    AS STRING
+            zipCode AS STRING
+        END RECORD
+
+
+ENUMERATION
+-----------
+
+ENUM
+    Defines a finite set of named values.
+
+    Example:
+
+        TYPE Color = ENUM
+            RED,
+            GREEN,
+            BLUE
+        END ENUM
+
+
+REFERENCE TYPES
+---------------
+
+REFERENCE TO <TYPE>
+    Reference to another value or object.
+
+    Example:
+        DECLARE customer AS REFERENCE TO Customer
+
+
+POINTER TO <TYPE>
+    Explicit address/reference to another value.
+    Mainly useful when pseudocode describes
+    low-level algorithms.
+
+    Example:
+        DECLARE next AS POINTER TO Node
+
+
+OPTIONAL TYPES
+--------------
+
+OPTIONAL <TYPE>
+    Value can either contain a value of TYPE
+    or contain no value.
+
+    Example:
+        DECLARE result AS OPTIONAL INTEGER
+
+
+USER-DEFINED TYPES
+------------------
+
+TYPE <NAME> = <TYPE-DEFINITION>
+
+    Creates a new named data type.
+
+    Example:
+        TYPE CustomerID = INTEGER
+
+
+OBJECT / CLASS TYPES
+--------------------
+
+CLASS
+    Structured data type containing state
+    and operations.
+
+    Example:
+
+        CLASS Customer
+            name    AS STRING
+            address AS Address
+        END CLASS
+
+
+FUNCTION TYPES
+--------------
+
+FUNCTION(<PARAMETER_TYPES>) RETURNS <TYPE>
+
+    Represents a callable function.
+
+    Example:
+        DECLARE compare AS
+            FUNCTION(INTEGER, INTEGER) RETURNS BOOLEAN
+
+
+Generic Types
+-------------
+
+<TYPE>
+    Placeholder for another data type.
+
+    Example:
+        LIST OF <T>
+        ARRAY OF <T>
+        MAP OF <K, V>
+
+
+Typical Variable Declaration
+----------------------------
+
+DECLARE <name> AS <type>
+
+Examples:
+
+    DECLARE counter AS INTEGER
+    DECLARE price AS DECIMAL
+    DECLARE average AS REAL
+    DECLARE finished AS BOOLEAN
+    DECLARE letter AS CHARACTER
+    DECLARE name AS STRING
+    DECLARE values AS ARRAY[100] OF INTEGER
+    DECLARE names AS LIST OF STRING
+
+
+Declaration with Initial Value
+------------------------------
+
+DECLARE <name> AS <type> ← <value>
+
+Examples:
+
+    DECLARE counter AS INTEGER ← 0
+    DECLARE pi AS REAL ← 3.14159265
+    DECLARE finished AS BOOLEAN ← FALSE
+    DECLARE name AS STRING ← "John"
+
+
+Constants
+---------
+
+CONSTANT <name> AS <type> ← <value>
+
+Examples:
+
+    CONSTANT MAX_SIZE AS INTEGER ← 1000
+    CONSTANT PI AS REAL ← 3.14159265
+
+
+Type Inference
+--------------
+
+DECLARE <name> ← <value>
+
+The type is inferred from the initial value.
+
+Examples:
+
+    DECLARE counter ← 0
+    DECLARE name ← "John"
+    DECLARE finished ← FALSE
+```
+
+##### Here is the link to Backus/Naur form  (BNF) for the PSEUDOCODE:
+ 
+The language definition is shown here to prove that PSEUDOCODE has all necessary language elements 
+
+[The Backus/Naur(BNF) Form  for pseudocode](./bnf_pseudocode/pseudocode.html) 
 
 - ![Image cannot be displayed](./logic-presentations/logic-history.png)
 
@@ -1371,7 +2061,915 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 <li><a href="././traveling-through-comp-scienceP3.html">Go back</a></li>
 </ul>
 <h1>Charts to express logic and their evolution</h1>
+<p>The way to express the logic of <strong>routines</strong> and <strong>procedures</strong> has changed over the decades. The reason is that the foundation of expressions and theories in developing <strong>programs/logics</strong>
+is scientific and mathematical. This explains why, at the beginning, ways to show logic were very close to how mathematical functions and expressions are defined. As programming paradigms changed and evolved, flowcharts and similar tools became insufficient. For this reason, ways of expressing logic have changed over time. The more complex the systems and paradigms, the more complex the description logic becomes. The goal is always to simplify these descriptions so each team member can understand them at the same level.</p>
 <h2>The history of charts to design and express logic</h2>
+<p>Now you may say, why should I learn these old things? It is just history. The point is that many applications and systems are described using these older ways of expressing logic. For that reason, a professional should be able at last to read these <strong>FlowCharts</strong> and <strong>PSEUDOCODE</strong> and all the other ways to express logic. Even nowadays, some applications are designed in that way; for example, assembler-written modules.</p>
+<h3>The ways to express logic in a timeline</h3>
+<h4><strong>Flowchart(1950s) -</strong> A flowchart is a way to show logic as a picture with the following figures:</h4>
+<blockquote>
+<h5><strong>Figures Table:</strong><strong>Here is a table of figures and symbols used for a flowchart</strong></h5>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Name</th>
+<th>Meaning / Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>⬭</td>
+<td>Terminator</td>
+<td>Start or end of a program/process</td>
+</tr>
+<tr>
+<td>▭</td>
+<td>Process</td>
+<td>An operation, calculation, assignment, or action</td>
+</tr>
+<tr>
+<td>◇</td>
+<td>Decision</td>
+<td>Condition or question; branches typically into <strong>Yes/No</strong> or <strong>True/False</strong></td>
+</tr>
+<tr>
+<td>▱</td>
+<td>Input/Output</td>
+<td>Read input or produce/output data</td>
+</tr>
+<tr>
+<td>→</td>
+<td>Flow Line</td>
+<td>Shows the direction of Control Flow</td>
+</tr>
+<tr>
+<td>○</td>
+<td>On-page connector</td>
+<td>Connects two separated flow lines on the same page</td>
+</tr>
+<tr>
+<td>⬟</td>
+<td>Off-page connector</td>
+<td>Flow continues on another page/diagram</td>
+</tr>
+<tr>
+<td>▭ with double vertical edges</td>
+<td>Predefined process/Subroutine</td>
+<td>Call to another procedure, function, or predefined process</td>
+</tr>
+<tr>
+<td>⬡</td>
+<td>Preparation</td>
+<td>Initialization or preparation, e.g. i = 0</td>
+</tr>
+<tr>
+<td>D-shaped symbol</td>
+<td>Delay</td>
+<td>Waiting or delay in processing</td>
+</tr>
+<tr>
+<td>Document shape (rectangle with wavy bottom)</td>
+<td>Document</td>
+<td>A document/report produced or consumed</td>
+</tr>
+<tr>
+<td>Stacked documents</td>
+<td>Multiple Documents</td>
+<td>Several documents</td>
+</tr>
+<tr>
+<td>Cylinder</td>
+<td>Data sources (e.g.: Database(s))</td>
+<td>Persistent stored data, traditionally disk/database</td>
+</tr>
+<tr>
+<td>Trapezoid</td>
+<td>Manual Operation</td>
+<td>An operation performed manually</td>
+</tr>
+<tr>
+<td>Inverted Trapezoid</td>
+<td>Manual input</td>
+<td>Data entered manually, traditionally via keyboard</td>
+</tr>
+<tr>
+<td>Hexagon-like display symbol</td>
+<td>Display</td>
+<td>Information shown on a display</td>
+</tr>
+<tr>
+<td>Annotation/bracket</td>
+<td>Comment/Annotation</td>
+<td>Additional explanation associated with part of the flowchart</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<h5><strong>A Simple program example</strong></h5>
+</blockquote>
+<pre><code class="language-text">              ╭───────────╮
+              │   START   │
+              ╰─────┬─────╯
+                    │
+                    ▼
+             ╱─────────────╲
+            ╱    Read X     ╲       INPUT
+            ╲               ╱
+             ╲──────┬──────╱
+                    │
+                    ▼
+              ┌───────────┐
+              │  Y = X*2  │             PROCESS
+              └─────┬─────┘
+                    │
+                    ▼
+                 ╱─────╲
+                ╱ Y &gt; 10╲                 DECISION
+                ╲       ╱
+                 ╲──┬──╱
+               Yes  │  No
+          ┌─────────┴─────────┐
+          ▼                   ▼
+    ╱────────────╲       ╱────────────╲
+   ╱ Print &quot;big&quot;  ╲     ╱Print &quot;small&quot; ╲
+   ╲               ╱     ╲              ╱
+    ╲──────┬──────╱       ╲──────┬─────╱
+           │                     │
+           └──────────┬──────────┘
+                      ▼
+                ╭───────────╮
+                │    END    │
+                ╰───────────╯
+</code></pre>
+<blockquote>
+<h5><strong>An elaborated example</strong></h5>
+</blockquote>
+<pre><code class="language-text">                         ╭────────────────────╮
+                         │       START        │
+                         ╰─────────┬──────────╯
+                                   │
+                                   ▼
+                         ⬡ PREPARATION
+                    Initialize order system
+                    attempts = 0
+                                   │
+                                   ▼
+                       ╱────────────────────╲
+                      ╱   MANUAL INPUT       ╲
+                     │ Enter customer number  │
+                      ╲──────────────────────╱
+                                   │
+                                   ▼
+                         ▱ INPUT / OUTPUT
+                    Read customer record
+                                   │
+                                   ▼
+                            ◇ DECISION
+                       Customer exists?
+                         /           \
+                      YES             NO
+                       │               │
+                       │               ▼
+                       │       ┌────────────────┐
+                       │       │    PROCESS     │
+                       │       │ Create customer│
+                       │       └───────┬────────┘
+                       │               │
+                       └───────┬───────┘
+                               │
+                               ▼
+                   ║────────────────────║
+                   ║ PREDEFINED PROCESS ║
+                   ║ CalculatePrice()   ║
+                   ║────────────────────║
+                               │
+                               ▼
+                         ◇ DECISION
+                     Payment required?
+                       /          \
+                     YES           NO
+                      │             │
+                      ▼             │
+               ▱ INPUT / OUTPUT     │
+                Request payment     │
+                      │             │
+                      ▼             │
+                 D-SHAPE            │
+                   DELAY             │
+             Wait for payment       │
+                      │             │
+                      ▼             │
+                 ◇ DECISION         │
+              Payment received?     │
+                /        \           │
+              YES        NO          │
+               │          │          │
+               │          ▼          │
+               │    ○ CONNECTOR A    │
+               │          │          │
+               └────┬─────┘          │
+                    │                │
+                    └────────┬───────┘
+                             │
+                             ▼
+                       ┌───────────┐
+                       │  PROCESS  │
+                       │ Save order│
+                       └─────┬─────┘
+                             │
+                             ▼
+                          CYLINDER
+                       ╭─────────────╮
+                       │  DATABASE   │
+                       │ Store order │
+                       ╰──────┬──────╯
+                              │
+                              ▼
+                    DOCUMENT SYMBOL
+                       ┌─────────────┐
+                       │   Invoice   │
+                       └~~~~~~~~~~~~~┘
+                              │
+                              ▼
+                MULTIPLE DOCUMENTS
+                     ┌──────────────┐
+                    ┌──────────────┐~
+                   │ Invoice      │~~
+                   │ Delivery note│~
+                   └~~~~~~~~~~~~~~┘
+                              │
+                              ▼
+                     MANUAL OPERATION
+                        ╱───────────╲
+                       │ Employee   │
+                       │ packs goods│
+                        ╲───────────╱
+                              │
+                              ▼
+                       DISPLAY SYMBOL
+                      ╭───────────────╮
+                     / &quot;Order ready&quot;  │
+                    ╰─────────────────╯
+                              │
+                              ├────────────── [ANNOTATION]
+                              │               Order is now
+                              │               ready to ship
+                              ▼
+                      ⬟ OFF-PAGE
+                       CONNECTOR B
+                   &quot;Continue on page 2&quot;
+
+
+              ───────────── PAGE 2 ─────────────
+
+                       ⬟ CONNECTOR B
+                              │
+                              ▼
+                      ┌──────────────┐
+                      │   PROCESS    │
+                      │ Ship goods   │
+                      └──────┬───────┘
+                             │
+                             ▼
+                       ○ CONNECTOR C
+                             │
+                             ▼
+                      ╭──────────────╮
+                      │     END      │
+                      ╰──────────────╯
+</code></pre>
+<p>One historical detail is worth noting: <strong>flowchart symbol sets vary somewhat between standards and eras.</strong>* The rectangle, diamond, parallelogram, terminator, and arrows are extremely stable, while symbols such as display, manual input, preparation, delay, and particular storage symbols are less commonly used in modern software flowcharts.</p>
+<h4><strong>PSEUDOCODE(1960s) -</strong> Independent code, like in a computer language, to show the logic</h4>
+<blockquote>
+<h5><strong>Keywords table of PSEUDOCODE</strong></h5>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="left">Command/Keyword</th>
+<th align="left">Purpose</th>
+<th align="left">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">BEGIN</td>
+<td align="left">Start of block/program</td>
+<td align="left">BEGIN</td>
+</tr>
+<tr>
+<td align="left">END</td>
+<td align="left">End of block/program</td>
+<td align="left">END</td>
+</tr>
+<tr>
+<td align="left">SET/←</td>
+<td align="left">Assignment</td>
+<td align="left">SET x ← 10</td>
+</tr>
+<tr>
+<td align="left">INPUT/READ</td>
+<td align="left">READ input</td>
+<td align="left">READ name</td>
+</tr>
+<tr>
+<td align="left">OUTPUT/PRINT</td>
+<td align="left">Produce output</td>
+<td align="left">PRINT message</td>
+</tr>
+<tr>
+<td align="left">IF</td>
+<td align="left">Conditional Execution</td>
+<td align="left">IF x &gt; 10 THEN</td>
+</tr>
+<tr>
+<td align="left">THEN</td>
+<td align="left">True branch</td>
+<td align="left">THEN...</td>
+</tr>
+<tr>
+<td align="left">ELSE</td>
+<td align="left">Alternative branch</td>
+<td align="left">ELSE...</td>
+</tr>
+<tr>
+<td align="left">ELSE IF</td>
+<td align="left">Next if case</td>
+<td align="left">ELSE IF x = 10 THEN</td>
+</tr>
+<tr>
+<td align="left">END IF</td>
+<td align="left">End of if expression</td>
+<td align="left">END IF</td>
+</tr>
+<tr>
+<td align="left">CASE/SWITCH</td>
+<td align="left">Multiple branch expression/select</td>
+<td align="left">CASE command OF</td>
+</tr>
+<tr>
+<td align="left">WHEN</td>
+<td align="left">Selection Alternative</td>
+<td align="left">WHEN 1: ...</td>
+</tr>
+<tr>
+<td align="left">END CASE</td>
+<td align="left">End selection</td>
+<td align="left">END CASE</td>
+</tr>
+<tr>
+<td align="left">WHILE</td>
+<td align="left">The pre-condition Loop</td>
+<td align="left">WHILE x &lt; 10 DO</td>
+</tr>
+<tr>
+<td align="left">END WHILE</td>
+<td align="left">End pre-cond loop</td>
+<td align="left">END WHILE</td>
+</tr>
+<tr>
+<td align="left">REPEAT</td>
+<td align="left">The start post-condition loop</td>
+<td align="left">Cell 3</td>
+</tr>
+<tr>
+<td align="left">UNTIL</td>
+<td align="left">The post-condition end</td>
+<td align="left">UNTIL x = 10</td>
+</tr>
+<tr>
+<td align="left">FOR</td>
+<td align="left">Counter loop</td>
+<td align="left">FOR i ← 1 TO 10 DO</td>
+</tr>
+<tr>
+<td align="left">TO</td>
+<td align="left">Counter is ascending</td>
+<td align="left">1 TO 10</td>
+</tr>
+<tr>
+<td align="left">DOWNTO</td>
+<td align="left">Counter is descending</td>
+<td align="left">10 DOWNTO 1</td>
+</tr>
+<tr>
+<td align="left">STEP</td>
+<td align="left">Change increment/decrement step value/default 1/-1</td>
+<td align="left">STEP 2/-2</td>
+</tr>
+<tr>
+<td align="left">END FOR</td>
+<td align="left">End for loop</td>
+<td align="left">END FOR</td>
+</tr>
+<tr>
+<td align="left">FOR EACH</td>
+<td align="left">Iterate through list</td>
+<td align="left">FOR EACH item IN list</td>
+</tr>
+<tr>
+<td align="left">BREAK</td>
+<td align="left">leave loop immediate</td>
+<td align="left">BREAK</td>
+</tr>
+<tr>
+<td align="left">CONTINUE</td>
+<td align="left">Iterate immediate</td>
+<td align="left">CONTINUE</td>
+</tr>
+<tr>
+<td align="left">FUNCTION</td>
+<td align="left">Define Function</td>
+<td align="left">FUNCTION max(a,b)</td>
+</tr>
+<tr>
+<td align="left">PROCEDURE</td>
+<td align="left">Define Procedure</td>
+<td align="left">PROCEDURE printString(s)</td>
+</tr>
+<tr>
+<td align="left">CALL</td>
+<td align="left">Call Procudure</td>
+<td align="left">CALL printString()</td>
+</tr>
+<tr>
+<td align="left">RETURN</td>
+<td align="left">return a value</td>
+<td align="left">RETURN value</td>
+</tr>
+<tr>
+<td align="left">DECLARE</td>
+<td align="left">declare a variable</td>
+<td align="left">DECLARE x AS INTEGER</td>
+</tr>
+<tr>
+<td align="left">ARRAY</td>
+<td align="left">declare an array</td>
+<td align="left">DECLARE values AS ARRAY</td>
+</tr>
+<tr>
+<td align="left">GOTO</td>
+<td align="left">jump without condition</td>
+<td align="left">GOTO retry</td>
+</tr>
+<tr>
+<td align="left">LABEL</td>
+<td align="left">JUMP label</td>
+<td align="left">LABEL retry</td>
+</tr>
+<tr>
+<td align="left">AND</td>
+<td align="left">logical AND</td>
+<td align="left">3 &lt; x AND y= 9</td>
+</tr>
+<tr>
+<td align="left">OR</td>
+<td align="left">logical OR</td>
+<td align="left">3 &gt; t OR z &gt;= 100</td>
+</tr>
+<tr>
+<td align="left">NOT</td>
+<td align="left">logical negation</td>
+<td align="left">NOT finished</td>
+</tr>
+<tr>
+<td align="left">TRUE, FALSE</td>
+<td align="left">True/False - boolean constants</td>
+<td align="left">finished ← FALSE</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<h5><strong>Examples using PSEUDOCODE</strong></h5>
+</blockquote>
+<ol>
+<li>Sequence</li>
+</ol>
+<pre><code class="language-text">BEGIN
+    READ x
+    SET y ← x * 2
+    PRINT y
+END
+</code></pre>
+<ol start="2">
+<li>IF/THEN/ELSE</li>
+</ol>
+<pre><code class="language-text">IF age &gt;= 18 THEN
+    PRINT &quot;adult&quot;
+ELSE
+    PRINT &quot;minor&quot;
+END IF
+</code></pre>
+<blockquote>
+<ul>
+<li>Here is a flowchart-like structure for comparison</li>
+</ul>
+</blockquote>
+<pre><code class="language-text">             ◇
+         age &gt;= 18?
+          /       \
+       TRUE       FALSE
+        ↓            ↓
+ PRINT &quot;adult&quot;  PRINT &quot;minor&quot;
+</code></pre>
+<ol start="3">
+<li>WHILE</li>
+</ol>
+<pre><code class="language-text">SET i ← 0
+
+WHILE i &lt; 10 DO
+    PRINT i
+    SET i ← i + 1
+END WHILE
+</code></pre>
+<ol start="4">
+<li>REPEAT/UNTIL</li>
+</ol>
+<pre><code class="language-text">REPEAT
+    PRINT &quot;Enter system password:&quot;
+    READ password
+UNTIL password = correctPassword
+</code></pre>
+<ol start="5">
+<li>FOR</li>
+</ol>
+<pre><code class="language-text">FOR i ← 1 TO 10 DO
+    PRINT i
+END FOR
+</code></pre>
+<ol start="6">
+<li>SWITCH/CASE</li>
+</ol>
+<pre><code class="language-text">CASE command OF
+    WHEN 1:
+        PRINT &quot;Open&quot;
+    WHEN 2:
+        PRINT &quot;Save&quot;
+    WHEN 3:
+        PRINT &quot;Exit&quot;
+    OTHERWISE:
+        PRINT &quot;Unknown command&quot;
+END CASE
+</code></pre>
+<ol start="7">
+<li>Functions</li>
+</ol>
+<blockquote>
+<h5>The definition</h5>
+</blockquote>
+<pre><code class="language-text">FUNCTION maximum(a, b)
+    IF a &gt; b THEN
+        RETURN a
+    ELSE
+        RETURN b
+    END IF
+END FUNCTION
+</code></pre>
+<blockquote>
+<h5>The invocation</h5>
+</blockquote>
+<pre><code class="language-text">largest ← maximum(x, y)
+</code></pre>
+<ol start="8">
+<li>Procedures</li>
+</ol>
+<pre><code class="language-text">PROCEDURE printAddress(address)
+    PRINT address.name
+    PRINT address.street
+    PRINT address.city
+END PROCEDURE
+
+CALL printAddress(customerAddress)
+</code></pre>
+<ol start="9">
+<li>A tiny program</li>
+</ol>
+<pre><code class="language-text">BEGIN
+
+    DECLARE numbers AS ARRAY
+    DECLARE searchValue AS INTEGER
+    DECLARE found AS BOOLEAN
+
+    READ numbers
+    READ searchValue
+
+    SET found ← FALSE
+
+    FOR EACH number IN numbers DO
+
+        IF number = searchValue THEN
+            SET found ← TRUE
+            BREAK
+        END IF
+
+    END FOR
+
+    IF found THEN
+        PRINT &quot;Value found&quot;
+    ELSE
+        PRINT &quot;Value not found&quot;
+    END IF
+
+END
+</code></pre>
+<ol start="10">
+<li>A little minimalistic language core</li>
+</ol>
+<pre><code class="language-text">BEGIN / END
+
+READ
+PRINT
+SET
+
+IF / THEN / ELSE / END IF
+
+WHILE / DO / END WHILE
+REPEAT / UNTIL
+FOR / TO / STEP / END FOR
+
+FUNCTION / PROCEDURE
+CALL
+RETURN
+
+BREAK
+CONTINUE
+</code></pre>
+<p><strong>REMARK:</strong> With sequence + selection (<strong>IF</strong>) + iteration (<strong>WHILE</strong>), you already have the fundamental structured-programming control structures. <strong>FOR</strong>, <strong>CASE</strong>, <strong>REPEAT</strong>, etc. mainly make algorithms easier for humans to express and read.</p>
+<h6>Datatypes in PSEUDOCODE:</h6>
+<pre><code class="language-text">DATA TYPE DEFINITIONS
+=====================
+
+Primitive Data Types
+--------------------
+
+BOOLEAN
+    Logical value.
+    Values: TRUE, FALSE
+
+CHARACTER
+    A single character.
+    Example: 'A'
+
+STRING
+    A sequence of characters.
+    Example: &quot;Hello World&quot;
+
+INTEGER
+    Whole signed number.
+    Examples: -100, 0, 42
+
+NATURAL
+    Non-negative whole number.
+    Examples: 0, 1, 2, 100
+
+REAL
+    Real / floating-point number.
+    Examples: 3.14, -0.25, 1.0
+
+FLOAT
+    Single-precision floating-point number.
+    Example: 3.14159
+
+DOUBLE
+    Double-precision floating-point number.
+    Example: 3.141592653589793
+
+DECIMAL
+    Decimal number with defined decimal precision.
+    Often useful for financial calculations.
+    Example: 123.45
+
+
+Special Data Types
+------------------
+
+VOID
+    Represents no value.
+    Typically used as the return type of procedures.
+
+NULL
+    Represents the absence of a value.
+
+ANY
+    Represents a value of any supported type.
+
+
+Collection / Compound Data Types
+--------------------------------
+
+ARRAY OF &lt;TYPE&gt;
+    Fixed-size or indexed collection of elements
+    having the same type.
+
+    Example:
+        DECLARE numbers AS ARRAY[10] OF INTEGER
+
+
+LIST OF &lt;TYPE&gt;
+    Ordered collection of elements.
+
+    Example:
+        DECLARE names AS LIST OF STRING
+
+
+SET OF &lt;TYPE&gt;
+    Unordered collection containing unique elements.
+
+    Example:
+        DECLARE numbers AS SET OF INTEGER
+
+
+MAP OF &lt;KEY_TYPE, VALUE_TYPE&gt;
+    Collection of key/value associations.
+
+    Example:
+        DECLARE ages AS MAP OF &lt;STRING, INTEGER&gt;
+
+
+QUEUE OF &lt;TYPE&gt;
+    First-In-First-Out collection.
+
+    Example:
+        DECLARE jobs AS QUEUE OF STRING
+
+
+STACK OF &lt;TYPE&gt;
+    Last-In-First-Out collection.
+
+    Example:
+        DECLARE values AS STACK OF INTEGER
+
+
+RECORD / STRUCTURE
+------------------
+
+RECORD
+    Compound data type containing named fields.
+
+    Example:
+
+        TYPE Address = RECORD
+            name    AS STRING
+            street  AS STRING
+            city    AS STRING
+            zipCode AS STRING
+        END RECORD
+
+
+ENUMERATION
+-----------
+
+ENUM
+    Defines a finite set of named values.
+
+    Example:
+
+        TYPE Color = ENUM
+            RED,
+            GREEN,
+            BLUE
+        END ENUM
+
+
+REFERENCE TYPES
+---------------
+
+REFERENCE TO &lt;TYPE&gt;
+    Reference to another value or object.
+
+    Example:
+        DECLARE customer AS REFERENCE TO Customer
+
+
+POINTER TO &lt;TYPE&gt;
+    Explicit address/reference to another value.
+    Mainly useful when pseudocode describes
+    low-level algorithms.
+
+    Example:
+        DECLARE next AS POINTER TO Node
+
+
+OPTIONAL TYPES
+--------------
+
+OPTIONAL &lt;TYPE&gt;
+    Value can either contain a value of TYPE
+    or contain no value.
+
+    Example:
+        DECLARE result AS OPTIONAL INTEGER
+
+
+USER-DEFINED TYPES
+------------------
+
+TYPE &lt;NAME&gt; = &lt;TYPE-DEFINITION&gt;
+
+    Creates a new named data type.
+
+    Example:
+        TYPE CustomerID = INTEGER
+
+
+OBJECT / CLASS TYPES
+--------------------
+
+CLASS
+    Structured data type containing state
+    and operations.
+
+    Example:
+
+        CLASS Customer
+            name    AS STRING
+            address AS Address
+        END CLASS
+
+
+FUNCTION TYPES
+--------------
+
+FUNCTION(&lt;PARAMETER_TYPES&gt;) RETURNS &lt;TYPE&gt;
+
+    Represents a callable function.
+
+    Example:
+        DECLARE compare AS
+            FUNCTION(INTEGER, INTEGER) RETURNS BOOLEAN
+
+
+Generic Types
+-------------
+
+&lt;TYPE&gt;
+    Placeholder for another data type.
+
+    Example:
+        LIST OF &lt;T&gt;
+        ARRAY OF &lt;T&gt;
+        MAP OF &lt;K, V&gt;
+
+
+Typical Variable Declaration
+----------------------------
+
+DECLARE &lt;name&gt; AS &lt;type&gt;
+
+Examples:
+
+    DECLARE counter AS INTEGER
+    DECLARE price AS DECIMAL
+    DECLARE average AS REAL
+    DECLARE finished AS BOOLEAN
+    DECLARE letter AS CHARACTER
+    DECLARE name AS STRING
+    DECLARE values AS ARRAY[100] OF INTEGER
+    DECLARE names AS LIST OF STRING
+
+
+Declaration with Initial Value
+------------------------------
+
+DECLARE &lt;name&gt; AS &lt;type&gt; ← &lt;value&gt;
+
+Examples:
+
+    DECLARE counter AS INTEGER ← 0
+    DECLARE pi AS REAL ← 3.14159265
+    DECLARE finished AS BOOLEAN ← FALSE
+    DECLARE name AS STRING ← &quot;John&quot;
+
+
+Constants
+---------
+
+CONSTANT &lt;name&gt; AS &lt;type&gt; ← &lt;value&gt;
+
+Examples:
+
+    CONSTANT MAX_SIZE AS INTEGER ← 1000
+    CONSTANT PI AS REAL ← 3.14159265
+
+
+Type Inference
+--------------
+
+DECLARE &lt;name&gt; ← &lt;value&gt;
+
+The type is inferred from the initial value.
+
+Examples:
+
+    DECLARE counter ← 0
+    DECLARE name ← &quot;John&quot;
+    DECLARE finished ← FALSE
+</code></pre>
+<h5>Here is the link to Backus/Naur form  (BNF) for the PSEUDOCODE:</h5>
+<p>The language definition is shown here to prove that PSEUDOCODE has all necessary language elements</p>
+<p><a href="./bnf_pseudocode/pseudocode.html">The Backus/Naur(BNF) Form  for pseudocode</a></p>
 <ul>
 <li><img src="./logic-presentations/logic-history.png" alt="Image cannot be displayed" /></li>
 </ul>

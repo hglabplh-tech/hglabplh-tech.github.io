@@ -1,7 +1,7 @@
-###### [Goto top](../index.html)
-###### [Goto index](./index.html)
-###### [Go next](./logic-charts.html)
-###### [Go back](./traveling-through-comp-scienceP2.html)
+- [Goto top](../index.html)
+- [Goto index](./index.html)
+- [Go next](./logic-charts.html)
+- [Go back](./traveling-through-comp-scienceP2.html)
 
 # The idea of object-oriented programming
 

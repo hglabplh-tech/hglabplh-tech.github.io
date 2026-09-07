@@ -1,8 +1,8 @@
 
-###### [Goto top](../index.html)
-###### [Goto index](./index.html)
-###### [Go next](./traveling-through-comp-scienceP3.html)
-###### [Go back](./traveling-through-comp-scienceP1.html)
+- [Goto top](../index.html)
+- [Goto index](./index.html)
+- [Go next](./traveling-through-comp-scienceP3.html)
+- [Go back](./traveling-through-comp-scienceP1.html)
 
 # The idea of functional programming 
 

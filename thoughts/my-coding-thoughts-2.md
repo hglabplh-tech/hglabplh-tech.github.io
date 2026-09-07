@@ -170,7 +170,7 @@ public interface TestEventListener extends ListenerBase {
 }
 ```  
 **RESUME:**
-This all is done in a way that we build up a registry for our listeners with the different listener types in the main thread and a listener of the specific type simply implements the listener interface for this type see above **_TestEventListener_** .
+This all is done in a way that we build up a registry for our listeners with the different listener types in the main thread and a listener of the specific type simply implements the listener interface for this type see above **_TestEventListener_**.
 
 Now we can write a fire event submitting an event to our test listner engine running in one ore more separate threads.
 
