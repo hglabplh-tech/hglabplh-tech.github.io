@@ -1,4 +1,8 @@
 <!-- Copyright (c) 2026 Harald Glab-Plhak. Licensed under the MIT License. -->
+- [Go Top](../index.html)
+- [Go index](./index.html)
+- [Go back](./readme.html)
+
 
 # HGPExamWorkFlowAndChat feature inventory
 
@@ -673,5 +677,10 @@ and UI masks verifiable.
 - Legal holds, backups, immutable storage, and certified retention require
   operational controls beyond application code.
 - The backend compatibility endpoint `get_fresh_totp` exists, but the login UI
-  now uses `send_totp` so TOTP values are delivered through the selected channel
-  instead of displayed by the browser button.
+  now uses `send_totp`, so TOTP values are delivered through the selected channel
+  instead of being displayed by the browser button.
+
+**NOTE:** Copyright
+- Harald Glab-Plhak
+- Computer Science since 1992
+- © Harald Glab-Plhak 2026

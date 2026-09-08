@@ -1,4 +1,8 @@
 <!-- Copyright (c) 2026 Harald Glab-Plhak. Licensed under the MIT License. -->
+- [Go Top](../index.html)
+- [Go index](./index.html)
+- [Go Next](./features.html)
+
 
 # HGPExamWorkFlowAndChat
 
@@ -268,11 +272,11 @@ an instructor approves and explicitly returns the grading. See
 
 A nightly Kubernetes CronJob curates consented course-public research and
 teacher-returned scoring examples. Staff moderate student research examples.
-When training is enabled and enough approved examples exist, it fine-tunes the
+When training is enabled, and enough approved examples exist, it fine-tunes the
 retrieval Sentence Transformer and supervised scoring CrossEncoder and records
 the resulting model run and artifact.
 
-For a local/manual nightly run use:
+For a local/manual nightly run, use:
 
 ```sh
 docker compose --profile tools run --rm trainer
@@ -283,7 +287,7 @@ docker compose --profile tools run --rm trainer
 Staff can upload PDF or UTF-8 text through `POST /api/v1/knowledge/upload`, merge or
 export versioned PostgreSQL bundles, or send a file and question together through
 `POST /api/v1/knowledge/upload-and-ask`. Imports are content-addressed with SHA-256:
-an existing hash is returned unchanged and only new content is inserted. Imported
+an existing hash is returned unchanged, and only new content is inserted. Imported
 documents become training candidates and require staff approval before use.
 
 Full-text search can use an active JSON thesaurus. Staff can import Apache Solr-style
@@ -304,7 +308,7 @@ accept `--vocab-file` so model artifacts record the project vocabulary used.
 
 Knowledge imports run a trusted-source fact-check step before approval. The check
 uses `INTERNET_SEARCH_ENDPOINT`, `INTERNET_SEARCH_API_KEY`, and
-`TRUSTED_FACT_SOURCE_DOMAINS`; when no endpoint is configured the import is marked
+`TRUSTED_FACT_SOURCE_DOMAINS`; when no endpoint is configured, the import is marked
 for manual review rather than silently trusted.
 
 The HTML5 frontend includes a GitHub-style administrator login with optional TOTP,
@@ -411,6 +415,11 @@ field.
 - Redis/NATS-backed WebSocket fan-out before multiple API replicas
 - background jobs for ASR, embeddings, Chroma indexing, and virus scanning
 - object storage for original documents and exam files
-- calibrated per-discipline grading against teacher-labelled evaluation sets
+- calibrated per-discipline grading against teacher-labeled evaluation sets
 - complete citation validation, ASR accuracy monitoring, and model-drift alerting
 - retention rules, consent, accessibility testing, backups, and monitoring
+
+**NOTE:** Copyright
+- Harald Glab-Plhak
+- Computer Science since 1992
+- © Harald Glab-Plhak 2026
