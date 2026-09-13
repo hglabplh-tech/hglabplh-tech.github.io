@@ -1,3 +1,5 @@
+- [Go top](../index.html)
+
 # Open Source Software Engineering, Compilers, AI and Programming Languages, Document & Internet Security, Articles about Computer Science
 
 Projects, documentation, and technical articles about Python, Clojure, Java, Scheme48, compiler construction, software testing, enterprise AI, privacy, and programming language design, and document & Internet Security - signatures, trust lists, certificates, hashes, content checks.

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-<title>index</title>
+<title>bindings</title>
 <style type="text/css">
 :root {
     --color-scale-black: #1b1f23;
@@ -1350,65 +1350,1611 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 <body>
 <textarea id="source" style="display: none">
 - [Go top](../index.html)
+- [Go index](./index.html)
 
-# Scheme48 reference and documentation Scheme 48 1.9
+# The Scheme/Scheme48 bindings concept
 
-## Short history and overview
+## General information about bindings
 
-## Links to the s48-reference, the descriptions, and the s48 repo at codebourg
+Bindings are essential for handling environmental variables and values in programming languages. In general, there are three ways to bind:
 
-#### Documentation and reference
+1. **Dynamic Binding**
 
-##### The Homepage:
-- [Scheme48 Home](https://www.s48.org/)
+In dynamic binding, the program searches for a variable by looking backward through the call stack (the chain of invoked functions) rather than the code's physical structure.
+- **Key Characteristic:** A function can access variables defined in the function that called it. 
+- **Why it's rare now:** It makes code unpredictable because a function's behavior can change depending on where it is called from, making bugs hard to track down.
 
-##### Descriptions:
-- [S48 Introduction](./intro.html)
-- [The architecture of Scheme48](./s48architecture.html)
-- [functions and bindings](./bindings.html)
+```perl
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+# 1. Define a package-level (global) variable
+our $target = "Global Value";
+
+sub print_target {
+    # Looks up the call stack to find what '$target' currently means
+    print "Current Value: $target\n";
+}
+
+sub run_dynamic_example {
+    # 'local' temporarily overrides the global $target on the execution stack.
+    # It will remain this way for ANY function called from inside this block.
+    local $target = "Dynamic Overridden Value";
+    
+    print_target(); 
+}
+
+# --- Execution ---
+
+print "Before test: ";
+print_target(); # Prints "Global Value"
+
+print "Inside test: ";
+run_dynamic_example(); # Prints "Dynamic Overridden Value" because of the call stack
+
+print "After test:  ";
+print_target(); # Prints "Global Value" (the temporary dynamic override is popped off the stack)
+
+```
+
+2. **Lexical Bindings**
+
+Lexical binding means that a variable's scope is determined entirely by where it is written in the physical source code. When you write a line of code, the compiler or interpreter looks at the surrounding text—the blocks, loops, or functions wrapping that line—to figure out exactly which variable you are pointing to. Because of this, it is also frequently called static scoping. Here is a lexical binding example in Javascript:
+
+```javascript
+function makeCounter() {
+    let count = 0; // 'count' is bound lexically to makeCounter
+    
+    return function() {
+        count++; // This inner function captures 'count'
+        return count;
+    };
+}
+
+const counter = makeCounter();
+console.log(counter()); // 1
+console.log(counter()); // 2
+```
+
+3. **Shallow vs. Deep Binding**
+
+These terms specifically describe how **dynamic** languages handle variables when you pass a function as an argument to another function.- Deep Binding:
+
+- **Deep Binding:** Captures the variable environment at the moment the function is **passed** as an argument. 
+- **Shallow Binding:** Resolves the variable environment at the moment the function is **finally executed**.
+ 
+## The binding concept in Scheme
+
+Scheme dialects use lexical binding. This form of binding is very clean. Here is an example to show the difference between lexical and dynamic binding:
+
+1. **Dynamic Binding in LISP**
+
+```lisp
+;; -*- lexical-binding: nil; -*- (Dynamic binding is active)
+
+(defvar target 100) ; 1. A global variable 'target' is created
+
+(defun print-target ()
+  "Prints whatever 'target' currently means on the call stack."
+  target)
+
+(defun run-dynamic-test ()
+  "Creates a local 'target' and then calls print-target."
+  (let ((target 200)) ; 2. Temporarily pushes 'target = 200' onto the stack
+    (print-target)))  ; 3. Calls the printing function
+
+(run-dynamic-test) 
+;; => OUTPUT: 200
+```
+- **Why this happens:** When print-target executes, it looks at the live call stack. Because it was called from inside run-dynamic-test, it grabs the temporary value 200 currently sitting on top of the stack
+
+2. **Lexical Binding in LISP**
+
+```lisp
+;; -*- lexical-binding: t; -*- (Lexical binding is active)
+
+(defvar target 100) ; 1. A global variable 'target' is created
+
+(defun print-target ()
+  "Prints 'target' based on where this function was typed."
+  target)
+
+(defun run-lexical-test ()
+  "Creates a local 'target' and then calls print-target."
+  (let ((target 200)) 
+    (print-target)))  
+
+(run-lexical-test) 
+;; => OUTPUT: 100
+
+``` 
+- **Why this happens:** When print-target executes, it looks at its physical surroundings in the text editor. It sees that it is written in the global outer space, completely separate from run-lexical-test. It completely ignores the let statement and grabs the global 100.
   
+## Scheme and the lexical environment
 
-##### Reference:
+### Here is a picture of a typical Scheme environment / Scheme 48 uses the same mechanisms
 
-- [Index of Reference](./reference/s48main.html)
+**NOTE** The code used is from one of my projects (**SECD machine** extended) written in **Racket** 
 
-#### The code:
-- [My fork of scheme48 "Tübingen Edition" at codeberg](https://codeberg.org/hglabplh/scheme48)
-- [My r6rs-lib development branch of scheme48 at codeberg](https://codeberg.org/hglabplh/scheme48/src/branch/r6rs-lib-io)
+[The SECD Suite project](https://github.com/hglabplh-tech/SECD-Machine-Compiler-Suite)
+
+**Here is a first code snippet showing the lookup of a dynamic environment binding:**
+
+```scheme
+
+;; Lookup of a binding -> lookup in the following order
+;;  - Actual Environment
+;;  - The last environment before the actual and its parent are searched up to the top-level 
+;; frame (a frame is one unit on the dump)
+
+
+(define lookup-environment
+  (lambda (environment dump variable)
+    (let* ([act-val (lookup-act-environment environment variable)])
+      (cond ((not (empty? act-val)) act-val)
+            ((not (empty? dump))  (env-lookup-helper dump variable))
+            (else act-val)))))
+
+;; Helper functions for lookup
+(define env-lookup-helper (lambda (dump variable)
+                            (let* ([env (frame-environment (first dump))]
+                                   [binding (lookup-act-environment env variable)])                            
+                              (if (not (empty? binding))
+                                  binding
+                                  (if (empty? (rest dump))
+                                      empty
+                                      (env-lookup-helper (rest dump) variable)
+                                      )                            
+                                  ))))
+```
+
+**Here, the runtime search for a binding is shown.
+The more interesting part is how the binding happens when compiling the code versus when it happens dynamically. For lexical binding, the way a variable is bound is determined by walking through the source when compiling it.
+Here is a Scheme example of lexical binding logic:**
+```racket
+#lang racket
+
+(require racket/match)
+
+;; ============================================================
+;; SOURCE ABSTRACT SYNTAX
+;; ============================================================
+
+(struct program (statements) #:transparent)
+(struct variable-declaration (name expression) #:transparent)
+(struct function-declaration (name body) #:transparent)
+(struct function-call (name arguments) #:transparent)
+(struct print-statement (format-expression arguments) #:transparent)
+(struct if-statement (condition then-block else-block) #:transparent)
+(struct comparison (operator left right) #:transparent)
+(struct integer-expression (value) #:transparent)
+(struct string-expression (value) #:transparent)
+(struct variable-expression (name) #:transparent)
+
+;; ============================================================
+;; LEXICALLY RESOLVED / COMPILED ABSTRACT SYNTAX
+;;
+;; A lexical address identifies a binding without searching by name:
+;;   depth = number of lexical parent links
+;;   slot  = position inside the selected environment frame
+;; ============================================================
+
+(struct lexical-address (depth slot name) #:transparent)
+(struct compiled-program (global-frame-size statements) #:transparent)
+(struct compiled-block (frame-size statements) #:transparent)
+(struct compiled-variable-declaration (address expression) #:transparent)
+(struct compiled-function-declaration
+  (address function-frame-size body)
+  #:transparent)
+(struct compiled-function-call (address arguments) #:transparent)
+(struct compiled-print-statement (format-expression arguments) #:transparent)
+(struct compiled-if-statement (condition then-block else-block) #:transparent)
+(struct compiled-comparison (operator left right) #:transparent)
+(struct compiled-integer (value) #:transparent)
+(struct compiled-string (value) #:transparent)
+(struct compiled-variable (address) #:transparent)
+
+;; ============================================================
+;; TOKENIZER
+;; ============================================================
+
+(define token-pattern
+  #px"\"(?:\\\\.|[^\"])*\"|<=|>=|==|!=|<-|<|>|[A-Za-z_][A-Za-z0-9_]*|-?[0-9]+|[(),;]")
+
+(define (tokenize source)
+  (regexp-match* token-pattern source))
+
+;; ============================================================
+;; PARSER
+;;
+;; program       := statement (";" statement)* ";"?
+;; statement     := declaration | call | print | if
+;; declaration   := "dcl" identifier "<-" expression
+;;                | "dcl" "fun"? identifier block
+;; call          := identifier "(" arguments? ")"
+;; print         := "print" expression ("," expression)*
+;; if            := "if" condition "then" block "else" block
+;; condition     := expression comparison-operator expression
+;; block         := "(" statement (";" statement)* ";"? ")"
+;; expression    := integer | string | identifier
+;; comparison-op := "==" | "!=" | "<" | "<=" | ">" | ">="
+;; ============================================================
+
+(define (parse source)
+  (define tokens (list->vector (tokenize source)))
+  (define position 0)
+
+  (define (finished?)
+    (= position (vector-length tokens)))
+
+  (define (peek)
+    (and (not (finished?))
+         (vector-ref tokens position)))
+
+  (define (take!)
+    (when (finished?)
+      (error 'parse "unexpected end of input"))
+    (begin0
+      (vector-ref tokens position)
+      (set! position (add1 position))))
+
+  (define (accept! expected)
+    (and (equal? (peek) expected)
+         (begin (take!) #t)))
+
+  (define (expect! expected)
+    (unless (accept! expected)
+      (error 'parse "expected ~a, found ~a" expected (peek))))
+
+  (define reserved-words
+    '("dcl" "fun" "print" "if" "then" "else"))
+
+  (define (identifier-token? token)
+    (and token
+         (regexp-match? #px"^[A-Za-z_][A-Za-z0-9_]*$" token)
+         (not (member token reserved-words))))
+
+  (define (take-identifier!)
+    (let ([token (take!)])
+      (unless (identifier-token? token)
+        (error 'parse "expected identifier, found ~a" token))
+      (string->symbol token)))
+
+  (define (string-token? token)
+    (and token
+         (>= (string-length token) 2)
+         (char=? (string-ref token 0) #\")))
+
+  (define (decode-string token)
+    (with-input-from-string token read))
+
+  (define (parse-expression)
+    (let ([token (take!)])
+      (cond
+        [(regexp-match? #px"^-?[0-9]+$" token)
+         (integer-expression (string->number token))]
+        [(string-token? token)
+         (string-expression (decode-string token))]
+        [(identifier-token? token)
+         (variable-expression (string->symbol token))]
+        [else
+         (error 'parse "invalid expression: ~a" token)])))
+
+  (define comparison-operators
+    '("==" "!=" "<" "<=" ">" ">="))
+
+  (define (parse-condition)
+    (let* ([left (parse-expression)]
+           [operator (take!)])
+      (unless (member operator comparison-operators)
+        (error 'parse "expected comparison operator, found ~a" operator))
+      (comparison operator left (parse-expression))))
+
+  (define (parse-arguments)
+    (expect! "(")
+    (cond
+      [(accept! ")") '()]
+      [else
+       (let loop ([result (list (parse-expression))])
+         (if (accept! ",")
+             (loop (append result (list (parse-expression))))
+             (begin
+               (expect! ")")
+               result)))]))
+
+  (define (parse-call)
+    (let ([name (take-identifier!)])
+      (function-call name (parse-arguments))))
+
+  (define (parse-print)
+    (expect! "print")
+    (let ([format-expression (parse-expression)])
+      (let loop ([arguments '()])
+        (if (accept! ",")
+            (loop (append arguments (list (parse-expression))))
+            (print-statement format-expression arguments)))))
+
+  (define (parse-block)
+    (expect! "(")
+    (let loop ([result '()])
+      (cond
+        [(accept! ")") result]
+        [else
+         (let ([statement (parse-statement)])
+           (accept! ";")
+           (loop (append result (list statement))))])))
+
+  (define (parse-if)
+    (expect! "if")
+    (let ([condition (parse-condition)])
+      (expect! "then")
+      (let ([then-block (parse-block)])
+        (expect! "else")
+        (if-statement condition then-block (parse-block)))))
+
+  (define (parse-declaration)
+    (expect! "dcl")
+    (let ([explicit-function? (accept! "fun")])
+      (let ([name (take-identifier!)])
+        (cond
+          [explicit-function?
+           (function-declaration name (parse-block))]
+          [(accept! "<-")
+           (variable-declaration name (parse-expression))]
+          [(equal? (peek) "(")
+           (function-declaration name (parse-block))]
+          [else
+           (error 'parse "invalid declaration for ~a" name)]))))
+
+  (define (parse-statement)
+    (cond
+      [(equal? (peek) "dcl") (parse-declaration)]
+      [(equal? (peek) "print") (parse-print)]
+      [(equal? (peek) "if") (parse-if)]
+      [(identifier-token? (peek)) (parse-call)]
+      [else (error 'parse "unexpected token: ~a" (peek))]))
+
+  (let loop ([result '()])
+    (if (finished?)
+        (program result)
+        (let ([statement (parse-statement)])
+          (accept! ";")
+          (loop (append result (list statement)))))))
+
+;; ============================================================
+;; COMPILE-TIME LEXICAL SCOPING
+;; ============================================================
+
+;; A compiler scope maps each declared name to a frame slot.
+(struct compiler-scope (bindings next-slot) #:mutable #:transparent)
+
+(define (make-compiler-scope)
+  (compiler-scope (make-hasheq) 0))
+
+(define (declare-compile-time-binding! scope name)
+  (when (hash-has-key? (compiler-scope-bindings scope) name)
+    (error 'compile
+           "duplicate declaration in the same lexical scope: ~a"
+           name))
+  (let ([slot (compiler-scope-next-slot scope)])
+    (hash-set! (compiler-scope-bindings scope) name slot)
+    (set-compiler-scope-next-slot! scope (add1 slot))
+    (lexical-address 0 slot name)))
+
+;; Scopes are ordered nearest-to-farthest.  The compiler performs this
+;; name search once and writes the resulting depth and slot into the code.
+(define (resolve-compile-time-binding scopes name)
+  (let loop ([remaining scopes]
+             [depth 0])
+    (cond
+      [(empty? remaining)
+       (error 'compile "unbound identifier: ~a" name)]
+      [(hash-has-key?
+        (compiler-scope-bindings (first remaining))
+        name)
+       (lexical-address
+        depth
+        (hash-ref
+         (compiler-scope-bindings (first remaining))
+         name)
+        name)]
+      [else
+       (loop (rest remaining) (add1 depth))])))
+
+(define (compile-expression expression scopes)
+  (match expression
+    [(integer-expression value)
+     (compiled-integer value)]
+    [(string-expression value)
+     (compiled-string value)]
+    [(variable-expression name)
+     (compiled-variable
+      (resolve-compile-time-binding scopes name))]))
+
+(define (compile-condition condition scopes)
+  (match condition
+    [(comparison operator left right)
+     (compiled-comparison
+      operator
+      (compile-expression left scopes)
+      (compile-expression right scopes))]))
+
+(define (compile-block statements outer-scopes)
+  (let ([block-scope (make-compiler-scope)])
+    (let ([compiled-statements
+           (compile-statements statements
+                               (cons block-scope outer-scopes))])
+      (compiled-block
+       (compiler-scope-next-slot block-scope)
+       compiled-statements))))
+
+(define (compile-statement statement scopes)
+  (match statement
+    [(variable-declaration name initializer)
+     ;; Resolve the initializer before adding the new name.  Therefore
+     ;; "dcl x <- x" sees an outer x rather than an uninitialized self.
+     (let ([compiled-initializer
+            (compile-expression initializer scopes)]
+           [address
+            (declare-compile-time-binding! (first scopes) name)])
+       (compiled-variable-declaration address compiled-initializer))]
+
+    [(function-declaration name body)
+     ;; Declare first so that the function can recursively call itself.
+     (let* ([address
+             (declare-compile-time-binding! (first scopes) name)]
+            [function-scope (make-compiler-scope)]
+            [compiled-body
+             (compile-statements body (cons function-scope scopes))])
+       (compiled-function-declaration
+        address
+        (compiler-scope-next-slot function-scope)
+        compiled-body))]
+
+    [(function-call name arguments)
+     (compiled-function-call
+      (resolve-compile-time-binding scopes name)
+      (map (lambda (argument)
+             (compile-expression argument scopes))
+           arguments))]
+
+    [(print-statement format-expression arguments)
+     (compiled-print-statement
+      (compile-expression format-expression scopes)
+      (map (lambda (argument)
+             (compile-expression argument scopes))
+           arguments))]
+
+    [(if-statement condition then-block else-block)
+     (compiled-if-statement
+      (compile-condition condition scopes)
+      (compile-block then-block scopes)
+      (compile-block else-block scopes))]))
+
+(define (compile-statements statements scopes)
+  ;; Compilation is sequential, so a reference can see earlier declarations
+  ;; in the same scope.  A function can also see its own binding.
+  (map (lambda (statement)
+         (compile-statement statement scopes))
+       statements))
+
+(define (compile-program source-program)
+  (let ([global-scope (make-compiler-scope)])
+    (let ([compiled-statements
+           (compile-statements
+            (program-statements source-program)
+            (list global-scope))])
+      (compiled-program
+       (compiler-scope-next-slot global-scope)
+       compiled-statements))))
+
+;; ============================================================
+;; RUNTIME LEXICAL ENVIRONMENTS
+;; ============================================================
+
+;; Every runtime frame has fixed slots and one lexical parent.
+(struct runtime-frame (slots lexical-parent) #:transparent)
+
+;; A closure captures the frame active at its declaration.
+(struct closure
+  (function-frame-size body definition-environment)
+  #:transparent)
+
+(define uninitialized (gensym 'uninitialized))
+
+(define (make-runtime-frame size [parent #f])
+  (runtime-frame
+   (build-vector size (lambda ignored (box uninitialized)))
+   parent))
+
+(define (follow-lexical-parents environment depth)
+  (cond
+    [(zero? depth) environment]
+    [(not environment)
+     (error 'runtime "broken lexical address: missing parent frame")]
+    [else
+     (follow-lexical-parents
+      (runtime-frame-lexical-parent environment)
+      (sub1 depth))]))
+
+;; Runtime lookup performs no name search.  It follows a known number of
+;; lexical-parent links and reads a known slot.
+(define (lexical-location environment address)
+  (let* ([target-frame
+          (follow-lexical-parents
+           environment
+           (lexical-address-depth address))]
+         [slot (lexical-address-slot address)])
+    (when (or (< slot 0)
+              (>= slot (vector-length
+                        (runtime-frame-slots target-frame))))
+      (error 'runtime "invalid lexical slot: ~a" slot))
+    (vector-ref (runtime-frame-slots target-frame) slot)))
+
+(define (lexical-reference environment address)
+  (let ([value (unbox (lexical-location environment address))])
+    (when (eq? value uninitialized)
+      (error 'runtime
+             "binding used before initialization: ~a"
+             (lexical-address-name address)))
+    value))
+
+(define (lexical-initialize! environment address value)
+  (let ([location (lexical-location environment address)])
+    (unless (eq? (unbox location) uninitialized)
+      (error 'runtime
+             "binding initialized more than once: ~a"
+             (lexical-address-name address)))
+    (set-box! location value)))
+
+;; Assignment is provided for completeness.  It changes an existing location;
+;; it does not create or redirect a binding.
+(define (lexical-assign! environment address value)
+  (set-box! (lexical-location environment address) value))
+
+;; ============================================================
+;; RUNTIME EVALUATION
+;; ============================================================
+
+(define (evaluate-compiled-expression expression environment)
+  (match expression
+    [(compiled-integer value) value]
+    [(compiled-string value) value]
+    [(compiled-variable address)
+     (lexical-reference environment address)]))
+
+(define (evaluate-compiled-comparison condition environment)
+  (match condition
+    [(compiled-comparison operator left-expression right-expression)
+     (let* ([left
+             (evaluate-compiled-expression left-expression environment)]
+            [right
+             (evaluate-compiled-expression right-expression environment)])
+       (cond
+         [(equal? operator "==") (equal? left right)]
+         [(equal? operator "!=") (not (equal? left right))]
+         [else
+          (unless (and (exact-integer? left) (exact-integer? right))
+            (error 'comparison
+                   "~a requires integer operands, received ~e and ~e"
+                   operator left right))
+          (cond
+            [(equal? operator "<") (< left right)]
+            [(equal? operator "<=") (<= left right)]
+            [(equal? operator ">") (> left right)]
+            [(equal? operator ">=") (>= left right)]
+            [else (error 'comparison "unknown operator: ~a" operator)])]))]))
+
+(define (format-with-placeholders format-string values)
+  (for/fold ([result format-string])
+            ([value (in-list values)])
+    (unless (regexp-match? #rx"%(d|s)" result)
+      (error 'print "too many values for format string: ~a" format-string))
+    (regexp-replace
+     #rx"%(d|s)"
+     result
+     (lambda ignored (format "~a" value)))))
+
+(define (execute-compiled-block! block parent-environment)
+  (let ([block-environment
+         (make-runtime-frame
+          (compiled-block-frame-size block)
+          parent-environment)])
+    (execute-compiled-statements!
+     (compiled-block-statements block)
+     block-environment)))
+
+(define (execute-compiled-call! statement caller-environment)
+  (match statement
+    [(compiled-function-call address arguments)
+     (let ([argument-values
+            (map (lambda (argument)
+                   (evaluate-compiled-expression
+                    argument caller-environment))
+                 arguments)]
+           [function
+            (lexical-reference caller-environment address)])
+       (unless (closure? function)
+         (error 'function-call
+                "~a is not a function"
+                (lexical-address-name address)))
+       (unless (empty? argument-values)
+         (error 'function-call "example functions accept no arguments"))
+
+       ;; This is the essential lexical-scoping operation.  The new call
+       ;; frame points to the closure's definition environment, not to the
+       ;; caller's frame or a caller dump.
+       (let ([function-environment
+              (make-runtime-frame
+               (closure-function-frame-size function)
+               (closure-definition-environment function))])
+         (execute-compiled-statements!
+          (closure-body function)
+          function-environment)))]))
+
+(define (execute-compiled-statement! statement environment)
+  (match statement
+    [(compiled-variable-declaration address initializer)
+     (lexical-initialize!
+      environment address
+      (evaluate-compiled-expression initializer environment))]
+
+    [(compiled-function-declaration address frame-size body)
+     (lexical-initialize!
+      environment address
+      (closure frame-size body environment))]
+
+    [(compiled-function-call _ _)
+     (execute-compiled-call! statement environment)]
+
+    [(compiled-print-statement format-expression argument-expressions)
+     (let* ([format-string
+             (evaluate-compiled-expression format-expression environment)]
+            [values
+             (map (lambda (argument)
+                    (evaluate-compiled-expression argument environment))
+                  argument-expressions)])
+       (unless (string? format-string)
+         (error 'print "first expression must produce a string"))
+       (displayln (format-with-placeholders format-string values)))]
+
+    [(compiled-if-statement condition then-block else-block)
+     (if (evaluate-compiled-comparison condition environment)
+         (execute-compiled-block! then-block environment)
+         (execute-compiled-block! else-block environment))]))
+
+(define (execute-compiled-statements! statements environment)
+  (for-each
+   (lambda (statement)
+     (execute-compiled-statement! statement environment))
+   statements))
+
+(define (execute-compiled-program! code)
+  (let ([global-environment
+         (make-runtime-frame
+          (compiled-program-global-frame-size code))])
+    (execute-compiled-statements!
+     (compiled-program-statements code)
+     global-environment)
+    global-environment))
+
+;; ============================================================
+;; EXECUTABLE EXAMPLE
+;; ============================================================
+
+(define source
+  (string-append
+   "dcl a <- 5; "
+   "dcl b <- 7; "
+   "dcl fun_print (print \"%d geta %d\", a, b); "
+   "dcl fun test ("
+   "  dcl a <- 9; "
+   "  if a == 9 then ("
+   "    print \"condition true; inner a = %d\", a; "
+   "    fun_print()"
+   "  ) else ("
+   "    print \"condition false; a = %d\", a"
+   "  ); "
+   "  print \"after if; inner a = %d\", a"
+   "); "
+   "test(); "
+   "fun_print(); "
+   "if a < b then ("
+   "  print \"top-level condition true: a = %d, b = %d\", a, b"
+   ") else ("
+   "  print \"top-level condition false: a = %d, b = %d\", a, b"
+   ")"))
+
+(define source-tree (parse source))
+(define compiled-code (compile-program source-tree))
+
+(displayln "Lexically resolved program:")
+(pretty-print compiled-code)
+(displayln "\nProgram output:")
+(void (execute-compiled-program! compiled-code))
+
+```
+**The output in DrRacket is ->**
+```text
+Lexically resolved program:
+(compiled-program
+ 4
+ (list
+  (compiled-variable-declaration (lexical-address 0 0 'a) (compiled-integer 5))
+  (compiled-variable-declaration (lexical-address 0 1 'b) (compiled-integer 7))
+  (compiled-function-declaration
+   (lexical-address 0 2 'fun_print)
+   0
+   (list
+    (compiled-print-statement
+     (compiled-string "%d geta %d")
+     (list
+      (compiled-variable (lexical-address 1 0 'a))
+      (compiled-variable (lexical-address 1 1 'b))))))
+  (compiled-function-declaration
+   (lexical-address 0 3 'test)
+   1
+   (list
+    (compiled-variable-declaration
+     (lexical-address 0 0 'a)
+     (compiled-integer 9))
+    (compiled-if-statement
+     (compiled-comparison
+      "=="
+      (compiled-variable (lexical-address 0 0 'a))
+      (compiled-integer 9))
+     (compiled-block
+      0
+      (list
+       (compiled-print-statement
+        (compiled-string "condition true; inner a = %d")
+        (list (compiled-variable (lexical-address 1 0 'a))))
+       (compiled-function-call (lexical-address 2 2 'fun_print) '())))
+     (compiled-block
+      0
+      (list
+       (compiled-print-statement
+        (compiled-string "condition false; a = %d")
+        (list (compiled-variable (lexical-address 1 0 'a)))))))
+    (compiled-print-statement
+     (compiled-string "after if; inner a = %d")
+     (list (compiled-variable (lexical-address 0 0 'a))))))
+  (compiled-function-call (lexical-address 0 3 'test) '())
+  (compiled-function-call (lexical-address 0 2 'fun_print) '())
+  (compiled-if-statement
+   (compiled-comparison
+    "<"
+    (compiled-variable (lexical-address 0 0 'a))
+    (compiled-variable (lexical-address 0 1 'b)))
+   (compiled-block
+    0
+    (list
+     (compiled-print-statement
+      (compiled-string "top-level condition true: a = %d, b = %d")
+      (list
+       (compiled-variable (lexical-address 1 0 'a))
+       (compiled-variable (lexical-address 1 1 'b))))))
+   (compiled-block
+    0
+    (list
+     (compiled-print-statement
+      (compiled-string "top-level condition false: a = %d, b = %d")
+      (list
+       (compiled-variable (lexical-address 1 0 'a))
+       (compiled-variable (lexical-address 1 1 'b)))))))))
+
+Program output:
+condition true; inner a = 9
+5 geta 7
+after if; inner a = 9
+5 geta 7
+top-level condition true: a = 5, b = 7
+> )
+```
+![Env Image cannot be shown](./graphics/scheme-env-bindings.png)
+
 
 **NOTE**: Copyright
 - Harald Glab-Plhak
 - Computer Science since 1992
 - © Harald Glab-Plhak 2026
 
+
 </textarea>
 <div id="markdown">
 <ul>
 <li><a href="../index.html">Go top</a></li>
+<li><a href="./index.html">Go index</a></li>
 </ul>
-<h1>Scheme48 reference and documentation Scheme 48 1.9</h1>
-<h2>Short history and overview</h2>
-<h2>Links to the s48-reference, the descriptions, and the s48 repo at codebourg</h2>
-<h4>Documentation and reference</h4>
-<h5>The Homepage:</h5>
+<h1>The Scheme/Scheme48 bindings concept</h1>
+<h2>General information about bindings</h2>
+<p>Bindings are essential for handling environmental variables and values in programming languages. In general, there are three ways to bind:</p>
+<ol>
+<li><strong>Dynamic Binding</strong></li>
+</ol>
+<p>In dynamic binding, the program searches for a variable by looking backward through the call stack (the chain of invoked functions) rather than the code's physical structure.</p>
 <ul>
-<li><a href="https://www.s48.org/">Scheme48 Home</a></li>
+<li><strong>Key Characteristic:</strong> A function can access variables defined in the function that called it.</li>
+<li><strong>Why it's rare now:</strong> It makes code unpredictable because a function's behavior can change depending on where it is called from, making bugs hard to track down.</li>
 </ul>
-<h5>Descriptions:</h5>
+<pre><code class="language-perl">#!/usr/bin/env perl
+use strict;
+use warnings;
+
+# 1. Define a package-level (global) variable
+our $target = &quot;Global Value&quot;;
+
+sub print_target {
+    # Looks up the call stack to find what '$target' currently means
+    print &quot;Current Value: $target\n&quot;;
+}
+
+sub run_dynamic_example {
+    # 'local' temporarily overrides the global $target on the execution stack.
+    # It will remain this way for ANY function called from inside this block.
+    local $target = &quot;Dynamic Overridden Value&quot;;
+    
+    print_target(); 
+}
+
+# --- Execution ---
+
+print &quot;Before test: &quot;;
+print_target(); # Prints &quot;Global Value&quot;
+
+print &quot;Inside test: &quot;;
+run_dynamic_example(); # Prints &quot;Dynamic Overridden Value&quot; because of the call stack
+
+print &quot;After test:  &quot;;
+print_target(); # Prints &quot;Global Value&quot; (the temporary dynamic override is popped off the stack)
+
+</code></pre>
+<ol start="2">
+<li><strong>Lexical Bindings</strong></li>
+</ol>
+<p>Lexical binding means that a variable's scope is determined entirely by where it is written in the physical source code. When you write a line of code, the compiler or interpreter looks at the surrounding text—the blocks, loops, or functions wrapping that line—to figure out exactly which variable you are pointing to. Because of this, it is also frequently called static scoping. Here is a lexical binding example in Javascript:</p>
+<pre><code class="language-javascript">function makeCounter() {
+    let count = 0; // 'count' is bound lexically to makeCounter
+    
+    return function() {
+        count++; // This inner function captures 'count'
+        return count;
+    };
+}
+
+const counter = makeCounter();
+console.log(counter()); // 1
+console.log(counter()); // 2
+</code></pre>
+<ol start="3">
+<li><strong>Shallow vs. Deep Binding</strong></li>
+</ol>
+<p>These terms specifically describe how <strong>dynamic</strong> languages handle variables when you pass a function as an argument to another function.- Deep Binding:</p>
 <ul>
-<li><a href="./intro.html">S48 Introduction</a></li>
-<li><a href="./s48architecture.html">The architecture of Scheme48</a></li>
-<li><a href="./bindings.html">functions and bindings</a></li>
+<li><strong>Deep Binding:</strong> Captures the variable environment at the moment the function is <strong>passed</strong> as an argument.</li>
+<li><strong>Shallow Binding:</strong> Resolves the variable environment at the moment the function is <strong>finally executed</strong>.</li>
 </ul>
-<h5>Reference:</h5>
+<h2>The binding concept in Scheme</h2>
+<p>Scheme dialects use lexical binding. This form of binding is very clean. Here is an example to show the difference between lexical and dynamic binding:</p>
+<ol>
+<li><strong>Dynamic Binding in LISP</strong></li>
+</ol>
+<pre><code class="language-lisp">;; -*- lexical-binding: nil; -*- (Dynamic binding is active)
+
+(defvar target 100) ; 1. A global variable 'target' is created
+
+(defun print-target ()
+  &quot;Prints whatever 'target' currently means on the call stack.&quot;
+  target)
+
+(defun run-dynamic-test ()
+  &quot;Creates a local 'target' and then calls print-target.&quot;
+  (let ((target 200)) ; 2. Temporarily pushes 'target = 200' onto the stack
+    (print-target)))  ; 3. Calls the printing function
+
+(run-dynamic-test) 
+;; =&gt; OUTPUT: 200
+</code></pre>
 <ul>
-<li><a href="./reference/s48main.html">Index of Reference</a></li>
+<li><strong>Why this happens:</strong> When print-target executes, it looks at the live call stack. Because it was called from inside run-dynamic-test, it grabs the temporary value 200 currently sitting on top of the stack</li>
 </ul>
-<h4>The code:</h4>
+<ol start="2">
+<li><strong>Lexical Binding in LISP</strong></li>
+</ol>
+<pre><code class="language-lisp">;; -*- lexical-binding: t; -*- (Lexical binding is active)
+
+(defvar target 100) ; 1. A global variable 'target' is created
+
+(defun print-target ()
+  &quot;Prints 'target' based on where this function was typed.&quot;
+  target)
+
+(defun run-lexical-test ()
+  &quot;Creates a local 'target' and then calls print-target.&quot;
+  (let ((target 200)) 
+    (print-target)))  
+
+(run-lexical-test) 
+;; =&gt; OUTPUT: 100
+
+</code></pre>
 <ul>
-<li><a href="https://codeberg.org/hglabplh/scheme48">My fork of scheme48 &quot;Tübingen Edition&quot; at codeberg</a></li>
-<li><a href="https://codeberg.org/hglabplh/scheme48/src/branch/r6rs-lib-io">My r6rs-lib development branch of scheme48 at codeberg</a></li>
+<li><strong>Why this happens:</strong> When print-target executes, it looks at its physical surroundings in the text editor. It sees that it is written in the global outer space, completely separate from run-lexical-test. It completely ignores the let statement and grabs the global 100.</li>
 </ul>
+<h2>Scheme and the lexical environment</h2>
+<h3>Here is a picture of a typical Scheme environment / Scheme 48 uses the same mechanisms</h3>
+<p><strong>NOTE</strong> The code used is from one of my projects (<strong>SECD machine</strong> extended) written in <strong>Racket</strong></p>
+<p><a href="https://github.com/hglabplh-tech/SECD-Machine-Compiler-Suite">The SECD Suite project</a></p>
+<p><strong>Here is a first code snippet showing the lookup of a dynamic environment binding:</strong></p>
+<pre><code class="language-scheme">
+;; Lookup of a binding -&gt; lookup in the following order
+;;  - Actual Environment
+;;  - The last environment before the actual and its parent are searched up to the top-level 
+;; frame (a frame is one unit on the dump)
+
+
+(define lookup-environment
+  (lambda (environment dump variable)
+    (let* ([act-val (lookup-act-environment environment variable)])
+      (cond ((not (empty? act-val)) act-val)
+            ((not (empty? dump))  (env-lookup-helper dump variable))
+            (else act-val)))))
+
+;; Helper functions for lookup
+(define env-lookup-helper (lambda (dump variable)
+                            (let* ([env (frame-environment (first dump))]
+                                   [binding (lookup-act-environment env variable)])                            
+                              (if (not (empty? binding))
+                                  binding
+                                  (if (empty? (rest dump))
+                                      empty
+                                      (env-lookup-helper (rest dump) variable)
+                                      )                            
+                                  ))))
+</code></pre>
+<p><strong>Here, the runtime search for a binding is shown.
+The more interesting part is how the binding happens when compiling the code versus when it happens dynamically. For lexical binding, the way a variable is bound is determined by walking through the source when compiling it.
+Here is a Scheme example of lexical binding logic:</strong></p>
+<pre><code class="language-racket">#lang racket
+
+(require racket/match)
+
+;; ============================================================
+;; SOURCE ABSTRACT SYNTAX
+;; ============================================================
+
+(struct program (statements) #:transparent)
+(struct variable-declaration (name expression) #:transparent)
+(struct function-declaration (name body) #:transparent)
+(struct function-call (name arguments) #:transparent)
+(struct print-statement (format-expression arguments) #:transparent)
+(struct if-statement (condition then-block else-block) #:transparent)
+(struct comparison (operator left right) #:transparent)
+(struct integer-expression (value) #:transparent)
+(struct string-expression (value) #:transparent)
+(struct variable-expression (name) #:transparent)
+
+;; ============================================================
+;; LEXICALLY RESOLVED / COMPILED ABSTRACT SYNTAX
+;;
+;; A lexical address identifies a binding without searching by name:
+;;   depth = number of lexical parent links
+;;   slot  = position inside the selected environment frame
+;; ============================================================
+
+(struct lexical-address (depth slot name) #:transparent)
+(struct compiled-program (global-frame-size statements) #:transparent)
+(struct compiled-block (frame-size statements) #:transparent)
+(struct compiled-variable-declaration (address expression) #:transparent)
+(struct compiled-function-declaration
+  (address function-frame-size body)
+  #:transparent)
+(struct compiled-function-call (address arguments) #:transparent)
+(struct compiled-print-statement (format-expression arguments) #:transparent)
+(struct compiled-if-statement (condition then-block else-block) #:transparent)
+(struct compiled-comparison (operator left right) #:transparent)
+(struct compiled-integer (value) #:transparent)
+(struct compiled-string (value) #:transparent)
+(struct compiled-variable (address) #:transparent)
+
+;; ============================================================
+;; TOKENIZER
+;; ============================================================
+
+(define token-pattern
+  #px&quot;\&quot;(?:\\\\.|[^\&quot;])*\&quot;|&lt;=|&gt;=|==|!=|&lt;-|&lt;|&gt;|[A-Za-z_][A-Za-z0-9_]*|-?[0-9]+|[(),;]&quot;)
+
+(define (tokenize source)
+  (regexp-match* token-pattern source))
+
+;; ============================================================
+;; PARSER
+;;
+;; program       := statement (&quot;;&quot; statement)* &quot;;&quot;?
+;; statement     := declaration | call | print | if
+;; declaration   := &quot;dcl&quot; identifier &quot;&lt;-&quot; expression
+;;                | &quot;dcl&quot; &quot;fun&quot;? identifier block
+;; call          := identifier &quot;(&quot; arguments? &quot;)&quot;
+;; print         := &quot;print&quot; expression (&quot;,&quot; expression)*
+;; if            := &quot;if&quot; condition &quot;then&quot; block &quot;else&quot; block
+;; condition     := expression comparison-operator expression
+;; block         := &quot;(&quot; statement (&quot;;&quot; statement)* &quot;;&quot;? &quot;)&quot;
+;; expression    := integer | string | identifier
+;; comparison-op := &quot;==&quot; | &quot;!=&quot; | &quot;&lt;&quot; | &quot;&lt;=&quot; | &quot;&gt;&quot; | &quot;&gt;=&quot;
+;; ============================================================
+
+(define (parse source)
+  (define tokens (list-&gt;vector (tokenize source)))
+  (define position 0)
+
+  (define (finished?)
+    (= position (vector-length tokens)))
+
+  (define (peek)
+    (and (not (finished?))
+         (vector-ref tokens position)))
+
+  (define (take!)
+    (when (finished?)
+      (error 'parse &quot;unexpected end of input&quot;))
+    (begin0
+      (vector-ref tokens position)
+      (set! position (add1 position))))
+
+  (define (accept! expected)
+    (and (equal? (peek) expected)
+         (begin (take!) #t)))
+
+  (define (expect! expected)
+    (unless (accept! expected)
+      (error 'parse &quot;expected ~a, found ~a&quot; expected (peek))))
+
+  (define reserved-words
+    '(&quot;dcl&quot; &quot;fun&quot; &quot;print&quot; &quot;if&quot; &quot;then&quot; &quot;else&quot;))
+
+  (define (identifier-token? token)
+    (and token
+         (regexp-match? #px&quot;^[A-Za-z_][A-Za-z0-9_]*$&quot; token)
+         (not (member token reserved-words))))
+
+  (define (take-identifier!)
+    (let ([token (take!)])
+      (unless (identifier-token? token)
+        (error 'parse &quot;expected identifier, found ~a&quot; token))
+      (string-&gt;symbol token)))
+
+  (define (string-token? token)
+    (and token
+         (&gt;= (string-length token) 2)
+         (char=? (string-ref token 0) #\&quot;)))
+
+  (define (decode-string token)
+    (with-input-from-string token read))
+
+  (define (parse-expression)
+    (let ([token (take!)])
+      (cond
+        [(regexp-match? #px&quot;^-?[0-9]+$&quot; token)
+         (integer-expression (string-&gt;number token))]
+        [(string-token? token)
+         (string-expression (decode-string token))]
+        [(identifier-token? token)
+         (variable-expression (string-&gt;symbol token))]
+        [else
+         (error 'parse &quot;invalid expression: ~a&quot; token)])))
+
+  (define comparison-operators
+    '(&quot;==&quot; &quot;!=&quot; &quot;&lt;&quot; &quot;&lt;=&quot; &quot;&gt;&quot; &quot;&gt;=&quot;))
+
+  (define (parse-condition)
+    (let* ([left (parse-expression)]
+           [operator (take!)])
+      (unless (member operator comparison-operators)
+        (error 'parse &quot;expected comparison operator, found ~a&quot; operator))
+      (comparison operator left (parse-expression))))
+
+  (define (parse-arguments)
+    (expect! &quot;(&quot;)
+    (cond
+      [(accept! &quot;)&quot;) '()]
+      [else
+       (let loop ([result (list (parse-expression))])
+         (if (accept! &quot;,&quot;)
+             (loop (append result (list (parse-expression))))
+             (begin
+               (expect! &quot;)&quot;)
+               result)))]))
+
+  (define (parse-call)
+    (let ([name (take-identifier!)])
+      (function-call name (parse-arguments))))
+
+  (define (parse-print)
+    (expect! &quot;print&quot;)
+    (let ([format-expression (parse-expression)])
+      (let loop ([arguments '()])
+        (if (accept! &quot;,&quot;)
+            (loop (append arguments (list (parse-expression))))
+            (print-statement format-expression arguments)))))
+
+  (define (parse-block)
+    (expect! &quot;(&quot;)
+    (let loop ([result '()])
+      (cond
+        [(accept! &quot;)&quot;) result]
+        [else
+         (let ([statement (parse-statement)])
+           (accept! &quot;;&quot;)
+           (loop (append result (list statement))))])))
+
+  (define (parse-if)
+    (expect! &quot;if&quot;)
+    (let ([condition (parse-condition)])
+      (expect! &quot;then&quot;)
+      (let ([then-block (parse-block)])
+        (expect! &quot;else&quot;)
+        (if-statement condition then-block (parse-block)))))
+
+  (define (parse-declaration)
+    (expect! &quot;dcl&quot;)
+    (let ([explicit-function? (accept! &quot;fun&quot;)])
+      (let ([name (take-identifier!)])
+        (cond
+          [explicit-function?
+           (function-declaration name (parse-block))]
+          [(accept! &quot;&lt;-&quot;)
+           (variable-declaration name (parse-expression))]
+          [(equal? (peek) &quot;(&quot;)
+           (function-declaration name (parse-block))]
+          [else
+           (error 'parse &quot;invalid declaration for ~a&quot; name)]))))
+
+  (define (parse-statement)
+    (cond
+      [(equal? (peek) &quot;dcl&quot;) (parse-declaration)]
+      [(equal? (peek) &quot;print&quot;) (parse-print)]
+      [(equal? (peek) &quot;if&quot;) (parse-if)]
+      [(identifier-token? (peek)) (parse-call)]
+      [else (error 'parse &quot;unexpected token: ~a&quot; (peek))]))
+
+  (let loop ([result '()])
+    (if (finished?)
+        (program result)
+        (let ([statement (parse-statement)])
+          (accept! &quot;;&quot;)
+          (loop (append result (list statement)))))))
+
+;; ============================================================
+;; COMPILE-TIME LEXICAL SCOPING
+;; ============================================================
+
+;; A compiler scope maps each declared name to a frame slot.
+(struct compiler-scope (bindings next-slot) #:mutable #:transparent)
+
+(define (make-compiler-scope)
+  (compiler-scope (make-hasheq) 0))
+
+(define (declare-compile-time-binding! scope name)
+  (when (hash-has-key? (compiler-scope-bindings scope) name)
+    (error 'compile
+           &quot;duplicate declaration in the same lexical scope: ~a&quot;
+           name))
+  (let ([slot (compiler-scope-next-slot scope)])
+    (hash-set! (compiler-scope-bindings scope) name slot)
+    (set-compiler-scope-next-slot! scope (add1 slot))
+    (lexical-address 0 slot name)))
+
+;; Scopes are ordered nearest-to-farthest.  The compiler performs this
+;; name search once and writes the resulting depth and slot into the code.
+(define (resolve-compile-time-binding scopes name)
+  (let loop ([remaining scopes]
+             [depth 0])
+    (cond
+      [(empty? remaining)
+       (error 'compile &quot;unbound identifier: ~a&quot; name)]
+      [(hash-has-key?
+        (compiler-scope-bindings (first remaining))
+        name)
+       (lexical-address
+        depth
+        (hash-ref
+         (compiler-scope-bindings (first remaining))
+         name)
+        name)]
+      [else
+       (loop (rest remaining) (add1 depth))])))
+
+(define (compile-expression expression scopes)
+  (match expression
+    [(integer-expression value)
+     (compiled-integer value)]
+    [(string-expression value)
+     (compiled-string value)]
+    [(variable-expression name)
+     (compiled-variable
+      (resolve-compile-time-binding scopes name))]))
+
+(define (compile-condition condition scopes)
+  (match condition
+    [(comparison operator left right)
+     (compiled-comparison
+      operator
+      (compile-expression left scopes)
+      (compile-expression right scopes))]))
+
+(define (compile-block statements outer-scopes)
+  (let ([block-scope (make-compiler-scope)])
+    (let ([compiled-statements
+           (compile-statements statements
+                               (cons block-scope outer-scopes))])
+      (compiled-block
+       (compiler-scope-next-slot block-scope)
+       compiled-statements))))
+
+(define (compile-statement statement scopes)
+  (match statement
+    [(variable-declaration name initializer)
+     ;; Resolve the initializer before adding the new name.  Therefore
+     ;; &quot;dcl x &lt;- x&quot; sees an outer x rather than an uninitialized self.
+     (let ([compiled-initializer
+            (compile-expression initializer scopes)]
+           [address
+            (declare-compile-time-binding! (first scopes) name)])
+       (compiled-variable-declaration address compiled-initializer))]
+
+    [(function-declaration name body)
+     ;; Declare first so that the function can recursively call itself.
+     (let* ([address
+             (declare-compile-time-binding! (first scopes) name)]
+            [function-scope (make-compiler-scope)]
+            [compiled-body
+             (compile-statements body (cons function-scope scopes))])
+       (compiled-function-declaration
+        address
+        (compiler-scope-next-slot function-scope)
+        compiled-body))]
+
+    [(function-call name arguments)
+     (compiled-function-call
+      (resolve-compile-time-binding scopes name)
+      (map (lambda (argument)
+             (compile-expression argument scopes))
+           arguments))]
+
+    [(print-statement format-expression arguments)
+     (compiled-print-statement
+      (compile-expression format-expression scopes)
+      (map (lambda (argument)
+             (compile-expression argument scopes))
+           arguments))]
+
+    [(if-statement condition then-block else-block)
+     (compiled-if-statement
+      (compile-condition condition scopes)
+      (compile-block then-block scopes)
+      (compile-block else-block scopes))]))
+
+(define (compile-statements statements scopes)
+  ;; Compilation is sequential, so a reference can see earlier declarations
+  ;; in the same scope.  A function can also see its own binding.
+  (map (lambda (statement)
+         (compile-statement statement scopes))
+       statements))
+
+(define (compile-program source-program)
+  (let ([global-scope (make-compiler-scope)])
+    (let ([compiled-statements
+           (compile-statements
+            (program-statements source-program)
+            (list global-scope))])
+      (compiled-program
+       (compiler-scope-next-slot global-scope)
+       compiled-statements))))
+
+;; ============================================================
+;; RUNTIME LEXICAL ENVIRONMENTS
+;; ============================================================
+
+;; Every runtime frame has fixed slots and one lexical parent.
+(struct runtime-frame (slots lexical-parent) #:transparent)
+
+;; A closure captures the frame active at its declaration.
+(struct closure
+  (function-frame-size body definition-environment)
+  #:transparent)
+
+(define uninitialized (gensym 'uninitialized))
+
+(define (make-runtime-frame size [parent #f])
+  (runtime-frame
+   (build-vector size (lambda ignored (box uninitialized)))
+   parent))
+
+(define (follow-lexical-parents environment depth)
+  (cond
+    [(zero? depth) environment]
+    [(not environment)
+     (error 'runtime &quot;broken lexical address: missing parent frame&quot;)]
+    [else
+     (follow-lexical-parents
+      (runtime-frame-lexical-parent environment)
+      (sub1 depth))]))
+
+;; Runtime lookup performs no name search.  It follows a known number of
+;; lexical-parent links and reads a known slot.
+(define (lexical-location environment address)
+  (let* ([target-frame
+          (follow-lexical-parents
+           environment
+           (lexical-address-depth address))]
+         [slot (lexical-address-slot address)])
+    (when (or (&lt; slot 0)
+              (&gt;= slot (vector-length
+                        (runtime-frame-slots target-frame))))
+      (error 'runtime &quot;invalid lexical slot: ~a&quot; slot))
+    (vector-ref (runtime-frame-slots target-frame) slot)))
+
+(define (lexical-reference environment address)
+  (let ([value (unbox (lexical-location environment address))])
+    (when (eq? value uninitialized)
+      (error 'runtime
+             &quot;binding used before initialization: ~a&quot;
+             (lexical-address-name address)))
+    value))
+
+(define (lexical-initialize! environment address value)
+  (let ([location (lexical-location environment address)])
+    (unless (eq? (unbox location) uninitialized)
+      (error 'runtime
+             &quot;binding initialized more than once: ~a&quot;
+             (lexical-address-name address)))
+    (set-box! location value)))
+
+;; Assignment is provided for completeness.  It changes an existing location;
+;; it does not create or redirect a binding.
+(define (lexical-assign! environment address value)
+  (set-box! (lexical-location environment address) value))
+
+;; ============================================================
+;; RUNTIME EVALUATION
+;; ============================================================
+
+(define (evaluate-compiled-expression expression environment)
+  (match expression
+    [(compiled-integer value) value]
+    [(compiled-string value) value]
+    [(compiled-variable address)
+     (lexical-reference environment address)]))
+
+(define (evaluate-compiled-comparison condition environment)
+  (match condition
+    [(compiled-comparison operator left-expression right-expression)
+     (let* ([left
+             (evaluate-compiled-expression left-expression environment)]
+            [right
+             (evaluate-compiled-expression right-expression environment)])
+       (cond
+         [(equal? operator &quot;==&quot;) (equal? left right)]
+         [(equal? operator &quot;!=&quot;) (not (equal? left right))]
+         [else
+          (unless (and (exact-integer? left) (exact-integer? right))
+            (error 'comparison
+                   &quot;~a requires integer operands, received ~e and ~e&quot;
+                   operator left right))
+          (cond
+            [(equal? operator &quot;&lt;&quot;) (&lt; left right)]
+            [(equal? operator &quot;&lt;=&quot;) (&lt;= left right)]
+            [(equal? operator &quot;&gt;&quot;) (&gt; left right)]
+            [(equal? operator &quot;&gt;=&quot;) (&gt;= left right)]
+            [else (error 'comparison &quot;unknown operator: ~a&quot; operator)])]))]))
+
+(define (format-with-placeholders format-string values)
+  (for/fold ([result format-string])
+            ([value (in-list values)])
+    (unless (regexp-match? #rx&quot;%(d|s)&quot; result)
+      (error 'print &quot;too many values for format string: ~a&quot; format-string))
+    (regexp-replace
+     #rx&quot;%(d|s)&quot;
+     result
+     (lambda ignored (format &quot;~a&quot; value)))))
+
+(define (execute-compiled-block! block parent-environment)
+  (let ([block-environment
+         (make-runtime-frame
+          (compiled-block-frame-size block)
+          parent-environment)])
+    (execute-compiled-statements!
+     (compiled-block-statements block)
+     block-environment)))
+
+(define (execute-compiled-call! statement caller-environment)
+  (match statement
+    [(compiled-function-call address arguments)
+     (let ([argument-values
+            (map (lambda (argument)
+                   (evaluate-compiled-expression
+                    argument caller-environment))
+                 arguments)]
+           [function
+            (lexical-reference caller-environment address)])
+       (unless (closure? function)
+         (error 'function-call
+                &quot;~a is not a function&quot;
+                (lexical-address-name address)))
+       (unless (empty? argument-values)
+         (error 'function-call &quot;example functions accept no arguments&quot;))
+
+       ;; This is the essential lexical-scoping operation.  The new call
+       ;; frame points to the closure's definition environment, not to the
+       ;; caller's frame or a caller dump.
+       (let ([function-environment
+              (make-runtime-frame
+               (closure-function-frame-size function)
+               (closure-definition-environment function))])
+         (execute-compiled-statements!
+          (closure-body function)
+          function-environment)))]))
+
+(define (execute-compiled-statement! statement environment)
+  (match statement
+    [(compiled-variable-declaration address initializer)
+     (lexical-initialize!
+      environment address
+      (evaluate-compiled-expression initializer environment))]
+
+    [(compiled-function-declaration address frame-size body)
+     (lexical-initialize!
+      environment address
+      (closure frame-size body environment))]
+
+    [(compiled-function-call _ _)
+     (execute-compiled-call! statement environment)]
+
+    [(compiled-print-statement format-expression argument-expressions)
+     (let* ([format-string
+             (evaluate-compiled-expression format-expression environment)]
+            [values
+             (map (lambda (argument)
+                    (evaluate-compiled-expression argument environment))
+                  argument-expressions)])
+       (unless (string? format-string)
+         (error 'print &quot;first expression must produce a string&quot;))
+       (displayln (format-with-placeholders format-string values)))]
+
+    [(compiled-if-statement condition then-block else-block)
+     (if (evaluate-compiled-comparison condition environment)
+         (execute-compiled-block! then-block environment)
+         (execute-compiled-block! else-block environment))]))
+
+(define (execute-compiled-statements! statements environment)
+  (for-each
+   (lambda (statement)
+     (execute-compiled-statement! statement environment))
+   statements))
+
+(define (execute-compiled-program! code)
+  (let ([global-environment
+         (make-runtime-frame
+          (compiled-program-global-frame-size code))])
+    (execute-compiled-statements!
+     (compiled-program-statements code)
+     global-environment)
+    global-environment))
+
+;; ============================================================
+;; EXECUTABLE EXAMPLE
+;; ============================================================
+
+(define source
+  (string-append
+   &quot;dcl a &lt;- 5; &quot;
+   &quot;dcl b &lt;- 7; &quot;
+   &quot;dcl fun_print (print \&quot;%d geta %d\&quot;, a, b); &quot;
+   &quot;dcl fun test (&quot;
+   &quot;  dcl a &lt;- 9; &quot;
+   &quot;  if a == 9 then (&quot;
+   &quot;    print \&quot;condition true; inner a = %d\&quot;, a; &quot;
+   &quot;    fun_print()&quot;
+   &quot;  ) else (&quot;
+   &quot;    print \&quot;condition false; a = %d\&quot;, a&quot;
+   &quot;  ); &quot;
+   &quot;  print \&quot;after if; inner a = %d\&quot;, a&quot;
+   &quot;); &quot;
+   &quot;test(); &quot;
+   &quot;fun_print(); &quot;
+   &quot;if a &lt; b then (&quot;
+   &quot;  print \&quot;top-level condition true: a = %d, b = %d\&quot;, a, b&quot;
+   &quot;) else (&quot;
+   &quot;  print \&quot;top-level condition false: a = %d, b = %d\&quot;, a, b&quot;
+   &quot;)&quot;))
+
+(define source-tree (parse source))
+(define compiled-code (compile-program source-tree))
+
+(displayln &quot;Lexically resolved program:&quot;)
+(pretty-print compiled-code)
+(displayln &quot;\nProgram output:&quot;)
+(void (execute-compiled-program! compiled-code))
+
+</code></pre>
+<p><strong>The output in DrRacket is -&gt;</strong></p>
+<pre><code class="language-text">Lexically resolved program:
+(compiled-program
+ 4
+ (list
+  (compiled-variable-declaration (lexical-address 0 0 'a) (compiled-integer 5))
+  (compiled-variable-declaration (lexical-address 0 1 'b) (compiled-integer 7))
+  (compiled-function-declaration
+   (lexical-address 0 2 'fun_print)
+   0
+   (list
+    (compiled-print-statement
+     (compiled-string &quot;%d geta %d&quot;)
+     (list
+      (compiled-variable (lexical-address 1 0 'a))
+      (compiled-variable (lexical-address 1 1 'b))))))
+  (compiled-function-declaration
+   (lexical-address 0 3 'test)
+   1
+   (list
+    (compiled-variable-declaration
+     (lexical-address 0 0 'a)
+     (compiled-integer 9))
+    (compiled-if-statement
+     (compiled-comparison
+      &quot;==&quot;
+      (compiled-variable (lexical-address 0 0 'a))
+      (compiled-integer 9))
+     (compiled-block
+      0
+      (list
+       (compiled-print-statement
+        (compiled-string &quot;condition true; inner a = %d&quot;)
+        (list (compiled-variable (lexical-address 1 0 'a))))
+       (compiled-function-call (lexical-address 2 2 'fun_print) '())))
+     (compiled-block
+      0
+      (list
+       (compiled-print-statement
+        (compiled-string &quot;condition false; a = %d&quot;)
+        (list (compiled-variable (lexical-address 1 0 'a)))))))
+    (compiled-print-statement
+     (compiled-string &quot;after if; inner a = %d&quot;)
+     (list (compiled-variable (lexical-address 0 0 'a))))))
+  (compiled-function-call (lexical-address 0 3 'test) '())
+  (compiled-function-call (lexical-address 0 2 'fun_print) '())
+  (compiled-if-statement
+   (compiled-comparison
+    &quot;&lt;&quot;
+    (compiled-variable (lexical-address 0 0 'a))
+    (compiled-variable (lexical-address 0 1 'b)))
+   (compiled-block
+    0
+    (list
+     (compiled-print-statement
+      (compiled-string &quot;top-level condition true: a = %d, b = %d&quot;)
+      (list
+       (compiled-variable (lexical-address 1 0 'a))
+       (compiled-variable (lexical-address 1 1 'b))))))
+   (compiled-block
+    0
+    (list
+     (compiled-print-statement
+      (compiled-string &quot;top-level condition false: a = %d, b = %d&quot;)
+      (list
+       (compiled-variable (lexical-address 1 0 'a))
+       (compiled-variable (lexical-address 1 1 'b)))))))))
+
+Program output:
+condition true; inner a = 9
+5 geta 7
+after if; inner a = 9
+5 geta 7
+top-level condition true: a = 5, b = 7
+&gt; )
+</code></pre>
+<p><img src="./graphics/scheme-env-bindings.png" alt="Env Image cannot be shown" /></p>
 <p><strong>NOTE</strong>: Copyright</p>
 <ul>
 <li>Harald Glab-Plhak</li>

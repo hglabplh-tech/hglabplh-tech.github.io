@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-<title>index</title>
+<title>intro</title>
 <style type="text/css">
 :root {
     --color-scale-black: #1b1f23;
@@ -1350,70 +1350,99 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 <body>
 <textarea id="source" style="display: none">
 - [Go top](../index.html)
+- [Go index](./index.html)
 
-# Scheme48 reference and documentation Scheme 48 1.9
+# Scheme 48 Introduction
 
-## Short history and overview
+Scheme 48 is a prominent, minimalist implementation of the Scheme programming language. It is built around a custom bytecode virtual machine and designed to be simple, clean, and highly extensible. 
+1. [Wikipedia Scheme](https://en.wikipedia.org/wiki/Scheme_48) 
+2. [Tail call paper](https://tailcall.au/s48-refman/scheme48.html)
 
-## Links to the s48-reference, the descriptions, and the s48 repo at codebourg
 
-#### Documentation and reference
+## The history of Scheme48 and the responsible persons from past to today
 
-##### The Homepage:
-- [Scheme48 Home](https://www.s48.org/)
+### History of Scheme 48
 
-##### Descriptions:
-- [S48 Introduction](./intro.html)
-- [The architecture of Scheme48](./s48architecture.html)
-- [functions and bindings](./bindings.html)
-  
+1. **The 48-Hour Toy (1986):** The project began in August 1986 following a conversation at the Lisp and Functional Programming Conference. The founders questioned why Lisp and Scheme implementations inevitably devolved into overly complex, unmanageable codebases. [(-1-) S48](https://mumble.net/~jar/s48/). To prove a minimal core could suffice, they hacked together a fully working Scheme interpreter—complete with a reader, writer, bytecode compiler, virtual machine, and a basic garbage collector—in exactly 48 hours. The name **Scheme 48** directly nods to this 48-hour sprint (and plays on the **1982 Walter Hill film 48 Hrs.** and the contemporary **Scheme 48** implementation). Later, the developers joked that the name also implied the implementation should be simple enough for a programmer to fully understand in 48 hours.
 
-##### Reference:
+2. **Architectural Evolution and Pre-Scheme:** Over the late 1980s and 1990s, Scheme 48 transformed from a toy into a highly influential academic and systems research platform. Its defining technical breakthrough was Pre-Scheme: [(-1-) PreScheme restoration](https://prescheme.org/posts/announcing-the-pre-scheme-restoration.html),  [(-2-) Tail call](https://tailcall.au/s48-refman/scheme48.html)
+- To maximize performance while maintaining code elegance, the developers wrote the Scheme 48 virtual machine and garbage collector in a restricted, statically typed subset of Scheme called Pre-Scheme. [(-1-) PreScheme](https://prescheme.org/), [(-2-) PreScheme Restoration Announcements](https://prescheme.org/posts/announcing-the-pre-scheme-restoration.html)
+- They built a special compiler that translated this Pre-Scheme code into highly efficient C code. This let developers safely debug the virtual machine in a standard Scheme environment before compiling it into a lightning-fast native binary. [(-1-) Deinprogramm (Mike Sperber)](https://www.deinprogramm.de/sperber/papers/tractable-native-code-scheme-system.pdf), [(-2-) PreScheme](https://prescheme.org/)
 
-- [Index of Reference](./reference/s48main.html)
+4. **Modern Era and Standards:** Scheme 48 eventually implemented full compatibility with the R5RS standard, maintaining a robust module system that prevents naming macro conflicts. It remained an active open-source project under a BSD license. Following periods of quiet maintenance, Scheme 48 continues to see active preservation, with its latest stable release, version 1.9.3, launching in late 2024
 
-#### The code:
-- [My fork of scheme48 "Tübingen Edition" at codeberg](https://codeberg.org/hglabplh/scheme48)
-- [My r6rs-lib development branch of scheme48 at codeberg](https://codeberg.org/hglabplh/scheme48/src/branch/r6rs-lib-io)
+### Leading Developers over the years
 
-**NOTE**: Copyright
-- Harald Glab-Plhak
-- Computer Science since 1992
-- © Harald Glab-Plhak 2026
+- **Richard Kelsey:** Co-creator and primary author of the original 1986 system. Kelsey's doctoral dissertation on transformational compilers directly shaped the creation of the Pre-Scheme compiler, which optimizes Scheme 48's virtual machine today. He has remained a lifelong maintainer of the project. [(-1-) PreScheme Site](https://prescheme.org/), [(-2-) Scheme48-WiKi](https://en.wikipedia.org/wiki/Scheme_48), [(-3-) S48](https://mumble.net/~jar/s48/), [(-4-) PreScheme Restoration](https://prescheme.org/posts/announcing-the-pre-scheme-restoration.html)
 
+- **Jonathan Rees:** Co-creator of Scheme 48. Rees is a legendary figure in the Lisp community, renowned for designing Scheme 48's advanced security-focused module system (based on his W7 security kernel). He was also heavily involved in the broader standardization of the Scheme language itself (co-authoring multiple Revised Report standards). [(-1-) The tail call](https://tailcall.au/s48-refman/scheme48.html)
+
+- **Mike Sperber & Martin Gasbichler:** In the early 2000s, these developers injected new life into the system by designing and implementing an optimizing native-code compiler layer on top of the old infrastructure, bridging the gap between historical bytecode execution and contemporary system speeds.
+
+- **Olin Shivers:** While primarily famous for creating `scsh` (The Scheme Shell), Shivers heavily contributed to `POSIX` compliance interfaces, regular expression engines, and the operating system abstractions built straight into Scheme 48's standard libraries.
+
+### Most Popular Scheme 48 Projects
+
+- **scsh (The Scheme Shell):** A highly popular systems programming and scripting environment built straight on top of Scheme 48 and POSIX capabilities. Created by Olin Shivers, it replaces traditional Unix shells (like Bash) with Scheme, letting developers manage processes, pipes, and network sockets with structural, functional code rather than messy text-parsing scripts.
+
+- **Kali Scheme:** A powerful distributed variant of Scheme implemented directly on top of Scheme 48 infrastructure. It lets code migrate smoothly across multiple servers over a network mid-calculation, proving essential for early academic research into autonomous mobile agents and decentralized computing.
+
+- **Essence** is a highly efficient, specialized **LR(k)** and **SLR(k)** parser generator designed to run within the Scheme 48 ecosystem. [S48 related software](https://www.s48.org/related-software.html), [GIT Project Home](https://github.com/mikesperber/essence). Developed by Mike Sperber and Peter Thiemann, Essence hosts its own dedicated space under the official Scheme 48 domain at [Essence parser site](https://s48.org/essence). The **PGG**(Parser Generator for Essence). The Essence parser generator home page is at:[PGG Home](https://www.s48.org/pgg/). **Real-World Production Example:** Essence has been successfully used commercially to build industrial-grade developer tools. For instance, the software firm intaris utilized Essence to build a **commercial TTCN-3-to-C compiler**. By pairing Essence with the Scheme 48 Pre-Scheme compiler infrastructure, they created a robust, low-effort, high-efficiency frontend capable of parsing complex industrial test suites.
 </textarea>
 <div id="markdown">
 <ul>
 <li><a href="../index.html">Go top</a></li>
+<li><a href="./index.html">Go index</a></li>
 </ul>
-<h1>Scheme48 reference and documentation Scheme 48 1.9</h1>
-<h2>Short history and overview</h2>
-<h2>Links to the s48-reference, the descriptions, and the s48 repo at codebourg</h2>
-<h4>Documentation and reference</h4>
-<h5>The Homepage:</h5>
+<h1>Scheme 48 Introduction</h1>
+<p>Scheme 48 is a prominent, minimalist implementation of the Scheme programming language. It is built around a custom bytecode virtual machine and designed to be simple, clean, and highly extensible.</p>
+<ol>
+<li><a href="https://en.wikipedia.org/wiki/Scheme_48">Wikipedia Scheme</a></li>
+<li><a href="https://tailcall.au/s48-refman/scheme48.html">Tail call paper</a></li>
+</ol>
+<h2>The history of Scheme48 and the responsible persons from past to today</h2>
+<h3>History of Scheme 48</h3>
+<ol>
+<li>
+<p><strong>The 48-Hour Toy (1986):</strong> The project began in August 1986 following a conversation at the Lisp and Functional Programming Conference. The founders questioned why Lisp and Scheme implementations inevitably devolved into overly complex, unmanageable codebases. <a href="https://mumble.net/~jar/s48/">(-1-) S48</a>. To prove a minimal core could suffice, they hacked together a fully working Scheme interpreter—complete with a reader, writer, bytecode compiler, virtual machine, and a basic garbage collector—in exactly 48 hours. The name <strong>Scheme 48</strong> directly nods to this 48-hour sprint (and plays on the <strong>1982 Walter Hill film 48 Hrs.</strong> and the contemporary <strong>Scheme 48</strong> implementation). Later, the developers joked that the name also implied the implementation should be simple enough for a programmer to fully understand in 48 hours.</p>
+</li>
+<li>
+<p><strong>Architectural Evolution and Pre-Scheme:</strong> Over the late 1980s and 1990s, Scheme 48 transformed from a toy into a highly influential academic and systems research platform. Its defining technical breakthrough was Pre-Scheme: <a href="https://prescheme.org/posts/announcing-the-pre-scheme-restoration.html">(-1-) PreScheme restoration</a>,  <a href="https://tailcall.au/s48-refman/scheme48.html">(-2-) Tail call</a></p>
+</li>
+</ol>
 <ul>
-<li><a href="https://www.s48.org/">Scheme48 Home</a></li>
+<li>To maximize performance while maintaining code elegance, the developers wrote the Scheme 48 virtual machine and garbage collector in a restricted, statically typed subset of Scheme called Pre-Scheme. <a href="https://prescheme.org/">(-1-) PreScheme</a>, <a href="https://prescheme.org/posts/announcing-the-pre-scheme-restoration.html">(-2-) PreScheme Restoration Announcements</a></li>
+<li>They built a special compiler that translated this Pre-Scheme code into highly efficient C code. This let developers safely debug the virtual machine in a standard Scheme environment before compiling it into a lightning-fast native binary. <a href="https://www.deinprogramm.de/sperber/papers/tractable-native-code-scheme-system.pdf">(-1-) Deinprogramm (Mike Sperber)</a>, <a href="https://prescheme.org/">(-2-) PreScheme</a></li>
 </ul>
-<h5>Descriptions:</h5>
+<ol start="4">
+<li><strong>Modern Era and Standards:</strong> Scheme 48 eventually implemented full compatibility with the R5RS standard, maintaining a robust module system that prevents naming macro conflicts. It remained an active open-source project under a BSD license. Following periods of quiet maintenance, Scheme 48 continues to see active preservation, with its latest stable release, version 1.9.3, launching in late 2024</li>
+</ol>
+<h3>Leading Developers over the years</h3>
 <ul>
-<li><a href="./intro.html">S48 Introduction</a></li>
-<li><a href="./s48architecture.html">The architecture of Scheme48</a></li>
-<li><a href="./bindings.html">functions and bindings</a></li>
+<li>
+<p><strong>Richard Kelsey:</strong> Co-creator and primary author of the original 1986 system. Kelsey's doctoral dissertation on transformational compilers directly shaped the creation of the Pre-Scheme compiler, which optimizes Scheme 48's virtual machine today. He has remained a lifelong maintainer of the project. <a href="https://prescheme.org/">(-1-) PreScheme Site</a>, <a href="https://en.wikipedia.org/wiki/Scheme_48">(-2-) Scheme48-WiKi</a>, <a href="https://mumble.net/~jar/s48/">(-3-) S48</a>, <a href="https://prescheme.org/posts/announcing-the-pre-scheme-restoration.html">(-4-) PreScheme Restoration</a></p>
+</li>
+<li>
+<p><strong>Jonathan Rees:</strong> Co-creator of Scheme 48. Rees is a legendary figure in the Lisp community, renowned for designing Scheme 48's advanced security-focused module system (based on his W7 security kernel). He was also heavily involved in the broader standardization of the Scheme language itself (co-authoring multiple Revised Report standards). <a href="https://tailcall.au/s48-refman/scheme48.html">(-1-) The tail call</a></p>
+</li>
+<li>
+<p><strong>Mike Sperber &amp; Martin Gasbichler:</strong> In the early 2000s, these developers injected new life into the system by designing and implementing an optimizing native-code compiler layer on top of the old infrastructure, bridging the gap between historical bytecode execution and contemporary system speeds.</p>
+</li>
+<li>
+<p><strong>Olin Shivers:</strong> While primarily famous for creating <code>scsh</code> (The Scheme Shell), Shivers heavily contributed to <code>POSIX</code> compliance interfaces, regular expression engines, and the operating system abstractions built straight into Scheme 48's standard libraries.</p>
+</li>
 </ul>
-<h5>Reference:</h5>
+<h3>Most Popular Scheme 48 Projects</h3>
 <ul>
-<li><a href="./reference/s48main.html">Index of Reference</a></li>
-</ul>
-<h4>The code:</h4>
-<ul>
-<li><a href="https://codeberg.org/hglabplh/scheme48">My fork of scheme48 &quot;Tübingen Edition&quot; at codeberg</a></li>
-<li><a href="https://codeberg.org/hglabplh/scheme48/src/branch/r6rs-lib-io">My r6rs-lib development branch of scheme48 at codeberg</a></li>
-</ul>
-<p><strong>NOTE</strong>: Copyright</p>
-<ul>
-<li>Harald Glab-Plhak</li>
-<li>Computer Science since 1992</li>
-<li>© Harald Glab-Plhak 2026</li>
+<li>
+<p><strong>scsh (The Scheme Shell):</strong> A highly popular systems programming and scripting environment built straight on top of Scheme 48 and POSIX capabilities. Created by Olin Shivers, it replaces traditional Unix shells (like Bash) with Scheme, letting developers manage processes, pipes, and network sockets with structural, functional code rather than messy text-parsing scripts.</p>
+</li>
+<li>
+<p><strong>Kali Scheme:</strong> A powerful distributed variant of Scheme implemented directly on top of Scheme 48 infrastructure. It lets code migrate smoothly across multiple servers over a network mid-calculation, proving essential for early academic research into autonomous mobile agents and decentralized computing.</p>
+</li>
+<li>
+<p><strong>Essence</strong> is a highly efficient, specialized <strong>LR(k)</strong> and <strong>SLR(k)</strong> parser generator designed to run within the Scheme 48 ecosystem. <a href="https://www.s48.org/related-software.html">S48 related software</a>, <a href="https://github.com/mikesperber/essence">GIT Project Home</a>. Developed by Mike Sperber and Peter Thiemann, Essence hosts its own dedicated space under the official Scheme 48 domain at <a href="https://s48.org/essence">Essence parser site</a>. The <strong>PGG</strong>(Parser Generator for Essence). The Essence parser generator home page is at:<a href="https://www.s48.org/pgg/">PGG Home</a>. <strong>Real-World Production Example:</strong> Essence has been successfully used commercially to build industrial-grade developer tools. For instance, the software firm intaris utilized Essence to build a <strong>commercial TTCN-3-to-C compiler</strong>. By pairing Essence with the Scheme 48 Pre-Scheme compiler infrastructure, they created a robust, low-effort, high-efficiency frontend capable of parsing complex industrial test suites.</p>
+</li>
 </ul>
 
 </div>
