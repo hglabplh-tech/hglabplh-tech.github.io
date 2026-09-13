@@ -12,9 +12,10 @@
 - [Scheme48 Home](https://www.s48.org/)
 
 ##### Descriptions:
+- [S48 Introduction](./intro.html)
 - [The architecture of Scheme48](./s48architecture.html)
 - [functions and bindings](./bindings.html)
-- [how bindings work example](./binding-example.html)
+  
 
 ##### Reference:
 
