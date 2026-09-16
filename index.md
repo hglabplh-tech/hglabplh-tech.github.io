@@ -68,6 +68,7 @@ Over the years I've worked in computer science, development, design, and testing
 
 [My funny games](https://github.com/hglabplh-tech/GamesProject/)
 
+**NOTE**: Copyright
 - Harald Glab-Plhak
 - Computer Science since 1992
-- © Harald Glab-Plhak (2024, 2025, 2026)
+- &copy; Harald Glab-Plhak (2024, 2025, 2026)

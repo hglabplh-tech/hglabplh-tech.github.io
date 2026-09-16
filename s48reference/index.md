@@ -22,10 +22,11 @@
 - [Index of Reference](./reference/s48main.html)
 
 #### The code:
+- [Main Source code "Tübingen Edition" responsible Mike Sperber](https://codeberg.org/s48/scheme48/)
 - [My fork of scheme48 "Tübingen Edition" at codeberg](https://codeberg.org/hglabplh/scheme48)
 - [My r6rs-lib development branch of scheme48 at codeberg](https://codeberg.org/hglabplh/scheme48/src/branch/r6rs-lib-io)
 
 **NOTE**: Copyright
 - Harald Glab-Plhak
 - Computer Science since 1992
-- © Harald Glab-Plhak 2026
+- &copy; Harald Glab-Plhak 2026

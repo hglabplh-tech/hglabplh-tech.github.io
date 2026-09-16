@@ -806,5 +806,5 @@ top-level condition true: a = 5, b = 7
 **NOTE**: Copyright
 - Harald Glab-Plhak
 - Computer Science since 1992
-- © Harald Glab-Plhak 2026
+- &copy; Harald Glab-Plhak 2026
 
