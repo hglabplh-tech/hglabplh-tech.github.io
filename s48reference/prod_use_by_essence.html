@@ -1385,10 +1385,28 @@ The compiler relies heavily on existing, rock-solid functional programming infra
 ```
 **NOTE** CPS: Continuation Passing Style - AST: Abstract Syntax Tree 
 
+**A. Syntax Analysis (Essence & Cronenberg)**
+
 The **TTCN-3 grammar** is incredibly dense and ambiguous, with more than 1,000 production rules. 
 - **The Role of Essence:** Because Essence can parse strings interpretively without pre-generating lookahead or parser tables first, the developers could rapidly iterate and tweak the language rules in real time. 
 - They successfully massaged the massive, **ambiguous grammar** into a clean, **SLR(1)** form. They built a minimalist companion scanner generator called **Cronenberg** to handle lexical analysis. 
 
+**B. Static Processing (The 8-Pass System)**
+
+Because **TTCN-3** constructs are highly interdependent and can appear out of order (e.g., types restricted by static expressions, which themselves rely on other types), the compiler uses **8 passes over the Abstract Syntax Tree (AST)** to resolve variables, sort dependencies topologically, and check types. Scheme's latent typing allowed them to flexibly append properties directly to AST nodes as passes progressed.
+
+**C. The Continuation-Passing Style (CPS) Transformation** 
+
+The absolute core of the compiler is the Transformational Compiler (TC). Originally built for the T project and used to maintain Scheme 48's virtual machine, the TC converts the AST into an explicitly managed graph of CPS nodes. [1]Why CPS? Representing the program in CPS made the messy, implicit control flows of TTCN-3 (such as selective polling, timers, and snapshotting via the alt construct) completely explicit and highly manageable.
+
+**D. Code Generation & Runtime Strategy**
+
+The compiler outputs to two distinct targets: 
+1. **The Scheme Backend:** A tiny (<200 lines) generator used strictly for rapid, interactive testing inside a live Scheme 48 session. 
+2. **The C Backend:** Designed to meet strict industrial constraints. Because standard C lacks native closures or a user-level preemptive thread system, the compiler performs liveness analysis to insert **explicit memory deallocation**. It then processes function calls using a classic **trampoline technique**, abandoning the native C stack to ensure safe execution on bare-metal systems without an OS. 
+
+###### Paper
+ 
 The design paper by Mike Sperber and Matthias Neubauer is found at [Design paper](https://www.deinprogramm.de/sperber/papers/ttcn-3-compiler.pdf)
 
 **NOTE**: Copyright
@@ -1425,11 +1443,23 @@ The design paper by Mike Sperber and Matthias Neubauer is found at [Design paper
 [Scheme]  [Portable C (via Trampoline)]
 </code></pre>
 <p><strong>NOTE</strong> CPS: Continuation Passing Style - AST: Abstract Syntax Tree</p>
+<p><strong>A. Syntax Analysis (Essence &amp; Cronenberg)</strong></p>
 <p>The <strong>TTCN-3 grammar</strong> is incredibly dense and ambiguous, with more than 1,000 production rules.</p>
 <ul>
 <li><strong>The Role of Essence:</strong> Because Essence can parse strings interpretively without pre-generating lookahead or parser tables first, the developers could rapidly iterate and tweak the language rules in real time.</li>
 <li>They successfully massaged the massive, <strong>ambiguous grammar</strong> into a clean, <strong>SLR(1)</strong> form. They built a minimalist companion scanner generator called <strong>Cronenberg</strong> to handle lexical analysis.</li>
 </ul>
+<p><strong>B. Static Processing (The 8-Pass System)</strong></p>
+<p>Because <strong>TTCN-3</strong> constructs are highly interdependent and can appear out of order (e.g., types restricted by static expressions, which themselves rely on other types), the compiler uses <strong>8 passes over the Abstract Syntax Tree (AST)</strong> to resolve variables, sort dependencies topologically, and check types. Scheme's latent typing allowed them to flexibly append properties directly to AST nodes as passes progressed.</p>
+<p><strong>C. The Continuation-Passing Style (CPS) Transformation</strong></p>
+<p>The absolute core of the compiler is the Transformational Compiler (TC). Originally built for the T project and used to maintain Scheme 48's virtual machine, the TC converts the AST into an explicitly managed graph of CPS nodes. [1]Why CPS? Representing the program in CPS made the messy, implicit control flows of TTCN-3 (such as selective polling, timers, and snapshotting via the alt construct) completely explicit and highly manageable.</p>
+<p><strong>D. Code Generation &amp; Runtime Strategy</strong></p>
+<p>The compiler outputs to two distinct targets:</p>
+<ol>
+<li><strong>The Scheme Backend:</strong> A tiny (&lt;200 lines) generator used strictly for rapid, interactive testing inside a live Scheme 48 session.</li>
+<li><strong>The C Backend:</strong> Designed to meet strict industrial constraints. Because standard C lacks native closures or a user-level preemptive thread system, the compiler performs liveness analysis to insert <strong>explicit memory deallocation</strong>. It then processes function calls using a classic <strong>trampoline technique</strong>, abandoning the native C stack to ensure safe execution on bare-metal systems without an OS.</li>
+</ol>
+<h6>Paper</h6>
 <p>The design paper by Mike Sperber and Matthias Neubauer is found at <a href="https://www.deinprogramm.de/sperber/papers/ttcn-3-compiler.pdf">Design paper</a></p>
 <p><strong>NOTE</strong>: Copyright</p>
 <ul>
