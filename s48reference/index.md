@@ -13,6 +13,7 @@
 
 ##### Descriptions:
 - [S48 Introduction](./intro.html)
+- [S48 Essence productive use](./prod_use_by_essence.html)
 - [The architecture of Scheme48](./s48architecture.html)
 - [functions and bindings](./bindings.html)
   

@@ -1,10 +1,10 @@
 - [Go top](../index.html)
 - [Go index](./index.html)
-
+- [Go next](./prod_use_by_essence.html)
 # Scheme 48 Introduction
 
-Scheme 48 is a prominent, minimalist implementation of the Scheme programming language. It is built around a custom bytecode virtual machine and designed to be simple, clean, and highly extensible. 
-1. [Wikipedia Scheme](https://en.wikipedia.org/wiki/Scheme_48) 
+Scheme 48 is a prominent, minimalist implementation of the Scheme programming language. It runs on a custom bytecode virtual machine and is designed to be simple, clean, and highly extensible. 
+1. [Wikipedia Scheme48](https://en.wikipedia.org/wiki/Scheme_48) 
 2. [Tail call paper](https://tailcall.au/s48-refman/scheme48.html)
 
 
