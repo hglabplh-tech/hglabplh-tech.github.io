@@ -13,17 +13,21 @@
 
 ##### Descriptions:
 - [S48 Introduction](./intro.html)
-- [S48 Essence productive use](./prod_use_by_essence.html)
 - [The architecture of Scheme48](./s48architecture.html)
-- [functions and bindings](./bindings.html)
+- [Bindings](./bindings.html)
   
+
+##### Additional Material
+
+- [S48 Essence productive use](./prod_use_by_essence.html)
+- [PGG]()
 
 ##### Reference:
 
 - [Index of Reference](./reference/s48main.html)
 
 #### The code:
-- [Main Source code "Tübingen Edition" responsible Mike Sperber](https://codeberg.org/s48/scheme48/)
+- [Main Source code "Tübingen Edition" responsible Mike Sperber(Responsible)](https://codeberg.org/s48/scheme48/)
 - [My fork of scheme48 "Tübingen Edition" at codeberg](https://codeberg.org/hglabplh/scheme48)
 - [My r6rs-lib development branch of scheme48 at codeberg](https://codeberg.org/hglabplh/scheme48/src/branch/r6rs-lib-io)
 
