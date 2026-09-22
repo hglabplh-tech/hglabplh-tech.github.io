@@ -5,11 +5,13 @@
 
 ### The linked pages:
 
-[The project source](https://github.com/hglabplh-tech/HGPExamWorkFlowAndChat)
+- [The project source](https://github.com/hglabplh-tech/HGPExamWorkFlowAndChat)
 
-[The README](./readme.html)
+- [The work the project is based on](./AcademicExamPrep_orig.html) - this work will be updated soon with more intensive tests, more facts, and thoughts, and a deeper view on the topic.
 
-[The FEATURES](./features.html)
+- [The README](./readme.html)
+
+- [The FEATURES](./features.html)
 
 **NOTE**: Copyright
 - Harald Glab-Plhak
