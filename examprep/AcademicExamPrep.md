@@ -1,116 +1,18 @@
 # []()Definition of a system for an interactive exam preparation application (WEB) with the help of AI concepts and algorithms
 
-*Harald Glab-Plhak, mailto:**[hglabplhak@icloud.com](mailto:hglabplhak@icloud.com),*
+*Harald Glab-Plhak, mailto:[Harald Glab-Plhak](mailto:hglabplhak@gmail.com),*
 
-(c) Harald Glab.Plhak
 
-***Harald Glab-Plhak – staatlich geprüfter Informatiker (GER)***
 
-**Table of Contents**
+***Abstract:*** The use of computing support in real life has grown for decades. In particular, AI use has grown rapidly over the last few decades. In education, this discipline is becoming increasingly important. In light of this, this paper proposes an application designed for interactive, intuitive exam preparation. Unlike other applications, this one integrates all parts of research, AI-assisted exam creation, automated scoring, and collaborative learning to create a dynamic, interactive, and intuitive user experience. Seamless integration of all exam-preparation tasks is essential to achieve this goal. The application is designed to be, on the one hand, attractive to users through an interactive, dynamic design, and on the other hand, to leverage the latest AI techniques, including Hybrid Search (BM25 and Sentence Transformers), RAG, BERT-based cross-encoding, and ASAG for automated answer scoring to deliver results quickly and with high accuracy. We must also outline the additional feature of building networks through a group chat, designed to connect students and instructors and enable dynamic learning mixed with social interaction.
 
-[Definition of a system for an interactive exam preparation application (WEB) with the help of AI concepts and algorithms 1](#__RefHeading___Toc2690_1309138682)
+# []() 1. Introduction
 
-[1 Introduction 2](#__RefHeading___Toc80318_1497012155)
+## []()1.1 Short overview
 
-[1.1 Short overview 2](#__RefHeading___Toc72186_1497012155)
+Artificial Intelligence is a growing field in many areas of society. One area where AI plays a significant role today is in studying, learning, and exam preparation (Chen et al., 2020). This paper introduces an application that enables students and instructors to conduct research, create examinations interactively, and correct them with AI-assisted scoring. It first examines the importance of scientifically relevant data. To clarify how it works, the paper outlines the workflow. The details include the AI algorithms and techniques used, and how it achieves fair scoring. The workflow is: research → research in group chat → creation of the exam(instructor) → executing the test exam and final exam (students) → submit exam → score exam → return result
 
-[1.2 The problem 2](#__RefHeading___Toc74041_1497012155)
-
-[1.3 The way to solve the problem 3](#__RefHeading___Toc4867_4102966944)
-
-[2 An example of AI in education and the preparation of exams 3](#__RefHeading___Toc72378_1497012155)
-
-[2.1 The concept 4](#__RefHeading___Toc72380_1497012155)
-
-[2.1.1 The high-level architecture 4](#__RefHeading___Toc1383_3453303719)
-
-[2.1.2 The workflow 7](#__RefHeading___Toc12134_3102968423)
-
-[2.1.2.1 The user’s journey 8](#__RefHeading___Toc4078_3102968423)
-
-[2.1.2.2 Dataset definition and organization(step) 8](#__RefHeading___Toc12136_3102968423)
-
-[2.1.2.3 The User Pool 8](#__RefHeading___Toc5253_4102966944)
-
-[2.1.2.4 The RPC/HTTP request logic 8](#__RefHeading___Toc5422_4102966944)
-
-[2.1.2.5 The exam creation component (step) 9](#__RefHeading___Toc12140_3102968423)
-
-[2.1.2.6 The group chat / user chat 9](#__RefHeading___Toc12144_3102968423)
-
-[2.1.3 Requirements for Used Resources 9](#__RefHeading___Toc72382_1497012155_Copy_)
-
-[2.1.4 Build an environment for exam preparation 10](#__RefHeading___Toc72396_1497012155)
-
-[2.1.5 Build an administration environment for the instructor 10](#__RefHeading___Toc72398_1497012155)
-
-[2.1.6 Concept for Multilingual Interactive Research, Exam Writing and Correction 10](#__RefHeading___Toc72406_1497012155)
-
-[2.2 The user identification and authorization in detail 10](#__RefHeading___Toc83751_1497012155)
-
-[2.3 AI Components and Algorithms 10](#__RefHeading___Toc72412_1497012155)
-
-[2.3.1 Hybrid Search 10](#__RefHeading___Toc3619_3452751782)
-
-[2.3.2 Fact checker 11](#__RefHeading___Toc3621_3452751782)
-
-[2.3.3 Six-Signal ASAG Pipeline 11](#__RefHeading___Toc3623_3452751782)
-
-[2.3.4 Examination Workflow Integration 12](#__RefHeading___Toc3625_3452751782)
-
-[2.4 The exam creation in detail 12](#__RefHeading___Toc72414_1497012155)
-
-[2.5 The final exam writing and submission 12](#__RefHeading___Toc73022_1497012155)
-
-[2.6 Additional Important points for design and implementation 13](#__RefHeading___Toc73024_1497012155)
-
-[2.6.1 Model training 13](#__RefHeading___Toc73026_1497012155)
-
-[3 Limitations, metrics, feature compare, usability 13](#__RefHeading___Toc83753_1497012155)
-
-[3.1 Feature comparison with other solutions 13](#__RefHeading___Toc5658_4102966944)
-
-[3.2 Limitations and metrics 14](#__RefHeading___Toc83755_1497012155)
-
-[3.2.1 Numeric measuring 15](#__RefHeading___Toc83994_1497012155)
-
-[3.2.2 HGPExamWorkFlowAndChat effectiveness test report 15](#__RefHeading___Toc2243_2729329270)
-
-[3.2.2.1 ASAG scoring effectiveness 15](#__RefHeading___Toc2247_2729329270)
-
-[3.2.2.2 ASAG question-answer benchmark 16](#__RefHeading___Toc4501_2729329270)
-
-[3.3 AI Workflow Good/Bad Test Report 16](#__RefHeading___Toc4082_2729329270)
-
-[3.3.1 Result table (11 tests) 17](#__RefHeading___Toc4084_2729329270)
-
-[3.4 Usability 18](#__RefHeading___Toc83757_1497012155)
-
-[4 The ethics 18](#__RefHeading___Toc6355_3102968423)
-
-[4.1 The Advantages 18](#__RefHeading___Toc1841_1535976919)
-
-[4.2 The Disadvantages 18](#__RefHeading___Toc1843_1535976919)
-
-[5 Conclusion 18](#__RefHeading___Toc72416_1497012155)
-
-[6 Appendix A: YouTube and Essay Links 19](#__RefHeading___Toc3518_200860977)
-
-[7 References, Abbreviation Index, figures 19](#__RefHeading___Toc3883_2729329270)
-
-[7.1 The References 19](#__RefHeading___Toc73040_1497012155)
-
-[7.2 The Abbreviations / Figures / Tables 20](#__RefHeading___Toc2786_3452751782)
-
-***Abstract:*** The use of computing support in real life has grown for decades. In particular, AI use has grown rapidly over the last few decades. In education, this discipline is becoming increasingly important. In light of this, this paper proposes an application designed for interactive, intuitive exam preparation. Unlike other applications, this one integrates all parts of research, AI-assisted exam creation, automated scoring, and collaborative learning to create a dynamic, interactive, and intuitive user experience. Seamless integration of all exam-preparation tasks is a prerequisite for achieving this goal. The application is designed to be, on the one hand, attractive to users through an interactive, dynamic design, and on the other hand, to leverage the latest AI techniques, including Hybrid Search (BM25 and Sentence Transformers), RAG, BERT-based cross-encoding, and ASAG for automated answer scoring to deliver results quickly and with high accuracy. We must also outline the additional feature of building networks through a group chat, designed to connect students and instructors and enable dynamic learning mixed with social interaction.
-
-# []()Introduction
-
-## []()Short overview
-
-Artificial Intelligence is a growing field in many areas of society. One area where AI is a significant factor today is in studying, learning, and examination preparation (Chen et al., 2020). This paper introduces an application that enables students and instructors to conduct research, create examinations interactively, and correct them with AI-assisted scoring. It first examines the importance of scientifically relevant data. To clarify how it works, the paper outlines the workflow. The details include the AI algorithms and techniques used and how fair scoring is achieved. The workflow is: research → research in group chat → creation of the exam(instructor) → executing the test exam and final exam (students) → submit exam → score exam → return result
-
-## []()The problem
+## []() 1.2 The problem
 
 The application must support interactive, intuitive learning and AI-assisted exam creation.
 
@@ -118,7 +20,7 @@ The required application connects interactive research with a social component, 
 
 To achieve this, a Web Service architecture with RPC/HTTP services and a cloud environment is required to build a fully scalable application.
 
-## []()The way to solve the problem
+## []() 1.3 The way to solve the problem
 
 *The problem identified in §1.2 is that existing tools address only parts of exam preparation. This work integrates all parts into a seamless, homogeneous service where every component is designed to interface with the next.*
 
@@ -132,9 +34,9 @@ Group chat isn't optional; it's a core architectural component. It makes group-b
 
 The tech stack uses ChromaDB vector databases with Hybrid Search for embedding-based retrieval across PDFs and plain-text files, GPT-4 or an equivalent locally hosted model (currently under evaluation) for generative answer generation, PostgreSQL as the database, and FastAPI or Django to serve the application. The full component map is presented in §2.1.1.
 
-A single signal is insufficient: a fluent but factually wrong answer may score high on embedding similarity alone, while a correct but short answer may score low on keyword matching alone. Nath et al. (2023) extended BERT-based ASAG to German datasets, confirming cross-lingual applicability, yet retained a single-signal architecture. The system proposed here combines six weighted signals — CrossEncoder BERT Similarity, Embedding Similarity, Jaccard, BM25, ContextMatch, and FactCoverage — into a unified, configurable pipeline (F1 = 1.00; §3.2.2.2), embedded inside a full examination workflow rather than deployed as a standalone module. The full signal design and weighting rationale are presented in §2.3.3.
+A single signal is insufficient: a fluent but factually wrong answer may score high on embedding similarity alone, while a correct but short answer may score low on keyword matching alone. Nath et al. (2023) extended BERT-based ASAG to German datasets, confirming cross-lingual applicability, yet retained a single-signal architecture. The system proposed here combines six weighted signals — CrossEncoder BERT Similarity, Embedding Similarity, Jaccard, BM25, ContextMatch, and FactCoverage — into a unified, configurable pipeline (F1 = 1.00; §3.2.2.2), embedded inside a full examination workflow rather than deployed as a standalone module. § 2.3.3 presents the full signal design and weighting rationale.
 
-# []()An example of AI in education and the preparation of exams
+# []() 2 An example of AI in education and the preparation of exams
 
 *For exam preparation, being AI-supported, quality rules must first be established. The rules should not be too strict. A tolerance range is required; in other words, a well-defined range for deciding which data are good. If the range is too wide, quality suffers; if it is too narrow, it misses relevant features.*
 
@@ -151,11 +53,11 @@ The following requirements are identified:
 - Utilities for BERT model training. Shortcut learning mitigation is a must-have (§2.6.1). The techniques used are dropout logic, shuffling, data augmentation, and text normalization.
 - A group chat utility is necessary to connect students if they want to share their work or learn together in teams. Connect and merge AI results from different sources to drive exponential knowledge growth.
 
-## []()The concept
+## []() 2.1 The concept
 
 The following section presents the high-level design and workflow, followed by detailed component descriptions.
 
-### []()The high-level architecture
+### []() 2.1.1 The high-level architecture
 
 The modules used:
 
@@ -167,9 +69,9 @@ The modules used:
 - A Middleware interface for controlled ingestion of documents and vectors (§2.1.2.2)
 - A Security Component providing cryptographic submission integrity (§2.5)
 
-Figure 1: The application is designed as a web service. Here is the application's exposed three-tier architecture.
+Figure 1: The application is designed as a web service. The figure shows the application's exposed three-tier architecture.
 
-![Figure 1 cannot be shown](AcademicExamPrep_html_bfb803ee.png)
+![Figure 1 cannot be shown](ClientsServerView.png)
 
 The clients communicate with the Web service via RPC/HTTP services (JSON format). The web service interacts with the database.
 
@@ -245,7 +147,7 @@ The following sections provide an *overview of the user's journey and interface 
 
 Figure 2: Examination preparation, execution (the test examination), and the real examination sent for correction. The Hybrid Search process.
 
-![Figure 2 cannot be shown](AcademicExamPrep_html_39c72659.png)
+![Figure 2 cannot be shown](CompletePlan.png)
 
 The figures show how an instructor creates an examination. They also show how examinations run in test and real modes. The Hybrid Search process is also included.
 
@@ -265,7 +167,7 @@ The instructor uses **AI-assisted text generation** (§2.1.2.5) to draft quest
 
 During grading, the **ASAG pipeline** (§2.3.3) pre-scores each answer and the **Fact Checker** (§2.3.2) flags insufficient factual coverage. Cryptographic integrity (§2.5) is verified before correction begins. The instructor reviews, adjusts where expert judgment is required, adds comments, and returns the final grade.
 
-#### []()Dataset definition and organization(step)
+#### []() Dataset definition and organization(step)
 
 A PostgreSQL database is defined. This database is filled with:
 
@@ -279,9 +181,9 @@ To populate the database, we use knowledge research articles and media. This is 
 
 #### []()The User Pool
 
-The user pool is the defined users who can access the service. The key functions are:
+The user pool is the defined set of users who can access the service. The key functions are:
 
-- User creation/access right setting
+- User creation/access rights setting
 - User erase
 - User update
 - Set password
@@ -304,9 +206,9 @@ Figure 3: Domain Storytelling → The users, group, and chatbot chat – here th
 
 ![Figure 3 cannot be shown](./ChatGroupPlan.png)
 
-### []()*Requirements for Used Resources*
+### []()Requirements for Used Resources*
 
-For good results and proper performance in scientific research, *the following requirements are mandatory:*
+For good results and proper performance in scientific research, the following requirements are mandatory:
 
 1. The correctness of the information used in the pool must be guaranteed
 2. The information must follow the citation rules and must have a correct publication ID, like an ISBN, as well as information about the author and the date of publication.
@@ -331,7 +233,7 @@ Enhancing models to support multiple languages is necessary to make knowledge ac
 
 To do so, the system needs support for MLS or NLS, as well as RAG and NLP models trained across many languages. Bidirectional language support in NLS and pre-trained models is required. The goal will be to use mBERT instead of single-language BERT. With mBERT, students get a native-like interaction experience in their own languages (e.g., English, German, Spanish, French, Italian, Hindi, and so on). Bidirectional language support is planned. Models like XLM-RoBERTa also support 100 (instead of 104) languages, are trained on a larger token set, and have more parameters (~179/~270M parameters; Conneau et al. (2020)). Both are offered and configurable via a defined interface; however, XLM-R is more accurate, and customers may have hardware limitations.
 
-## []()The user identification and authorization in detail
+## []()2.2 User identification and authorization in detail
 
 User authorization is done in the following steps
 
@@ -347,7 +249,7 @@ The login is performed via an RPC/HTTP service request using a certificate (publ
 
 ## []()2.3 **AI** **Components** **and Algorithms**
 
-### []()2.3.1Hybrid Search
+### []()2.3.1 Hybrid Search
 
 A robust research environment is a prerequisite. The application uses Hybrid Search to search the sources. The course materials are accessible in a vector database. In addition, the search supports media and article references as well as images, which are retrieved in a second step. A history search functionality is introduced. At the end of each search, the system generates text suggesting what to search next to dive deeper.
 
@@ -359,13 +261,13 @@ where **k₁ = 1.5, b = 0.75**​.Where **f(q\_i, D)** is the term frequency of 
 
 Highest-scoring answers inform subsequent queries. Personalized and public histories progressively refine results; users may reset with *'start new'*.
 
-### []()2.3.2Fact checker
+### []()2.3.2 Fact checker
 
 To ensure fair scoring, a fact-checking component is used. This fact-checker analyzes the answer by performing a Hybrid Search (§2.3.1) across trusted sources containing facts about the discipline. Experts check these trusted sources in a prior step. In the application, a RAG system uses: **Confidence = α · EvidenceSimilarity + β · SourceTrust + γ · Entailment − δ · Contradiction**. We must verify the data before insertion. For this reason, we implement a fact-checker alongside a manual check. The fact-checker verifies facts by searching trusted websites and online knowledge bases. This process produces the FactCoverage signal: the coverage returned when checking the student's answer against the articles and knowledge databases. The best value for fact-checking is 100% factual accuracy.
 
-### []()2.3.3Six-Signal ASAG Pipeline
+### []()2.3.3 Six-Signal ASAG Pipeline
 
-Prior ASAG systems typically rely on a single similarity signal (Sultan et al., 2016) or fine-tuned BERT alone (Sung et al., 2019). The problem with a single signal is that a fluent but factually wrong answer may score high on embedding similarity alone, whereas a correct but short answer may score low on keyword matching alone. Nath et al. (2023) extended BERT-based ASAG to German datasets that are cross-lingually applicable while preserving a single-signal architecture. The system proposed here differs from all three prior approaches by combining six weighted signals, the CrossEncoder BERT Similarity, Embedding Similarity, Jaccard, BM25, ContextMatch, and FactCoverage into a unified, configurable pipeline **(F1 = 1.00; §3.2.2.2)**. Unlike prior work, we do not treat scoring as an independent module; we integrate it into the overall evaluation workflow.
+Prior ASAG systems typically rely on a single similarity signal (Sultan et al., 2016) or fine-tuned BERT alone (Sung et al., 2019). The problem with a single signal is that a fluent but factually wrong answer may score high on embedding similarity alone, whereas a correct but short answer may score low on keyword matching alone. Nath et al. (2023) extended BERT-based ASAG to German datasets in a cross-lingual way while preserving a single-signal architecture. The system proposed here differs from all three prior approaches by combining six weighted signals- the CrossEncoder BERT Similarity, Embedding Similarity, Jaccard, BM25, ContextMatch, and FactCoverage into a unified, configurable pipeline **(F1 = 1.00; §3.2.2.2)**. Unlike prior work, we do not treat scoring as an independent module; we integrate it into the overall evaluation workflow.
 
 We score the answer using different scoring methods. We multiply the scores by weights to get the optimal total score. In ASAG scoring, BERT replaces Sentence Transformer for cross-encoding because BERT is slower but better at context-oriented analysis. Here, BERT is more accurate, which is particularly important. An effective combination of scoring components consists of:
 
@@ -402,11 +304,11 @@ In total, the full ASAG score is: **ASAG = 0.40 · CrossEncoder + 0.30 · Embedd
 
 BM25 serves as the full-text component; ContextMatch measures semantic alignment by comparing the model answer with the student's answer; FactCoverage checks factual correctness against trusted knowledge databases (§2.3.2). This combination ensures a fair, consistent, and scalable score — identical answers always receive identical results, and feedback can be immediate. ASAG performs best on short answers with fixed concepts, high submission volumes, and natural-science topics; it is less suited to creative writing, legal argumentation, and multi-interpretation essays. Since the most important metric among the six metrics in ASAG, as described here, differs by discipline and question type, the weights are set by default but can be overwritten in configuration for each discipline and question type. Each configuration can be stored as a profile for question types, e.g., ‘fact question’ or ‘arguing question’.
 
-### []()2.3.4Examination Workflow Integration
+### []()2.3.4 Examination Workflow Integration
 
 The interactive test exam is scored in the same way as the real exam. The difference is that students get immediate feedback. The feedback is calculated via the ASAG methods described in §2.3.3. This interactive approach provides fast feedback by storing results and tracking learning progress.
 
-## []()2.4The exam creation in detail
+## []()2.4 The exam creation in detail
 
 For exam creation, the AI text creation function generates questions, answers, and keywords. AI-assisted generation is available as an optional support mechanism for the instructor. AI can increase efficiency. The exam work is created in the portable JSON format and is stored in the PostgreSQL database.
 
@@ -416,7 +318,7 @@ For exam creation, the AI text creation function generates questions, answers, a
 
 This file is stored in the examination pool, with a classifier indicating whether it is a test or a final examination, and it is graded. After storage, students can access the test examinations. The student can load a test examination. *After that, the user can answer the questions interactively, and their answers are immediately scored by the ASAG pipeline (§2.3.3).* *The resulting score is expressed as a normalized value, e.g., 6 out of 10 points."*
 
-## []()2.5The final exam writing and submission
+## []()2.5 The final exam writing and submission
 
 For the final writing, no immediate feedback is given; answers are recorded. For submission, the work is stamped with a certificate, protected by a Hash algorithm, and timestamped. After correction, as with the interactive test examinations, the corrected work is delivered to the student. The detailed submission process is described in the following steps:
 
@@ -425,78 +327,35 @@ For the final writing, no immediate feedback is given; answers are recorded. For
 3. Now the examination is in the ‘correction’ pool. The next free instructor can correct the examination. After correcting the result, including the grade and comments, the instructor submits it to the student. The instructor completes the correction using the same ASAG scoring as in a test examination.
 4. For each phase, the certificate, the hash value, and the signatures and timestamps are checked to ensure the identity and correctness of the submitted work.
 
-## []()2.6Additional Important points for design and implementation
+## []()2.6 Additional Important points for design and implementation
 
-### []()2.6.1Model training
+### []()2.6.1 Model training
 
-To achieve high search quality, we train the BERT model incrementally. Starting from the base model checkpoint, we collect training data from chat interactions and prompting sessions, batch it, and augment it with question–answer pairs. We prepare the resulting batch as described above and use it for overnight training over a two-day interval. Early stopping is applied to optimize the training result. After training, an evaluation and validation step checks for over- and underfitting using the following metrics: Train Loss, Validation Loss, Accuracy, Precision, Recall, F1 Score, Matthews Correlation Coefficient (MCC), Learning Effect Score, and Generalization Gap. After training, the new model replaces the previous generation.
+To achieve high search quality, we train the BERT model incrementally. Starting from the base model checkpoint, we collect training data from chat interactions and prompting sessions, batch it, and augment it with question–answer pairs. We prepare the resulting batch as described above and use it for overnight training over a two-day interval. We apply early stopping to optimize training performance. After training, an evaluation and validation step checks for over- and underfitting using the following metrics: Train Loss, Validation Loss, Accuracy, Precision, Recall, F1 Score, Matthews Correlation Coefficient (MCC), Learning Effect Score, and Generalization Gap. After training, the new model replaces the previous generation.
 
-# []()3Limitations, metrics, feature compare, usability
+# []()3 Limitations, metrics, feature compare, usability
 
-## []()3.1Feature comparison with other solutions
-
-**Table 9: Comparative analysis of exam preparation platform**
-
-|**Feature / Capability**|**Turnitin**|**Quizlet**|**Canvas LMS**|**Khan Academy**|**Moodle**|**This Work**|
-|------------------------|------------|-----------|--------------|----------------|----------|--------|
-|▸ **A. Search & Knowledge Retrieval** 
-|Hybrid Search (BM25 + Dense Semantic)|✗|✗|✗|✗|✗|✅|
-|RAG-based Research Component|✗|✗|✗|✗|✗|✅|
-|Query History for Progressive Refinement|✗|✗|✗|✗|✗|✅|
-|▸ **B. Automated Scoring & Grading**
-|ASAG Scoring (open-ended answers)|**Partial1**|✗|✗|**Partial2**|✗|✅|
-|Configurable, Multi-Method ASAG Scoring|✗|✗|✗|✗|✗|✅|
-|Configurable Scoring Weights per Discipline|✗|✗|✗|✗|✗|✅|
-|Fact-Coverage Validation (RAG + Trusted Sources)|✗|✗|✗|✗|✗|✅|
-|▸ **C. Exam Creation & Workflow**
-|AI-assisted Exam Creation (Q&A + Keywords)|✗|✗|✗|✗|✗|✅|
-|Practice Mode with Immediate ASAG Feedback|✗|**Partial5**|✗|**Partial2**|**Partial5**|✅|
-|Cryptographic Submission Integrity (SHA-256 + CMS)|✗|✗|✗|✗|✗|✅|
-|▸ **D. Collaboration & Group Learning**
-|Integrated Group Chat|✗|✗|✅|✗|✅|✅|
-|End-to-End Encrypted Group Chat|✗|✗|✗|✗|✗|✅
-|@Chatbot in Chat → Hybrid Search Result|✗|✗|✗|✗|✗|✅|
-|Certificate-Encrypted ASAG Result Sharing in Chat|✗|✗|✗|✗|✗|✅|
-|▸ **E. Security & Infrastructure**
-|Auditable RPC/HTTP (NONCE + TLS 1.3)|✗|✗|**Partial4**|✗|**Partial4**|✅|
-|Hardware-Efficient (CPU-only Deployment)|N/A|N/A|N/A|N/A|**Partial6**|✅|
-|▸ **F. Multilingual & Accessibility**
-|Multilingual NLP Scoring Pipeline (mBERT / XLM-R)|✗|**Partial3**|**Partial3**|**Partial3**|**Partial3**|✅
-|Configurable Model (mBERT ↔ XLM-R) per Deployment|✗|✗|✗|✗|✗|✅|
-
-*1 Turnitin's WritingMate component provides similarity-based feedback but does not return a normalized, per-question score weighted across semantic, lexical, and factual components (Turnitin LLC, 2024).*
-
-*2 Khan Academy's Khanmigo assistant provides contextual answer hints but does not return a normalized ASAG score per answer.*
-
-*3 Platform UI is multilingual, but the underlying NLP scoring pipeline processes input in English only; no mBERT or XLM-R integration is present.*
-
-*4 Canvas LMS and Moodle expose REST/RPC APIs for administrative use but not for real-time, NONCE-authenticated exam scoring with per-request integrity verification.*
-
-*5 Quizlet and Moodle support multiple-choice and flashcard-style self-testing with immediate feedback, but do not support open-ended answer scoring via ASAG pipelines.*
-
-Table 9 reveals a consistent pattern: no existing platform combines all evaluated dimensions. The most critical gap is the lack of configurable, multi-method ASAG scoring—an issue this work directly addresses. Turnitin's WritingMate offers similarity-based feedback but returns no normalized, per-question score weighted across semantic, lexical, and factual components (Turnitin LLC, 2024); Khan Academy's Khanmigo equally lacks normalized grading output (footnote 2). The fragmentation of existing tools forces students to switch between isolated platforms, introducing cognitive overhead and reducing learning continuity (Schlippe & Sawatzki, 2023); no evaluated platform exposes configurable scoring weights, whereas the proposed system enables discipline-specific transparency. The cryptographic submission integrity feature — SHA-256 hashing with CMS signatures and timestamps — is entirely absent across all compared platforms, addressing a real-world need for tamper-proof, auditable exam submission. The complexity of this integrated system may, however, introduce greater deployment and maintenance overhead than simpler, single-purpose alternatives.
-
-## []()3.2Limitations and metrics
+## []()3.1 Limitations and metrics
 
 ASAG has inherent limitations in context-heavy disciplines such as psychology or philosophy, where too many variables make automated scoring unreliable, particularly for intuitive answers. Search quality depends on hit-scoring methods and data quality; ASAG accuracy depends on scoring weights. A further constraint is that new courses require a sufficiently large, discipline-specific corpus before training can begin. ASAG models also tend to over-score fluent but factually incorrect answers (Nath et al., 2023), especially in open-ended humanities questions with multiple valid interpretations; the FactCoverage component partially mitigates this but cannot replace expert review.
 
-A structural cold-start problem arises when no discipline-specific corpus exists to populate the vector database or fine-tune BERT, causing retrieval quality and ASAG accuracy to fall below the thresholds in §3.2.1. Three mitigation strategies address this: (1) bootstrapping from the `bert-base-uncased`checkpoint as a semantic baseline; (2) a fallback scoring mode that sets ContextMatch and FactCoverage weights (§2.3.3) to zero until 50 verified documents are indexed, preventing unreliable signals from distorting the ASAG score; and (3) data augmentation via paraphrasing, synonym substitution, and back-translation to accelerate corpus growth (Du et al., 2023). The cold-start phase is resolved once Retrieval Quality exceeds 0.85 and the corpus contains at least 200 indexed items. *A further limitation is robustness against adversarial inputs: carefully crafted answers designed to exploit embedding similarity without genuine factual content may still yield elevated ContextMatch or EmbeddingSimilarity scores; the FactCoverage signal (§2.3.2) partially mitigates this, but dedicated adversarial testing is planned for Phase 4.*
+A structural cold-start problem arises when no discipline-specific corpus exists to populate the vector database or fine-tune BERT, causing retrieval quality and ASAG accuracy to fall below the thresholds in §3.2.1. Three mitigation strategies address this: (1) bootstrapping from the `bert-base-uncased`checkpoint as a semantic baseline; (2) a fallback scoring mode that sets ContextMatch and FactCoverage weights (§2.3.3) to zero until 50 verified documents are indexed, preventing unreliable signals from distorting the ASAG score; and (3) data augmentation via paraphrasing, synonym substitution, and back-translation to accelerate corpus growth (Du et al., 2023). The cold-start phase is resolved once Retrieval Quality exceeds 0.85 and the corpus contains at least 200 indexed items. A further limitation is robustness against adversarial inputs: carefully crafted answers designed to exploit embedding similarity without genuine factual content may still yield elevated ContextMatch or EmbeddingSimilarity scores; the FactCoverage signal (§2.3.2) partially mitigates this, but dedicated adversarial testing is planned for Phase 4.
 
-### []()3.2.1Numeric measuring
+### []()3.2.1 Numeric measuring
 
 The metrics used to measure the quality are:
 
 Average Response Time: Time needed for a response for research or scoring → a good value is Avg. Response Time **&lt; 2 s** under normal load conditions. Retrieval quality: the average scoring for retrievals → a good value is Retrieval Quality **&gt; 0.85**, measured as the mean ASAG score across a defined test set. Context Precision: Measures the relevance of the retrieved chunks → a good value is Context Precision> 0.80. MRR (Mean Reciprocal Rank): Measures the rank of the documents with the highest relevance (e.g., top ten) → a good value is MRR &gt; 0.75. *F1-Score / Precision-Recall: Measuring ASAG grading correctness against human-annotated ground truth → good value: F1 &gt; 0.80*
 
-### []()3.2.2HGPExamWorkFlowAndChat effectiveness test report
+### []()3.2.2 HGPExamWorkFlowAndChat effectiveness test report
 
 This report is generated from the domain-specific text outputs created by the pytest effectiveness tests.
 
-#### []()3.2.2.1ASAG scoring effectiveness
+#### []()3.2.2.1 ASAG scoring effectiveness
 
 Scores one intentionally strong answer and one intentionally weak answer for an Apple M3 microprocessor-programming question. The test verifies that the AI-assisted ASAG signals separate correct from incorrect answers, preserve deterministic expected values, keep fact and contradiction signals healthy, and complete within the configured latency budget.
 
-**Table 10: ASAG Metrics**
+**Table 9: ASAG Metrics**
 
 |**Metric**|**Value**|
 |----------|---------|
@@ -530,7 +389,7 @@ Scores one intentionally strong answer and one intentionally weak answer for an 
 |meets\_latency\_target|True|
 |performance\_verdict|performant|
 
-**Table 11: Score summary**
+**Table 10: Score summary**
 
 |**No**|**Detail**|
 |----------|---------|
@@ -539,193 +398,89 @@ Scores one intentionally strong answer and one intentionally weak answer for an 
 
 `The trained_scoring signal returns None in the current prototype because fine-tuning the BERT cross-encoder on a domain-specific QA corpus requires at least 200 verified pairs (§3.2), which has not yet been met. The BERT training pipeline is independently validated in §3.3 (loss 1.20→0.42, accuracy ≥ 0.80, shortcut mitigation active); integration into the ASAG trained_scoring signal is scheduled for Phase 3 once the corpus threshold is met.`
 
-#### []()3.2.2.2*ASAG question-answer benchmark*
+#### []()3.2.2.2 ASAG question-answer benchmark
 
 This table records deterministic ASAG measurement rows for Apple M3 hardware, BERT machine learning, and Hybrid Search / RAG answer quality cases. Human scores were assigned independently prior to running the ASAG pipeline. Binary classification metrics use a threshold t = 0.50, the natural midpoint of the normalized \[0, 1] scoring range (H. Glab‑Plhak, 2026). The primary instructor assigned human scores across all 12 pairs; a second rater independently scored a random subset of 4 pairs, yielding Cohen's κ = 0.91 and confirming strong inter-rater agreement. Full inter-rater validation is planned for Phase 4.
 
-**Table 12: ASAG scoring benchmark against human-annotated ground truth across 12 Q&A**
-
-ID
-
-Domain
-
-Answer type
-
-Measure
-
-Run ASAG
-
-Δ
-
-Status
-
-Q1
-
-Apple M3 / Hardware
-
-Strong answer
-
-0.900
-
-0.892
-
--0.008
-
-✅
-
-Q2
-
-Apple M3 / Hardware
-
-Weak answer
-
-0.350
-
-0.314
-
--0.036
-
-✅
-
-Q3
-
-Apple M3 / Hardware
-
-Partial answer
-
-0.600
-
-0.572
-
--0.028
-
-✅
-
-Q4
-
-Apple M3 / Hardware
-
-Off-topic answer
-
-0.100
-
-0.084
-
--0.016
-
-✅
-
-Q5
-
-BERT / Machine Learning
-
-Strong answer
-
-0.880
-
-0.861
-
--0.019
-
-✅
-
-Q6
-
-BERT / Machine Learning
-
-Weak answer
-
-0.320
-
-0.347
-
-+0.027
-
-✅
-
-Q7
-
-BERT / Machine Learning
-
-Partial answer
-
-0.580
-
-0.604
-
-+0.024
-
-✅
-
-Q8
-
-BERT / Machine Learning
-
-Fluent but wrong
-
-0.180
-
-0.216
-
-+0.036
-
-✅
-
-Q9
-
-Hybrid Search / RAG
-
-Strong answer
-
-0.890
-
-0.913
-
-+0.023
-
-✅
-
-Q10
-
-Hybrid Search / RAG
-
-Weak answer
-
-0.300
-
-0.281
-
--0.019
-
-✅
-
-Q11
-
-Hybrid Search / RAG
-
-Partial answer
-
-0.570
-
-0.548
-
--0.022
-
-✅
-
-Q12
-
-Hybrid Search / RAG
-
-Off-topic answer
-
-0.100
-
-0.073
-
--0.027
-
-✅
+**Table 11: ASAG scoring benchmark against human-annotated ground truth across 12 Q&A**
+
+
+> **✅ Optimal** — ASAG closely matched all 12 human-scored answers across 15,000 comparisons.
+
+Report generated: `2026-09-22T21:36:23.929714+00:00`
+
+## At a glance
+
+| What was measured | Result | Assessment |
+|---|---:|---|
+| Human-annotated reference set | 12 Q&A pairs | Fixed ground truth |
+| Parallel execution | 250 batches × 5 workers | 1250 complete suites |
+| Individual comparisons | 15000 | All completed |
+| Within ±0.12 of human score | 100.0% | ✅ Optimal |
+| Mean absolute error | 0.023058 | ✅ Optimal |
+| Root mean squared error | 0.024377 | ✅ Optimal |
+| Pearson correlation | 0.996568 | ✅ Very strong |
+| Total measured wall time | 77.126 ms | Formula only |
+| Processing rate | 194,486.31 comparisons/s | ✅ Optimal |
+
+## Human score compared with ASAG
+
+The **Human score** is the annotated reference value. **ASAG score** is the mean result from 1,250 repeated executions. A positive delta means ASAG scored higher than the human; a negative delta means it scored lower.
+
+### Apple M3 / Hardware
+
+| ID | Answer type | Human score | ASAG score | Delta | Agreement |
+|---|---|---:|---:|---:|---|
+| Q1 | Strong answer | 0.900 | 0.892 | -0.008 | ✅ Optimal |
+| Q2 | Weak answer | 0.350 | 0.314 | -0.036 | ✅ Optimal |
+| Q3 | Partial answer | 0.600 | 0.572 | -0.028 | ✅ Optimal |
+| Q4 | Off-topic answer | 0.100 | 0.088 | -0.012 | ✅ Optimal |
+
+### BERT / Machine Learning
+
+| ID | Answer type | Human score | ASAG score | Delta | Agreement |
+|---|---|---:|---:|---:|---|
+| Q5 | Strong answer | 0.880 | 0.861 | -0.019 | ✅ Optimal |
+| Q6 | Weak answer | 0.320 | 0.347 | +0.027 | ✅ Optimal |
+| Q7 | Partial answer | 0.580 | 0.604 | +0.024 | ✅ Optimal |
+| Q8 | Fluent but wrong | 0.180 | 0.216 | +0.036 | ✅ Optimal |
+
+### Hybrid Search / RAG
+
+| ID | Answer type | Human score | ASAG score | Delta | Agreement |
+|---|---|---:|---:|---:|---|
+| Q9 | Strong answer | 0.890 | 0.913 | +0.023 | ✅ Optimal |
+| Q10 | Weak answer | 0.300 | 0.281 | -0.019 | ✅ Optimal |
+| Q11 | Partial answer | 0.570 | 0.548 | -0.022 | ✅ Optimal |
+| Q12 | Off-topic answer | 0.100 | 0.078 | -0.022 | ✅ Optimal |
+
+## Stability and response time
+
+| ID | Runs | Within tolerance | Score variation | Average latency | P95 latency | Result |
+|---|---:|---:|---:|---:|---:|---|
+| Q1 | 1250 | 100.0% | 0.000000000 | 0.003460 ms | 0.005250 ms | ✅ Optimal |
+| Q2 | 1250 | 100.0% | 0.000000000 | 0.002754 ms | 0.004042 ms | ✅ Optimal |
+| Q3 | 1250 | 100.0% | 0.000000000 | 0.002598 ms | 0.003792 ms | ✅ Optimal |
+| Q4 | 1250 | 100.0% | 0.000000000 | 0.002558 ms | 0.003750 ms | ✅ Optimal |
+| Q5 | 1250 | 100.0% | 0.000000000 | 0.002577 ms | 0.003709 ms | ✅ Optimal |
+| Q6 | 1250 | 100.0% | 0.000000000 | 0.002621 ms | 0.003792 ms | ✅ Optimal |
+| Q7 | 1250 | 100.0% | 0.000000000 | 0.002569 ms | 0.003750 ms | ✅ Optimal |
+| Q8 | 1250 | 100.0% | 0.000000000 | 0.002529 ms | 0.003708 ms | ✅ Optimal |
+| Q9 | 1250 | 100.0% | 0.000000000 | 0.002551 ms | 0.003709 ms | ✅ Optimal |
+| Q10 | 1250 | 100.0% | 0.000000000 | 0.002566 ms | 0.003709 ms | ✅ Optimal |
+| Q11 | 1250 | 100.0% | 0.000000000 | 0.002522 ms | 0.003709 ms | ✅ Optimal |
+| Q12 | 1250 | 100.0% | 0.000000000 | 0.002557 ms | 0.003750 ms | ✅ Optimal |
+
+## How to read the result
+
+- **Accuracy:** optimal when the absolute difference from the human score is at most 0.04; good up to 0.08.
+- **Pass tolerance:** an execution passes when it is within ±0.12 of the human score.
+- **Pass rate:** optimal at 100%; good at 99% or higher.
+- **Formula latency:** optimal at 5 ms or less; good at 50 ms or less.
+
+## Scope
+
+This benchmark measures the deterministic six-signal ASAG weighting formula. BERT inference, embedding generation, hybrid retrieval, PostgreSQL access, and HTTP transport are deliberately excluded. The 1,250 repetitions demonstrate stability and speed; they do **not** increase the human-annotated sample beyond the original 12 Q&A pairs.
 
 ***Aggregate (n=12, t=0.50)***
 
@@ -799,7 +554,7 @@ Future work will make all search and scoring parameters fully configurable per d
 
 A planned Phase 4 evaluation will deploy the system to a cohort of 30 students across two disciplines, collect SUS scores against the ≥75 target defined in §3.4, and report ASAG F1 scores to the instructor.
 
-# []()6Appendix A: YouTube and Essay Links
+# []()6 Appendix A: YouTube and Essay Links
 
 []()
 
@@ -817,9 +572,9 @@ The YouTube and essay links are stored in CSV format in the DATA POOL (PostgreSQ
 
 Retrieve video links that match the search criteria. For flexible querying, meta definitions describe the CSV layout.
 
-# []()References, Abbreviation Index, figures
+# []()7 References, Abbreviation Index, figures
 
-## []()7The References
+## []()7.1 The References
 
 Brooke, J. (1996). SUS: A quick and dirty usability scale. In P. Jordan, B. Thomas, B. A. Weerdmeester, & A. L. McClelland (Eds.),[https://aclanthology.org/D19-1628](https://aclanthology.org/D19-1628) *Usability evaluation in industry* (pp. 189–194). Taylor & Francis.
 
@@ -859,7 +614,7 @@ Turnitin LLC. (2024). *WritingMate*. [https://www.turnitin.com](https://www.tur
 
 W3C. (2018). *Web Content Accessibility Guidelines (WCAG) 2.1*. [https://www.w3.org/TR/WCAG21/](https://www.w3.org/TR/WCAG21/)
 
-## []()The Abbreviations 
+## []()7.2 The Abbreviations 
 
 **BERT:** Bidirectional Encoder Representations from Transformers (Devlin et al., 2019)
  
@@ -911,13 +666,11 @@ W3C. (2018). *Web Content Accessibility Guidelines (WCAG) 2.1*. [https://www.w3
 
 **Table 8:** Context + Evidence
 
-**Table 9:** Comparative analysis of exam preparation platforms
+**Table 9:** Metrics ASAG
 
-**Table 10:** Metrics ASAG
+**Table 10:** Score Summary
 
-**Table 11:** Score Summary
-
-**Table 12:** ASAG scoring benchmark against human-annotated ground truth across 12 Q&A
+**Table 11:** ASAG scoring benchmark against human-annotated ground truth across 12 Q&A
 
 **Figure 1:** The application design
 
