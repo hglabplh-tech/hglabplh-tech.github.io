@@ -27,6 +27,9 @@ Here is the Link to the project itself
 
 [The YATestEnvironment project on GitHub](https://github.com/hglabplh-tech/YATestEnvironment)
 
+## The used libraries and projects
+- [`active-data` description](./active-data.html)
+
 ## Status Legend
 
 - **Available**: implemented and covered by smoke or unit tests in this repository.

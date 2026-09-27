@@ -686,4 +686,4 @@ W3C. (2018). *Web Content Accessibility Guidelines (WCAG) 2.1*. [https://www.w3
 **NOTE:** Copyright statement
 - Harald Glab-Plhak
 - Computer Science since 1992
-- &copy; Harald Glab-Plhak (2024, 2025, 2026)
+- &copy; Harald Glab-Plhak 2026
