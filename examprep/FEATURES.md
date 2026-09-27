@@ -1,6 +1,7 @@
 <!-- Copyright (c) 2026 Harald Glab-Plhak. Licensed under the MIT License. -->
 - [Go Top](../index.html)
 - [Go index](./index.html)
+- [Go Next](./AcademicExamPrep.html)
 - [Go back](./readme.html)
 
 
