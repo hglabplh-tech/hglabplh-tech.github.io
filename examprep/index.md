@@ -1,6 +1,6 @@
 <!-- Copyright (c) 2026 Harald Glab-Plhak. Licensed under the MIT License. -->
 - [Go Top](../index.html)
-- [Go Next](./readme.html)
+- [Go Next](./README.html)
 
 # Examination preparation application with AI-based preparation and grading algorithms
 
@@ -12,8 +12,8 @@ The linked pages include the project source, documentation links, and the work t
 
 - [The work the project is based on](./AcademicExamPrep.html) - this work will be updated soon with more intensive tests, more facts, and thoughts, and a deeper view on the topic.
 
-- [The README](./readme.html)
-- [The FEATURES](./features.html)
+- [The README](./README.html)
+- [The FEATURES](./FEATURES.html)
 
 **NOTE**: Copyright
 - Harald Glab-Plhak

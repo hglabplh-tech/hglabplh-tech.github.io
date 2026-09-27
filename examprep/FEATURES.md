@@ -2,7 +2,7 @@
 - [Go Top](../index.html)
 - [Go index](./index.html)
 - [Go Next](./AcademicExamPrep.html)
-- [Go back](./readme.html)
+- [Go back](./README.html)
 
 
 # HGPExamWorkFlowAndChat feature inventory

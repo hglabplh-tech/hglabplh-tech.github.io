@@ -1,7 +1,7 @@
 <!-- Copyright (c) 2026 Harald Glab-Plhak. Licensed under the MIT License. -->
 - [Go Top](../index.html)
 - [Go index](./index.html)
-- [Go Next](./features.html)
+- [Go Next](./FEATURES.html)
 
 
 # HGPExamWorkFlowAndChat

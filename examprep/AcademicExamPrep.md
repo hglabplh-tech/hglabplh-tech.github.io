@@ -1,7 +1,7 @@
 <!-- Copyright (c) 2026 Harald Glab-Plhak. Licensed under the MIT License. -->
 - [Go Top](../index.html)
 - [Go Index](./index.html)
-- [Go Back](./features.html)
+- [Go Back](./FEATURES.html)
 
 # []()Definition of a system for an interactive exam preparation application (WEB) with the help of AI concepts and algorithms
 
