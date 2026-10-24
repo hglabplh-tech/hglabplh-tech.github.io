@@ -6,6 +6,19 @@
 
 Starting with the project, I missed a short explanation of how to define realms to make it easier for everyone starting to use `àctive-data`. I'd like to give a short overview: 
 
+The annotated `defn` below comes from `active.data.realm.attach`. Evaluate these imports before the examples:
+
+```clojure
+(ns yatestenv.realm-examples
+  (:refer-clojure :exclude [defn def])
+  (:require [active.data.realm :as realm]
+            [active.data.realm.attach :refer [defn]]
+            [active.data.record :as ad]
+            [active.data.realm.validation :as validation]
+            [clojure.pprint :refer [pprint]])
+  (:import [java.util UUID]))
+```
+
 ## Primitive realms:
 
 - **String: realm/string**
@@ -20,21 +33,21 @@ Starting with the project, I missed a short explanation of how to define realms 
 - **Integer: realm/integer**
 
 ```clojure
-(defn my-fun-int :- realm/integer ;;function can return any value type 
+(defn my-fun-int :- realm/integer ;;function returns an integer value 
   [label :- realm/string
    op1 :- realm/integer
-   op2 :- realm/integer];; the argument is only accepted if it is an integer
+   op2 :- realm/integer] ;; the argument is only accepted if it is an integer
   (let [result (* op1 op2)]
     (print "I am the op1 %d and op2 %d:" op1 op2) ;; print the arguments
     (print label ": %d" result)
     result))
-(my-fun-int 7 8)
+(my-fun-int "Product" 7 8)
 ```
 
 - **Number: realm/number**
 
 ```clojure
-(defn my-fun-num :- realm/number ;;function can return any value type 
+(defn my-fun-num :- realm/number ;;function returns a number value 
   [op1 :- realm/number
    op2 :- realm/number] ;; the argument is only accepted if it is a number
   (let [result (* op1 op2)]
@@ -46,7 +59,7 @@ Starting with the project, I missed a short explanation of how to define realms 
 - **Natural: realm/natural**
 
 ```clojure
-(defn my-fun-nat :- realm/natural ;;function can return any value type 
+(defn my-fun-nat :- realm/natural ;;function returns a natural number value 
   [op1 :- realm/natural
    op2 :- realm/natural] ;; the argument is only accepted if it is a natural number
   (let [result (* op1 op2)]
@@ -57,7 +70,7 @@ Starting with the project, I missed a short explanation of how to define realms 
 - **Real: realm/real**
 
 ```clojure
-(defn my-fun-real :- realm/real ;;function can return any value type 
+(defn my-fun-real :- realm/real ;;function returns a real number value 
   [op1 :- realm/real
    op2 :- realm/real] ;; the arguments are only accepted if they are real numbers
   (let [result (* op1 op2)]
@@ -70,7 +83,7 @@ Starting with the project, I missed a short explanation of how to define realms 
 - **Boolean: realm/boolean**
 
 ```clojure
-(defn my-fun-bool :- realm/boolean ;;function can return any value type 
+(defn my-fun-bool :- realm/boolean ;;function returns a boolean value 
   [op1 :- realm/boolean ;; boolean value false / true
    op2 :- realm/boolean] ;; the argument is only accepted if it is a boolean
   (let [result (or (not op1) op2)]
@@ -83,7 +96,7 @@ Starting with the project, I missed a short explanation of how to define realms 
 - **Symbol: realm/symbol**
 
 ```clojure
-(defn my-fun-sym :- realm/symbol ;;function can return any value type 
+(defn my-fun-sym :- realm/symbol ;;function returns a symbol value 
   [fun-sym :- realm/symbol] ;; the argument is only accepted if it is a symbol
   (let [result (= fun-sym 'my-fun)]
     (pprint result) ;; pretty print the result
@@ -96,8 +109,8 @@ Starting with the project, I missed a short explanation of how to define realms 
 - **Keyword: realm/keyword**
 
 ```clojure
-(defn my-fun-keyword :- realm/keyword ;;function can return any value type 
-  [fun-key :- realm/keyword] ;; the argument is only accepted if it is a symbol
+(defn my-fun-keyword :- realm/keyword ;;function returns a keyword value 
+  [fun-key :- realm/keyword] ;; the argument is only accepted if it is a keyword
   (let [result (= fun-key :my-fun)]
     (pprint result) ;; pretty print the result
     (pprint fun-key) ;; pretty print the given key
@@ -108,12 +121,11 @@ Starting with the project, I missed a short explanation of how to define realms 
 
 ```clojure
 (import (java.util UUID))
-(defn my-fun-uuid :- realm/uuid ;;function can return any value type 
+(defn my-fun-uuid :- realm/uuid ;;function returns a UUID value 
   [key-id :- realm/uuid] ;; the argument is only accepted if it is a valid UUID  
-  (pprint result)
-    (pprint key-id) ;; pretty print the UUID argument
-    key-id)
-(my-fun-uuid (UUID/toString (UUID/random)))
+  (pprint key-id) ;; pretty print the UUID argument
+  key-id)
+(my-fun-uuid (UUID/randomUUID))
 ```
 
 ## Tuple/Enum definition:
@@ -169,9 +181,57 @@ Starting with the project, I missed a short explanation of how to define realms 
   [the-map :- (realm/map-of realm/integer (realm/set-of realm/string))]
   ;; only accepted if the argument is a map with a key type of integer and a value type, 
   ;; of a set of strings
-  (pprint the-map)
-  (mapof-fun {5 #{"hello" "that" "is" "cool"}})
+  (pprint the-map) 
   )
+(mapof-fun {5 #{"hello" "that" "is" "cool"}})
+```
+
+## Record realm
+
+- **Record: ad/def-record**
+```clojure
+(ad/def-record Person
+  [person-name :- realm/string
+   person-age  :- realm/natural])
+
+(def ada
+  (validation/checking
+    (Person person-name "Ada"
+            person-age 36)))
+
+(person-name ada) ;; => "Ada"
+(person-age ada)  ;; => 36
+(ad/is-a? Person ada) ;; => true
+
+(def older-ada
+  (validation/checking
+    (person-age ada 37)))
+
+(person-age older-ada) ;; => 37
+(person-age ada)       ;; => 36 (the original is unchanged)
+
+;; With validation enabled, a negative age is rejected.
+(try
+  (validation/checking
+    (Person person-name "Ada"
+            person-age -1))
+  (catch Exception _
+    :invalid-age)) ;; => :invalid-age
+```
+
+## Function realm
+- **Function: (realm/function realm/number realm/number -> realm/number)**
+```clojure
+(defn function-fun :- realm/number 
+  [op-fun :- (realm/function realm/number realm/number -> realm/number)
+   op1 :- realm/number
+   op2 :- realm/number]
+  (op-fun op1 op2))
+(defn plus :- realm/number
+  [op1 :- realm/number
+   op2 :- realm/number]
+  (+ op1 op2))
+(function-fun plus 9.8 7.7)
 ```
 
 **NOTE:** Copyright statement

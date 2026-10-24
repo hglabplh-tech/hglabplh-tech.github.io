@@ -21,14 +21,17 @@ You can use the project as a library or as a research/workbench codebase. Some a
 
 **Additional links:** (API Documentation will be updated next time):
 
-- [Documentation for the YATestEnvironment API](./IE.New.Clojure-reflect)
+- [The technical documentation](./techdoc/internals.html)
+
+**_At the moment, not available and is under reconstruction_**
+- [Documentation for the YATestEnvironment API]()
 
 Here is the Link to the project itself
 
 [The YATestEnvironment project on GitHub](https://github.com/hglabplh-tech/YATestEnvironment)
 
 ## The used libraries and projects
-- [`active-data` description](./active-data.html)
+- [`active-data` and the project](./active-data.html)
 
 ## Status Legend
 
