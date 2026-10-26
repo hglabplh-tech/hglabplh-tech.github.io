@@ -1,18 +1,18 @@
 - [Go top](../index.html)
 - [Go to index](./index.html)
 
-# A short word about `active-data`, which is referenced in our project
+# A short word about `active-data` and `prismatic schema`, which are referenced in our project
 
 Mike Sperber (Active Group) and others initiated the `active-data` project.
 We're interested in using his approach to creating contracts for functions, records, and other data used in the program. This part of active data is used when the product needs a clear reflection of function and record types.
 
-## Here are the resource links for `active-data` and its usage in this project:
+## Here are the resource links for `active-data`:
 
-- [`active-data` and `YATestEnvironment`](./active-data-yatestenv.html)
 - [The project on GitHub](https://github.com/active-group/active-data/)
 - [Direct link to the README.md](https://github.com/active-group/active-data/blob/main/README.md)
 - [How to declare functions, records and friends with realms](./realm-types-defs.html)
 
+## Here are the resource links for `prismatic schema` 
 
 **NOTE:** Copyright statement
 - Harald Glab-Plhak

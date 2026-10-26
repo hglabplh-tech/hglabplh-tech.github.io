@@ -21,17 +21,20 @@ You can use the project as a library or as a research/workbench codebase. Some a
 
 **Additional links:** (API Documentation will be updated next time):
 
-- [The technical documentation](./techdoc/internals.html)
+- [The technical documentation](./techdoc/designtech.html)
+
+- [`Data-oriented testing`](./data-oriented-test.html)
 
 **_At the moment, not available and is under reconstruction_**
-- [Documentation for the YATestEnvironment API]()
+- [Documentation for the YATestEnvironment API](./)
+
 
 Here is the Link to the project itself
 
 [The YATestEnvironment project on GitHub](https://github.com/hglabplh-tech/YATestEnvironment)
 
-## The used libraries and projects
-- [`active-data` and the project](./active-data.html)
+## The libraries and projects used
+- [`active-data` and `prismatic schema`](./active-data.html)
 
 ## Status Legend
 

@@ -1,6 +1,7 @@
-# ACTIVE-DATA/PRISMATIC SCHEMA/CLOJURE SPEC/TYPE HINTS and YATestEnvironment: how they work together
+# `Data-oriented testing` ACTIVE-DATA/PRISMATIC SCHEMA/CLOJURE SPEC/TYPE HINTS and user-defined data. How they work together in the project 
 
-First of all, please read the introduction of the creators:
+
+First of all, please read the introduction by the creators:
 [Introduction to Active Data](https://github.com/active-group/active-data/tree/main/doc/intro.md) and the definition of what a REALM is in active-data: [REALMS in active-data](https://github.com/active-group/active-data/tree/main/doc/realms.md). This is necessary to understand the following.
 
 ## Intention / Introduction
@@ -19,7 +20,7 @@ Since we talk about data-oriented programming and design, it is fair to call thi
 
 In short, `Data-oriented testing` is a testing approach in which tests and test data are defined and generated automatically by analyzing reflected productive functions and using user-defined use cases, data formats, data source definitions, and data flow plans. One part of the tests can be generated and executed dynamically, and the test results can be logged in detail. This part focuses on testing functionality with different kinds of test data. The other part includes tests that run strict checks on the production code for regression and new functionality. These tests store results to ensure repeatable, verifiable outcomes.
 
-It's called `data-oriented` because it collects different kinds of data. The code treats reflection results as input data for testing and test data generation. Use cases are another data input that separates test assertions and test control flow from test data inputs and sources. The test code is generated so input data controls the flow, so the test code changes only if the business logic or general interfaces change. The tests and control flow are defined in a `Test Matrix` and a `Test Steps Definition`; together, these define the test logic and input data. 
+It's called `data-oriented` because it collects different kinds of data. The code treats reflection results as input data for testing and test data generation. Use cases are another data input, separating test assertions and test control flow from test data inputs and sources. The test code is generated so input data controls the flow, so the test code changes only if the business logic or general interfaces change. The tests and control flow are defined in a `Test Matrix` and a `Test Steps Definition`; together, these define the test logic and input data. 
 
 In the following Clojure example, I show the principles of this testing approach. To see how it is realized effectively in the project, see the 
 - [Design and Tech Documentation](./techdoc/designtech.html) .
@@ -162,6 +163,71 @@ In the following Clojure example, I show the principles of this testing approach
         analysis))))
 
 ```
+
+#### An overview of the logic
+
+```text
+
+
+INPUT
+  |
+  +-- Reflection
+  +-- Interface definitions / Runtime capture
+  +-- Business use cases
+  +-- Dynamic test matrix
+  +-- Existing regression tests
+  |
+  v
+UNIFIED REFLECTION MODEL
+  |
+  v
+SEMANTIC TEST MODEL
+  |
+  +-- AI-assisted enhancement (optional)
+  +-- Constraint validation
+  |
+  v
+TEST DATA GENERATION
+  |
+  +-- Valid / invalid
+  +-- Boundary / combinations
+  +-- Business scenarios
+  +-- Regression data
+  |
+  v
+TEST CASE GENERATION
+  |
+  +-- Unit tests
+  +-- Dynamic tests
+  +-- Business tests
+  +-- Regression tests
+  |
+  v
+NATIVE TEST CODE GENERATION
+  |
+  +-- JUnit / clojure.test
+  +-- ScalaTest / Kotest / pytest
+  |
+  v
+TEST EXECUTION (optional)
+  |
+  v
+RESULTS AND COVERAGE ANALYSIS
+  |
+  +-- Failures -> Regression candidates
+  |
+  +-- Coverage gaps -> AI / Model improvement
+  |
+  +-- Feedback -> Next generation cycle
+  |
+  v
+REPORT + PERSISTED IMPROVEMENTS
+
+```
+
+### The data driving tests and test-data generation
+
+#### The input and workflow
 
 
 
