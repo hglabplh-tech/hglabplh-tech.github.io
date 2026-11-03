@@ -7,7 +7,7 @@
 
 Cross-language reflection + metadata → unified test-data generation, Active Data realms, mocking/spying, and artifact/test-data and test-code generation
 
-YATestEnvironment is a mixed Clojure/Java test-engineering project. It brings together reflection utilities, generated test-data pipelines, function spying and mocking, annotation helpers, and early code-generation experiments for Java/Clojure test automation.
+YATestEnvironment is a mixed Clojure/Java test-engineering project. It brings together reflection utilities, generated test-data pipelines, function spying and mocking, annotation helpers for typing, and code-generation for Java/Clojure/Scala/Kotlin/Python test automation.
 
 You can use the project as a library or as a research/workbench codebase. Some areas are mature enough for automated tests, while others are intentionally marked as foundations or experiments.
 
@@ -17,13 +17,15 @@ You can use the project as a library or as a research/workbench codebase. Some a
 
 ### The process from reflection to emitted output 
 
-![The diagram is missing](./yatest_compile.png)
+![The diagram is missing](./test_data_gen_ddd_exec.png)
 
 **Additional links:** (API Documentation will be updated next time):
 
 - [The technical documentation](./techdoc/designtech.html)
 
 - [`Data-oriented testing`](./data-oriented-test.html)
+
+- [`Domain-driven design check`](./design-check.html)
 
 **_At the moment, not available and is under reconstruction_**
 - [Documentation for the YATestEnvironment API](./)

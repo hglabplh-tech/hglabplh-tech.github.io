@@ -1349,6 +1349,10 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 </head>
 <body>
 <textarea id="source" style="display: none">
+- [GoTo Top](../index.html)
+- [GoTo Index](./index.html)
+
+
 # `Data-oriented testing` ACTIVE-DATA/PRISMATIC SCHEMA/CLOJURE SPEC/TYPE HINTS and user-defined data. How they work together in the project 
 
 
@@ -1359,7 +1363,7 @@ First of all, please read the introduction by the creators:
 
 Here, `active-data` will be seen from the perspective of testing programs. In contrast to a data representation via a key-value map or pure dynamic typing, records, functions, and other types are strictly defined by `active-data` realms. As a result, the types and data structures are well defined and visible in the source code. There is no way to create a record or a function in a way that does not meet the requirements of the `active-data` realm definition. This is true for sets of a specific type, maps with specific key/value types, enums, records, and functions. This strict definition improves testability because a test framework can read the data's specific contracts and attributes. For example, a test can see whether an integer range or an enum is defined and which values are valid. You no longer need to test a function with every possible value to see whether unwanted values return a well-defined result. The result of an unwanted value is defined by active data. So testing can focus on the valid data range to verify the logic. Testing parameter and return-value validity is complex and time-consuming, and if you don't need to test it further, you have many other things to test.
 
-What has to be tested for the incoming parameters is, for example, the relation of the values of a parameter in relation to the values of the other parameters given in the same call of a function. If `realm/intersection` and `realm/union` are used, possibly in connection with `realm/restricted`, such things can also be expressed with `active-data`.
+For incoming parameters, for example, you have to test how a parameter's value relates to the values of other parameters in the same function call. If `realm/intersection` and `realm/union` are used, possibly in connection with `realm/restricted`, such things can also be expressed with `active-data`.
 
 To get input for tests, the `active-data` meta information can be retrieved from the data objects or functions. This can be used to get all information about the interfaces of functions, records, and other data objects.
 
@@ -1371,7 +1375,7 @@ Since we talk about data-oriented programming and design, it is fair to call thi
 
 In short, `Data-oriented testing` is a testing approach in which tests and test data are defined and generated automatically by analyzing reflected productive functions and using user-defined use cases, data formats, data source definitions, and data flow plans. One part of the tests can be generated and executed dynamically, and the test results can be logged in detail. This part focuses on testing functionality with different kinds of test data. The other part includes tests that run strict checks on the production code for regression and new functionality. These tests store results to ensure repeatable, verifiable outcomes.
 
-It's called `data-oriented` because it collects different kinds of data. The code treats reflection results as input data for testing and test data generation. Use cases are another data input, separating test assertions and test control flow from test data inputs and sources. The test code is generated so input data controls the flow, so the test code changes only if the business logic or general interfaces change. The tests and control flow are defined in a `Test Matrix` and a `Test Steps Definition`; together, these define the test logic and input data. 
+It's called `data-oriented` because it collects different kinds of data. The code treats reflection results as input data for testing and generating test data. Use cases are another data input, separating test assertions and test control flow from test data inputs and sources. The test code is generated so input data controls the flow, so the test code changes only if the business logic or general interfaces change. The tests and control flow are defined in a `Test Matrix` and a `Test Steps Definition`; together, these define the test logic and input data. 
 
 In the following Clojure example, I show the principles of this testing approach. To see how it is realized effectively in the project, see the 
 - [Design and Tech Documentation](./techdoc/designtech.html) .
@@ -1578,7 +1582,21 @@ REPORT + PERSISTED IMPROVEMENTS
 
 ### The data driving tests and test-data generation
 
-#### The input and workflow
+#### The input for the generation
+
+The input data are the following:
+
+- Data collected by reflecting Interfaces and functions that are public
+- Use case definitions created by the development and the project or product team - extracted from the design papers
+- Test data definitions that are fed by the use case definitions, the reflection data, and additional add-ons by the users and developers
+- A test-data and test definition matrix that tells how many tests have to be executed with invalid input or invalid result and how much test data with invalid or valid values has to be generated as input for the tests
+
+#### How testdata are generated
+#### How the tests are generated 
+
+
+
+
 
 
 
@@ -1590,18 +1608,22 @@ REPORT + PERSISTED IMPROVEMENTS
 
 </textarea>
 <div id="markdown">
+<ul>
+<li><a href="../index.html">GoTo Top</a></li>
+<li><a href="./index.html">GoTo Index</a></li>
+</ul>
 <h1><code>Data-oriented testing</code> ACTIVE-DATA/PRISMATIC SCHEMA/CLOJURE SPEC/TYPE HINTS and user-defined data. How they work together in the project</h1>
 <p>First of all, please read the introduction by the creators:
 <a href="https://github.com/active-group/active-data/tree/main/doc/intro.md">Introduction to Active Data</a> and the definition of what a REALM is in active-data: <a href="https://github.com/active-group/active-data/tree/main/doc/realms.md">REALMS in active-data</a>. This is necessary to understand the following.</p>
 <h2>Intention / Introduction</h2>
 <p>Here, <code>active-data</code> will be seen from the perspective of testing programs. In contrast to a data representation via a key-value map or pure dynamic typing, records, functions, and other types are strictly defined by <code>active-data</code> realms. As a result, the types and data structures are well defined and visible in the source code. There is no way to create a record or a function in a way that does not meet the requirements of the <code>active-data</code> realm definition. This is true for sets of a specific type, maps with specific key/value types, enums, records, and functions. This strict definition improves testability because a test framework can read the data's specific contracts and attributes. For example, a test can see whether an integer range or an enum is defined and which values are valid. You no longer need to test a function with every possible value to see whether unwanted values return a well-defined result. The result of an unwanted value is defined by active data. So testing can focus on the valid data range to verify the logic. Testing parameter and return-value validity is complex and time-consuming, and if you don't need to test it further, you have many other things to test.</p>
-<p>What has to be tested for the incoming parameters is, for example, the relation of the values of a parameter in relation to the values of the other parameters given in the same call of a function. If <code>realm/intersection</code> and <code>realm/union</code> are used, possibly in connection with <code>realm/restricted</code>, such things can also be expressed with <code>active-data</code>.</p>
+<p>For incoming parameters, for example, you have to test how a parameter's value relates to the values of other parameters in the same function call. If <code>realm/intersection</code> and <code>realm/union</code> are used, possibly in connection with <code>realm/restricted</code>, such things can also be expressed with <code>active-data</code>.</p>
 <p>To get input for tests, the <code>active-data</code> meta information can be retrieved from the data objects or functions. This can be used to get all information about the interfaces of functions, records, and other data objects.</p>
 <p>Like Java reflection, we have all the information we need to create tests that cover all combinations needed for very high coverage. The same is valid when generating test data.</p>
 <p>Since we talk about data-oriented programming and design, it is fair to call this <code>data-oriented testing</code>, because input data from reflection, user-defined contracts, and data layouts drive test definitions and test data generation.</p>
 <h2>What is <code>data-oriented testing</code> in YATestEnvironment</h2>
 <p>In short, <code>Data-oriented testing</code> is a testing approach in which tests and test data are defined and generated automatically by analyzing reflected productive functions and using user-defined use cases, data formats, data source definitions, and data flow plans. One part of the tests can be generated and executed dynamically, and the test results can be logged in detail. This part focuses on testing functionality with different kinds of test data. The other part includes tests that run strict checks on the production code for regression and new functionality. These tests store results to ensure repeatable, verifiable outcomes.</p>
-<p>It's called <code>data-oriented</code> because it collects different kinds of data. The code treats reflection results as input data for testing and test data generation. Use cases are another data input, separating test assertions and test control flow from test data inputs and sources. The test code is generated so input data controls the flow, so the test code changes only if the business logic or general interfaces change. The tests and control flow are defined in a <code>Test Matrix</code> and a <code>Test Steps Definition</code>; together, these define the test logic and input data.</p>
+<p>It's called <code>data-oriented</code> because it collects different kinds of data. The code treats reflection results as input data for testing and generating test data. Use cases are another data input, separating test assertions and test control flow from test data inputs and sources. The test code is generated so input data controls the flow, so the test code changes only if the business logic or general interfaces change. The tests and control flow are defined in a <code>Test Matrix</code> and a <code>Test Steps Definition</code>; together, these define the test logic and input data.</p>
 <p>In the following Clojure example, I show the principles of this testing approach. To see how it is realized effectively in the project, see the</p>
 <ul>
 <li><a href="./techdoc/designtech.html">Design and Tech Documentation</a> .</li>
@@ -1801,7 +1823,16 @@ REPORT + PERSISTED IMPROVEMENTS
 
 </code></pre>
 <h3>The data driving tests and test-data generation</h3>
-<h4>The input and workflow</h4>
+<h4>The input for the generation</h4>
+<p>The input data are the following:</p>
+<ul>
+<li>Data collected by reflecting Interfaces and functions that are public</li>
+<li>Use case definitions created by the development and the project or product team - extracted from the design papers</li>
+<li>Test data definitions that are fed by the use case definitions, the reflection data, and additional add-ons by the users and developers</li>
+<li>A test-data and test definition matrix that tells how many tests have to be executed with invalid input or invalid result and how much test data with invalid or valid values has to be generated as input for the tests</li>
+</ul>
+<h4>How testdata are generated</h4>
+<h4>How the tests are generated</h4>
 
 </div>
 <script type="text/javascript">
