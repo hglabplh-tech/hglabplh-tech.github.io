@@ -17,7 +17,7 @@ You can use the project as a library or as a research/workbench codebase. Some a
 
 ### The process from reflection to emitted output 
 
-![The diagram is missing](./test_data_gen_ddd_exec.png)
+![The diagram is missing](./yatest_tech.png)
 
 **Additional links:** (API Documentation will be updated next time):
 
@@ -25,7 +25,7 @@ You can use the project as a library or as a research/workbench codebase. Some a
 
 - [`Data-oriented testing`](./data-oriented-test.html)
 
-- [`Domain-driven design check`](./design-check.html)
+- [`Domain-driven design and defensive coding check support`](./design-check.html)
 
 **_At the moment, not available and is under reconstruction_**
 - [Documentation for the YATestEnvironment API](./)
