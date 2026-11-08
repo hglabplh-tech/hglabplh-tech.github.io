@@ -8,8 +8,8 @@ The other part reflects namespaces, classes, and packages in Clojure, Java, Kotl
 
 The tests and test data are generated from the reflection data and from use case definitions or test matrices.
 
-This part also has features for mocking functions during test runs. Use this feature with care; it should be used only to mock external logic from other libraries. If you need mocking for your project functions, something in your design may be wrong. 
+This part also has features for mocking functions during test runs. Use this feature with care; use it only to mock external logic from other libraries. If you need mocking for your project functions, something in your design may be wrong. 
 
-The other feature is the spy for functions or methods; the spy executes the original function unchanged and collects only runtime data, e.g., the number of calls to a function and the dynamic parameter or return value types. It can be used if the types of the functions cannot be distinguished statically. 
+The other feature is the spy for functions or methods; the spy executes the original function unchanged and collects only runtime data, e.g., the number of calls to a function and the dynamic parameter or return value types. It can be used when function types cannot be distinguished statically. 
 
 - [Detailed technical documentation](./internals.html) 

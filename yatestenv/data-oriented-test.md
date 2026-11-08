@@ -12,11 +12,11 @@ First of all, please read the introduction by the creators:
 
 Here, `active-data` will be seen from the perspective of testing programs. In contrast to a data representation via a key-value map or pure dynamic typing, records, functions, and other types are strictly defined by `active-data` realms. As a result, the types and data structures are well defined and visible in the source code. There is no way to create a record or a function in a way that does not meet the requirements of the `active-data` realm definition. This is true for sets of a specific type, maps with specific key/value types, enums, records, and functions. This strict definition improves testability because a test framework can read the data's specific contracts and attributes. For example, a test can see whether an integer range or an enum is defined and which values are valid. You no longer need to test a function with every possible value to see whether unwanted values return a well-defined result. The result of an unwanted value is defined by active data. So testing can focus on the valid data range to verify the logic. Testing parameter and return-value validity is complex and time-consuming, and if you don't need to test it further, you have many other things to test.
 
-For incoming parameters, for example, you have to test how a parameter's value relates to the values of other parameters in the same function call. If `realm/intersection` and `realm/union` are used, possibly in connection with `realm/restricted`, such things can also be expressed with `active-data`.
+For incoming parameters, for example, you have to test how a parameter's value relates to other parameters in the same function call. If `realm/intersection` and `realm/union` are used, possibly in connection with `realm/restricted`, such things can also be expressed with `active-data`.
 
 To get input for tests, the `active-data` meta information can be retrieved from the data objects or functions. This can be used to get all information about the interfaces of functions, records, and other data objects.
 
-Like Java reflection, we have all the information we need to create tests that cover all combinations needed for very high coverage. The same is valid when generating test data.
+Like Java reflection, we have all the information we need to create tests that cover all combinations needed for very high coverage. The same holds for generating test data.
 
 Since we talk about data-oriented programming and design, it is fair to call this `data-oriented testing`, because input data from reflection, user-defined contracts, and data layouts drive test definitions and test data generation. 
 
