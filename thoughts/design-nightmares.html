@@ -1416,10 +1416,60 @@ public @interface MethodDescriberBad {
     }
 }
 ```
+### 1\. An Inner Class in a Record except being a Record
 
+It can make sense to nest a record inside a record, especially for generating JSON or other things from it. 
+
+This is no problem:
+
+```java
+public record GoodRecordDesign (String name, InnerRecord details) {
+    // This nested record is implicitly static!
+    public record InnerRecord(int id, String description) {}
+}
+```
+
+
+But it is a bad idea to nest any class like interfaces or enums inside a record. Here is a small explaination.
+
+
+
+#### Why Nesting inside a Record leads to Poor Design
+
+1. **Violates the Single Responsibility Principle (SRP)**: A record's sole job is to be a transparent, immutable data carrier ("dumb data"). The moment you start nesting classes, enums, or interfaces inside it, the record becomes a "kitchen sink" mixing data definitions with architectural behavior.
+2. **Confuses Mutability Expectations**: Records are strictly immutable. If you nest a traditional class inside a record, that inner class can have mutable fields. This creates a confusing hybrid object that looks immutable from the outside but can change states on the inside.
+3. **Reduces Readability and Reusability**: Nesting classes inside a record forces other parts of your application to write deeply nested types (e.g., OuterRecord.InnerClass). If another part of your application needs to use that inner class independently, it is awkwardly tied to the record.
+
+
+```java
+public record PoorRecordDesign(String username, SecurityContext security) {
+
+    // 1. A traditional static nested class (allowed)
+    // Note: Writing 'static' is optional; it is static by default.
+    public static class SecurityContext {
+        private String token;
+
+        public SecurityContext(String token) { this.token = token; }
+        public String getToken() { return token; }
+    }
+
+    // 2. An inner enum (allowed & implicitly static)
+    public enum AccountStatus {
+        ACTIVE, SUSPENDED, DELETED
+    }
+
+    // 3. An inner interface (allowed & implicitly static)
+    public interface Validator {
+        boolean validate(UserProfile profile);
+    }
+}
+
+```
+
+**NOTE:** Copyright statement
 - Harald Glab-Plhak
 - Computer Science since 1992
-- &copy; Harald Glab-Plhak (2026)
+- &copy; Harald Glab-Plhak 2026
 
 
 </textarea>
@@ -1478,10 +1528,49 @@ public @interface MethodDescriberBad {
     }
 }
 </code></pre>
+<h3>1. An Inner Class in a Record except being a Record</h3>
+<p>It can make sense to nest a record inside a record, especially for generating JSON or other things from it.</p>
+<p>This is no problem:</p>
+<pre><code class="language-java">public record GoodRecordDesign (String name, InnerRecord details) {
+    // This nested record is implicitly static!
+    public record InnerRecord(int id, String description) {}
+}
+</code></pre>
+<p>But it is a bad idea to nest any class like interfaces or enums inside a record. Here is a small explaination.</p>
+<h4>Why Nesting inside a Record leads to Poor Design</h4>
+<ol>
+<li><strong>Violates the Single Responsibility Principle (SRP)</strong>: A record's sole job is to be a transparent, immutable data carrier (&quot;dumb data&quot;). The moment you start nesting classes, enums, or interfaces inside it, the record becomes a &quot;kitchen sink&quot; mixing data definitions with architectural behavior.</li>
+<li><strong>Confuses Mutability Expectations</strong>: Records are strictly immutable. If you nest a traditional class inside a record, that inner class can have mutable fields. This creates a confusing hybrid object that looks immutable from the outside but can change states on the inside.</li>
+<li><strong>Reduces Readability and Reusability</strong>: Nesting classes inside a record forces other parts of your application to write deeply nested types (e.g., OuterRecord.InnerClass). If another part of your application needs to use that inner class independently, it is awkwardly tied to the record.</li>
+</ol>
+<pre><code class="language-java">public record PoorRecordDesign(String username, SecurityContext security) {
+
+    // 1. A traditional static nested class (allowed)
+    // Note: Writing 'static' is optional; it is static by default.
+    public static class SecurityContext {
+        private String token;
+
+        public SecurityContext(String token) { this.token = token; }
+        public String getToken() { return token; }
+    }
+
+    // 2. An inner enum (allowed &amp; implicitly static)
+    public enum AccountStatus {
+        ACTIVE, SUSPENDED, DELETED
+    }
+
+    // 3. An inner interface (allowed &amp; implicitly static)
+    public interface Validator {
+        boolean validate(UserProfile profile);
+    }
+}
+
+</code></pre>
+<p><strong>NOTE:</strong> Copyright statement</p>
 <ul>
 <li>Harald Glab-Plhak</li>
 <li>Computer Science since 1992</li>
-<li>© Harald Glab-Plhak (2026)</li>
+<li>© Harald Glab-Plhak 2026</li>
 </ul>
 
 </div>
