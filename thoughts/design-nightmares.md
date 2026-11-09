@@ -149,7 +149,7 @@ public enum PaymentProcessor {
 
 This is useful because the inner interface is used only with the enum values, which define the strategy interface as a value. The interface works only on the enumeration values to find the right strategy, nothing else. 
 
-So the strategy interface has a direct relation to he enum values. The other situations, like defining interfaces and other classes inside an enumeration. This is a bad design decision. Enumerations are a classic way to enumerate values and give them names for more readable code. A pure enumeration looks like that
+So the strategy interface has a direct relation to he enum values. Other approaches, like defining interfaces and other classes inside an enumeration, are also bad. This is a bad design decision. Enumerations are a classic way to enumerate values and give them names for more readable code. A pure enumeration looks like that
 
 ```java
 public enum ConnectionStates {
@@ -208,6 +208,17 @@ public enum ConnectionStates {
     }	
 }
 ``` 
+
+### 4\. Execution fallthrough in a switch statement
+
+There are many different ways to handle logic in a Java switch statement. There is a classic switch, like in ANSI C, which it is influenced by. And there is a new switch statement with a `"functional"` touch -> the result of the switch statement can be directly assigned to a variable with the type of the result. This is sometimes confusing. So my first proposal is to use the same kind of switch statement throughout an application so that development is clean and straightforward.
+
+
+```java
+
+
+
+```
 
 **NOTE:** Copyright statement
 - Harald Glab-Plhak
