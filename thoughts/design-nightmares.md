@@ -209,11 +209,79 @@ public enum ConnectionStates {
 }
 ``` 
 
-### 4\. Execution fallthrough in a switch statement
+A bad example using inner classes and methods in an enum is shown here:
 
-There are many different ways to handle logic in a Java switch statement. There is a classic switch, like in ANSI C, which it is influenced by. And there is a new switch statement with a `"functional"` touch -> the result of the switch statement can be directly assigned to a variable with the type of the result. This is sometimes confusing. So my first proposal is to use the same kind of switch statement throughout an application so that development is clean and straightforward.
+```java
 
-The point with the original switch is that the break statement is necessary to get the awaited continuation. To use case statements without break, I implemented grouping values, for example, weekends and weekdays. Here a positive example: 
+import java.util.ArrayList;
+import java.util.List;
+
+public enum OrderStatusBad {
+    PENDING("Pending"),
+    PAID("Paid"),
+    SHIPPED("Shipped");
+
+    // 1. BAD: Mutable field inside an enum singleton!
+    // Every thread in the application shares and overwrites this counter.
+    private String label;
+    private int transitionCount = 0;
+
+    // 2. BAD: Mutable static collection hidden inside the enum
+    private static final List<String> AUDIT_LOG = new ArrayList<>();
+
+    OrderStatusBad(String label) {
+        this.label = label;
+    }
+
+    // 3. BAD: Setter mutating the singleton's state at runtime
+    public void setLabel(String newLabel) {
+        this.label = newLabel; // Thread-safety nightmare!
+    }
+
+    // 4. BAD: Heavy side effects, I/O, and state mutation mixed into enum logic
+    public void processOrderAndNotify(String orderId) {
+        this.transitionCount++; // Race condition under concurrent requests
+        AUDIT_LOG.add("Order " + orderId + " moved to " + this.name());
+        
+        // Enums should never contain infrastructure/persistence logic
+        System.out.println("Connecting to SMTP server to email customer about " + orderId);
+    }
+
+    // 5. BAD: Nested mutable inner class living inside a fixed constant type
+    public static class StatusTracker {
+        private int activeErrors = 0;
+
+        public void recordError() {
+            this.activeErrors++;
+        }
+
+        public int getActiveErrors() {
+            return activeErrors;
+        }
+    }
+}
+
+
+```
+This is bad design because it is not clear what happens here, the logic is mixed up, and an enum constant's behavior can change at runtime. Here is the explanation in detail:
+
+- **Broken Singleton Immutability:** Enum constants (PENDING, PAID, SHIPPED) exist only once per JVM classloader. Adding setters (setLabel) or mutable counters (transitionCount++) means one user's request silently mutates the enum constant for every other user in the system.
+- **Race Conditions & Memory Leaks:** Unsynchronized writes to transitionCount and unbounded growth in private static final List<String> AUDIT_LOG cause concurrency bugs and memory leaks in long-running applications.
+- **Violates Single Responsibility (God Enum):** Mixing domain states (PAID) with infrastructure concerns (sending emails or writing audit logs) makes the enum impossible to unit test without triggering side effects.
+- **Misleading Inner Class (StatusTracker):** Nesting a stateful StatusTracker class inside OrderStatusBad implies it tracks individual enum transitions automatically, when in reality it is just an unrelated mutable class awkwardly glued onto the enum's namespace.
+
+How to refactor this cleanly:
+
+- **Keep Enum Fields private final:** Only store immutable metadata (such as private final String label;) initialized via the constructor.
+- **Move Business & I/O Logic to a Service:** Extract processOrderAndNotify into a dedicated OrderWorkflowService class that accepts OrderStatus as a parameter.
+-  **Move StatusTracker to Its Own File:** Make StatusTracker a separate class in the same package rather than nesting it inside the enum.
+
+
+### 4\. Execution fall-through in a switch statement
+
+There are many different ways to handle logic in a Java switch statement. There is a classic switch, like in ANSI C, which it is influenced by. And there is a new switch statement with a `"functional"` touch -> the result of the switch statement can be directly assigned to a variable with the type of the result. This is sometimes confusing. So my first proposal is to use the same kind of switch statement throughout the application so development stays clean and straightforward.
+
+The point with the original switch is that the break statement is necessary to get the awaited continuation. To use case statements without break, I implemented grouping values, for example, weekends and weekdays. Here is a positive example: 
 
 
 ```java
@@ -240,13 +308,167 @@ switch (day) {
 ```
 
 The advantage of this logic can also lead to the disadvantage of a forgotten break. This makes the construction dangerous and was one reason to introduce the new switch statement; see below.
-But first a failing logic to see the disadvantage:
+But first, a failing logic to see the disadvantage:
+
+```java
+String userRole = "VIEWER";
+boolean canEditContent = false;
+boolean canViewContent = false;
+
+switch (userRole) {
+    case "VIEWER":
+        canViewContent = true;
+        // BUG: Forgot to add 'break;' here! Execution falls straight through...
+    case "EDITOR":
+        canEditContent = true; // ...and accidentally grants edit permissions to a Viewer!
+        break;
+    case "ADMIN":
+        canViewContent = true;
+        canEditContent = true;
+        break;
+    default:
+        System.out.println("Unknown role");
+        break;
+}
+
+System.out.println("Can View: " + canViewContent); // true
+System.out.println("Can Edit: " + canEditContent); // true (WRONG! Should be false)
+```
+
+And now our weekdays example with the new switch logic:
+
 
 ```java
 
+int day = 2; // 1 = Monday, 7 = Sunday
 
+switch (day) {
+    case 1, 2, 3, 4, 5 -> System.out.println("It is a weekday. Time to work!");
+    case 6, 7 -> System.out.println("It is the weekend. Time to relax!");
+    default -> System.out.println("Invalid day number.");
+}
+// Output:
+// It is a weekday. Time to work!
 
 ```
+
+And a simple example which also shows that the switch can be used in an assignment and which shows the new keyword `yield`, working like a break but in addition returns the value: 
+
+```java
+public record AccessPolicy(boolean canRead, boolean canWrite, boolean canDelete, String reason) {}
+
+public class AuthEvaluator {
+
+    public static AccessPolicy evaluateAccess(String role, boolean isMfaVerified, boolean isOwner) {
+        return switch (role) {
+            case "GUEST" -> new AccessPolicy(true, false, false, "Public read-only access.");
+
+            case "VIEWER", "AUDITOR" -> new AccessPolicy(true, false, false, "Verified read-only role.");
+
+            case "CONTRIBUTOR" -> {
+                // Multi-line block requires 'yield' to return the AccessPolicy value
+                if (!isOwner) {
+                    yield new AccessPolicy(true, false, false, "Contributors can only edit their own resources.");
+                }
+                yield new AccessPolicy(true, true, false, "Owner edit access granted.");
+            }
+
+            case "ADMIN", "SUPER_ADMIN" -> {
+                // Using 'yield' after a multi-step security check
+                if (!isMfaVerified) {
+                    System.out.println("Security Alert: Admin attempted access without MFA.");
+                    yield new AccessPolicy(true, false, false, "Downgraded to read-only: MFA required.");
+                }
+                yield new AccessPolicy(true, true, true, "Full administrative access granted.");
+            }
+
+            default -> new AccessPolicy(false, false, false, "Access denied: Unrecognized role.");
+        };
+    }
+
+    public static void main(String[] args) {
+        AccessPolicy policy = evaluateAccess("ADMIN", false, false);
+        System.out.println(policy);
+        // Output: AccessPolicy[canRead=true, canWrite=false, canDelete=false, reason=Downgraded to read-only: MFA required.]
+    }
+}
+```
+
+In these examples, the progress is clear. It started with the classic switch, where continuation in a switch/case depends on the programmer setting the correct break statements so that execution fall-through occurs only intentionally.
+
+In early versions, switch in Java supported only integral types like int and char. Over the years, enums and Strings, and later other objects, have been supported. 
+The logic of the modernized switch, in an LTS version, was introduced with Java 17. The reasons were clear. A switch with break statements as essential triggers for continuation is not easy to handle. Good code quality is not easy to achieve with it.
+With the new version, the compiler implicitly inserts break statements, and grouping is easy by providing multiple values in a switch case.
+
+```java
+public class DayChecker {
+
+    public enum Day {
+        MONDAY,
+        TUESDAY,
+        WEDNESDAY,
+        THURSDAY,
+        FRIDAY,
+        SATURDAY,
+        SUNDAY
+    }
+
+    public static String checkDayByNumber(int day) {
+        return switch (day) {
+            case 1, 2, 3, 4, 5 -> "It is a weekday. Time to work!";
+            case 6, 7 -> "It is the weekend. Time to relax!";
+            default -> "Invalid day number.";
+        };
+    }
+
+    public static String checkDayByEnum(Day day) {
+        return switch (day) {
+            case MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY -> "It is a weekday. Time to work!";
+            case SATURDAY, SUNDAY -> "It is the weekend. Time to relax!";
+        };
+    }
+
+    public static void main(String[] args) {
+        String messageFromInt = checkDayByNumber(2);
+        String messageFromEnum = checkDayByEnum(Day.TUESDAY);
+
+        System.out.println("From int:  " + messageFromInt);
+        System.out.println("From enum: " + messageFromEnum);
+    }
+}
+```
+Here, in this well-known example, the advantages are clear. First, it uses less code for the same thing, and the break is implicit. The fact that you can pass a list of values, as well as a single value, allows grouping. The flow of control is clear. Another advantage is that you can easily assign the result to a variable. Instead of one assignment with the old switch, it looks like:
+
+```java
+int day = 2; // 1 = Monday, 7 = Sunday
+String message;
+
+switch (day) {
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+        message = "It is a weekday. Time to work!";
+        break;
+    case 6:
+    case 7:
+        message = "It is the weekend. Time to relax!";
+        break;
+    default:
+        message = "Invalid day number.";
+        break;
+}
+
+System.out.println(message);
+// Output:
+// It is a weekday. Time to work!
+``` 
+So, to avoid pitfalls, I strongly recommend that if you use Java 17+, you also use the new switch, and if you use Java 8, avoid fall-through whenever you can.
+
+### 5\. Wrong or too much use of `continue`and `break`:
+
+
 
 **NOTE:** Copyright statement
 - Harald Glab-Plhak
