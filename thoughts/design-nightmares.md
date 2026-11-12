@@ -213,6 +213,34 @@ public enum ConnectionStates {
 
 There are many different ways to handle logic in a Java switch statement. There is a classic switch, like in ANSI C, which it is influenced by. And there is a new switch statement with a `"functional"` touch -> the result of the switch statement can be directly assigned to a variable with the type of the result. This is sometimes confusing. So my first proposal is to use the same kind of switch statement throughout an application so that development is clean and straightforward.
 
+The point with the original switch is that the break statement is necessary to get the awaited continuation. To use case statements without break, I implemented grouping values, for example, weekends and weekdays. Here a positive example: 
+
+
+```java
+int day = 2; // 1 = Monday, 7 = Sunday
+
+switch (day) {
+    case 1:
+    case 2: // Matches here and intentionally falls through...
+    case 3:
+    case 4:
+    case 5: // ...all the way down to the shared weekday logic!
+        System.out.println("It is a weekday. Time to work!");
+        break;
+    case 6: // Matches Saturday and falls through to Sunday
+    case 7:
+        System.out.println("It is the weekend. Time to relax!");
+        break;
+    default:
+        System.out.println("Invalid day number.");
+        break;
+}
+// Output:
+// It is a weekday. Time to work!
+```
+
+The advantage of this logic can also lead to the disadvantage of a forgotten break. This makes the construction dangerous and was one reason to introduce the new switch statement; see below.
+But first a failing logic to see the disadvantage:
 
 ```java
 
