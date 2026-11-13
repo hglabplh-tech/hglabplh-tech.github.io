@@ -507,7 +507,7 @@ public record Position(int row, int col) {}
 
 ````
 
-Or, if you like to avoid nested loops and make it more functional style, use the `stream interface` like here:
+Or, if you like to avoid nested loops and make it more functional style, use the `stream-interface` like here:
 
 ```java
  public static Optional<Position> findTarget(int[][] matrix, int target) {
@@ -519,7 +519,9 @@ Or, if you like to avoid nested loops and make it more functional style, use the
                 .findFirst(); // Short-circuits immediately on the first match
     }
 ```
+Another statement that can cause trouble if used is `continue` or both `continue` and `break` in the same logic, like here:
 
+----- will be continued soon ----- 
 **NOTE:** Copyright statement
 - Harald Glab-Plhak
 - Computer Science since 1992

@@ -1858,7 +1858,7 @@ public record Position(int row, int col) {}
 
 ````
 
-Or, if you like to avoid nested loops and make it more functional style, use the `stream interface` like here:
+Or, if you like to avoid nested loops and make it more functional style, use the `stream-interface` like here:
 
 ```java
  public static Optional<Position> findTarget(int[][] matrix, int target) {
@@ -1870,7 +1870,9 @@ Or, if you like to avoid nested loops and make it more functional style, use the
                 .findFirst(); // Short-circuits immediately on the first match
     }
 ```
+Another statement that can cause trouble if used is `continue` or both `continue` and `break` in the same logic, like here:
 
+----- will be continued soon ----- 
 **NOTE:** Copyright statement
 - Harald Glab-Plhak
 - Computer Science since 1992
@@ -2320,7 +2322,7 @@ public record Position(int row, int col) {}
     }
 
 </code></pre>
-<p>Or, if you like to avoid nested loops and make it more functional style, use the <code>stream interface</code> like here:</p>
+<p>Or, if you like to avoid nested loops and make it more functional style, use the <code>stream-interface</code> like here:</p>
 <pre><code class="language-java"> public static Optional&lt;Position&gt; findTarget(int[][] matrix, int target) {
         return IntStream.range(0, matrix.length)
                 .boxed()
@@ -2330,7 +2332,9 @@ public record Position(int row, int col) {}
                 .findFirst(); // Short-circuits immediately on the first match
     }
 </code></pre>
-<p><strong>NOTE:</strong> Copyright statement</p>
+<p>Another statement that can cause trouble if used is <code>continue</code> or both <code>continue</code> and <code>break</code> in the same logic, like here:</p>
+<p>----- will be continued soon -----
+<strong>NOTE:</strong> Copyright statement</p>
 <ul>
 <li>Harald Glab-Plhak</li>
 <li>Computer Science since 1992</li>
