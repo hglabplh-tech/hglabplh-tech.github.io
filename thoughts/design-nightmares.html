@@ -1819,7 +1819,57 @@ So, to avoid pitfalls, I strongly recommend that if you use Java 17+, you also u
 
 ### 5\. Wrong or too much use of `continue`and `break`:
 
+Another thing that is not valuable for a clean design is the usage of `break` and `continue` in places where it is not necessary, or, like a `break` in an inner loop with a label to the outer loop:
 
+```java
+ int target = 99;
+
+        outerLoop: // Label attached to the outer loop
+        for (int row = 0; row < matrix.length; row++) {
+            for (int col = 0; col < matrix[row].length; col++) {
+                System.out.println("Checking [" + row + "][" + col + "] = " + matrix[row][col]);
+
+                if (matrix[row][col] == target) {
+                    System.out.println("Target " + target + " found! Exiting both loops.");
+                    break outerLoop; // Exits the outer loop immediately, skipping row 2 completely
+                }
+            }
+        }
+```
+This is a poor design because it is nearly as confusing as a GOTO in BASIC. If you need this for your logic, better redesign it into an extracted helper method like:
+
+```java
+
+public record Position(int row, int col) {}
+
+    public static Optional<Position> findTarget(int[][] matrix, int target) {
+        for (int row = 0; row < matrix.length; row++) {
+            for (int col = 0; col < matrix[row].length; col++) {
+                System.out.println("Checking [" + row + "][" + col + "] = " + matrix[row][col]);
+
+                if (matrix[row][col] == target) {
+                    System.out.println("Target " + target + " found! Exiting cleanly.");
+                    return Optional.of(new Position(row, col)); // Exits both loops and returns the result
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
+````
+
+Or, if you like to avoid nested loops and make it more functional style, use the `stream interface` like here:
+
+```java
+ public static Optional<Position> findTarget(int[][] matrix, int target) {
+        return IntStream.range(0, matrix.length)
+                .boxed()
+                .flatMap(row -> IntStream.range(0, matrix[row].length)
+                        .filter(col -> matrix[row][col] == target)
+                        .mapToObj(col -> new Position(row, col)))
+                .findFirst(); // Short-circuits immediately on the first match
+    }
+```
 
 **NOTE:** Copyright statement
 - Harald Glab-Plhak
@@ -2236,6 +2286,50 @@ System.out.println(message);
 </code></pre>
 <p>So, to avoid pitfalls, I strongly recommend that if you use Java 17+, you also use the new switch, and if you use Java 8, avoid fall-through whenever you can.</p>
 <h3>5. Wrong or too much use of <code>continue</code>and <code>break</code>:</h3>
+<p>Another thing that is not valuable for a clean design is the usage of <code>break</code> and <code>continue</code> in places where it is not necessary, or, like a <code>break</code> in an inner loop with a label to the outer loop:</p>
+<pre><code class="language-java"> int target = 99;
+
+        outerLoop: // Label attached to the outer loop
+        for (int row = 0; row &lt; matrix.length; row++) {
+            for (int col = 0; col &lt; matrix[row].length; col++) {
+                System.out.println(&quot;Checking [&quot; + row + &quot;][&quot; + col + &quot;] = &quot; + matrix[row][col]);
+
+                if (matrix[row][col] == target) {
+                    System.out.println(&quot;Target &quot; + target + &quot; found! Exiting both loops.&quot;);
+                    break outerLoop; // Exits the outer loop immediately, skipping row 2 completely
+                }
+            }
+        }
+</code></pre>
+<p>This is a poor design because it is nearly as confusing as a GOTO in BASIC. If you need this for your logic, better redesign it into an extracted helper method like:</p>
+<pre><code class="language-java">
+public record Position(int row, int col) {}
+
+    public static Optional&lt;Position&gt; findTarget(int[][] matrix, int target) {
+        for (int row = 0; row &lt; matrix.length; row++) {
+            for (int col = 0; col &lt; matrix[row].length; col++) {
+                System.out.println(&quot;Checking [&quot; + row + &quot;][&quot; + col + &quot;] = &quot; + matrix[row][col]);
+
+                if (matrix[row][col] == target) {
+                    System.out.println(&quot;Target &quot; + target + &quot; found! Exiting cleanly.&quot;);
+                    return Optional.of(new Position(row, col)); // Exits both loops and returns the result
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
+</code></pre>
+<p>Or, if you like to avoid nested loops and make it more functional style, use the <code>stream interface</code> like here:</p>
+<pre><code class="language-java"> public static Optional&lt;Position&gt; findTarget(int[][] matrix, int target) {
+        return IntStream.range(0, matrix.length)
+                .boxed()
+                .flatMap(row -&gt; IntStream.range(0, matrix[row].length)
+                        .filter(col -&gt; matrix[row][col] == target)
+                        .mapToObj(col -&gt; new Position(row, col)))
+                .findFirst(); // Short-circuits immediately on the first match
+    }
+</code></pre>
 <p><strong>NOTE:</strong> Copyright statement</p>
 <ul>
 <li>Harald Glab-Plhak</li>
